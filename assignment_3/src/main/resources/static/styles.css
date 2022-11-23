@@ -1,0 +1,82 @@
+body {
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  display: flex;
+}
+
+#container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: max-content;
+  width: 100%;
+  background-color: aqua;
+}
+
+#round-details {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+}
+
+#round {
+  font-size: 25;
+}
+
+#winner {
+  font-size: 25;
+}
+
+#center-frame {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  width: 100%;
+}
+
+#player-scores-container {
+  display: flex;
+  width: 25%;
+  flex-direction: column;
+  padding-left: 20px;
+}
+
+#player-score {
+  font-size: 25;
+}
+
+#top-card-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+}
+
+#top-card {
+  font-size: 50;
+}
+
+#deck-count {
+  font-size: medium;
+}
+
+#draw-card-button {
+  font-size: 20;
+}
+
+#player-hands {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 50%;
+  flex-wrap: wrap;
+}
+
+#card {
+  font-size: 30;
+  margin: 5px;
+}

@@ -1,12 +1,12 @@
 <html>
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Webchat WebSocket</title>
-    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-  
-    <div id="main-content" class="container">
+    <!-- <div id="main-content" class="container">
       <div class="row text-center">
         <h2>WebChat WebSocket</h2>
       </div>
@@ -34,8 +34,28 @@
       <div id="chat_list" class="row"></div>
       
       <div id="alerts"></div>
+    </div> -->
+
+    <div id="container">
+      <div id="round-details">
+        <p id="round">Round: 22</p>
+        <p id="winner">Winner: ----</p>
+      </div>
+      <div id="center-frame">
+        <div id="player-scores-container">
+          <p id="player-score">Player: Score</p>
+        </div>
+        <div id="top-card-container">
+          <p id="top-card">9C</p>
+          <p id="deck-count">Deck Count: 20</p>
+          <input id="draw-card-button" type="button" value="Draw Card" />
+        </div>
+      </div>
+      <div id="player-hands">
+        <input id="card" type="button" value="1C" />
+      </div>
     </div>
-    
+
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
     <script src="/js/index.js"></script>
