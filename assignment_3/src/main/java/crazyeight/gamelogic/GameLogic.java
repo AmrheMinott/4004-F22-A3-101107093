@@ -14,7 +14,7 @@ public class GameLogic {
 		}
 
 		for (String card : playerHand) {
-			if (card.contains(CardFaces.KING) || card.contains(CardFaces.QUEEN)) {
+			if (card.contains(CardFaces.KING) || card.contains(CardFaces.QUEEN) || card.contains(CardFaces.JACK)) {
 				finalScore += SCORE_TEN;
 			}
 		}
