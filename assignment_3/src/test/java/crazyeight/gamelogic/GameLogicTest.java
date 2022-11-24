@@ -24,10 +24,17 @@ public class GameLogicTest {
 
 		assertEquals(10, gameLogic.scoreRound(playerHand));
 	}
-	
+
 	@Test
 	public void givenQueen_whenScoreRound_assertScoreOfTen() {
 		ArrayList<String> playerHand = new ArrayList<>(Arrays.asList("QH"));
+
+		assertEquals(10, gameLogic.scoreRound(playerHand));
+	}
+
+	@Test
+	public void givenJack_whenScoreRound_assertScoreOfTen() {
+		ArrayList<String> playerHand = new ArrayList<>(Arrays.asList("JH"));
 
 		assertEquals(10, gameLogic.scoreRound(playerHand));
 	}
