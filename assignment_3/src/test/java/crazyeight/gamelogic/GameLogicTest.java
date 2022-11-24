@@ -38,4 +38,11 @@ public class GameLogicTest {
 
 		assertEquals(10, gameLogic.scoreRound(playerHand));
 	}
+	
+	@Test
+	public void givenAnEightOfSomeThing_whenScoreRound_assertScoreOfTen() {
+		ArrayList<String> playerHand = new ArrayList<>(Arrays.asList("8H"));
+
+		assertEquals(50, gameLogic.scoreRound(playerHand));
+	}
 }
