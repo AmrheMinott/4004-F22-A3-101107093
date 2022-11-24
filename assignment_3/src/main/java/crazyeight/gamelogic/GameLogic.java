@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import constants.CardFaces;
 
 public class GameLogic {
+	final int SCORE_ONE = 1;
 	final int SCORE_TEN = 10;
 	final int SCORE_FIFTY = 50;
 
@@ -19,6 +20,8 @@ public class GameLogic {
 				finalScore += SCORE_TEN;
 			} else if (card.contains(CardFaces.EIGHT)) {
 				finalScore += SCORE_FIFTY;
+			} else if (card.contains(CardFaces.ACE)) {
+				finalScore += SCORE_ONE;
 			} else {
 				finalScore += Integer.parseInt(Character.toString(card.charAt(0)));
 			}
