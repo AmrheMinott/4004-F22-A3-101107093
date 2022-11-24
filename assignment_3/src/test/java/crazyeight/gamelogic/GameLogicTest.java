@@ -15,13 +15,13 @@ public class GameLogicTest {
 	public void givenEmptyHand_whenScoreRound_assertScoreOfZero() {
 		ArrayList<String> playerHand = new ArrayList<>(Arrays.asList());
 
-		assertEquals(gameLogic.scoreRound(playerHand), 0);
+		assertEquals(0, gameLogic.scoreRound(playerHand));
 	}
 
 	@Test
 	public void givenKing_whenScoreRound_assertScoreOfTen() {
 		ArrayList<String> playerHand = new ArrayList<>(Arrays.asList("KH"));
 
-		assertEquals(gameLogic.scoreRound(playerHand), 10);
+		assertEquals(10, gameLogic.scoreRound(playerHand));
 	}
 }
