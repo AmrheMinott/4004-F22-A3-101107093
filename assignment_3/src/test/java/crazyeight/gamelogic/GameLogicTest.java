@@ -54,7 +54,7 @@ public class GameLogicTest {
 	}
 	
 	@Test
-	public void givenAnAceCardOfSomeThing_whenScoreRound_assertScoreOfTen() {
+	public void givenAnAceCardOfSomeThing_whenScoreRound_assertScoreOfOne() {
 		ArrayList<String> playerHand = new ArrayList<>(Arrays.asList("AH"));
 
 		assertEquals(1, gameLogic.scoreRound(playerHand));

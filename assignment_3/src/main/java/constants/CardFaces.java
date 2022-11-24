@@ -10,5 +10,5 @@ public class CardFaces {
 
 	public static final String EIGHT = "8";
 
-	public static final CharSequence ACE = null;
+	public static final CharSequence ACE = "A";
 }
