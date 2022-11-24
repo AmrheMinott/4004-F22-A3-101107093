@@ -17,9 +17,10 @@ public class GameLogic {
 		for (String card : playerHand) {
 			if (card.contains(CardFaces.KING) || card.contains(CardFaces.QUEEN) || card.contains(CardFaces.JACK)) {
 				finalScore += SCORE_TEN;
-			}
-			if (card.contains(CardFaces.EIGHT)) {
+			} else if (card.contains(CardFaces.EIGHT)) {
 				finalScore += SCORE_FIFTY;
+			} else {
+				finalScore += Integer.parseInt(Character.toString(card.charAt(0)));
 			}
 		}
 
