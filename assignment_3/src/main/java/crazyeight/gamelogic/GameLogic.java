@@ -12,9 +12,9 @@ public class GameLogic {
 		if (playerHand.size() == 0) {
 			return finalScore;
 		}
-		
+
 		for (String card : playerHand) {
-			if (card.contains(CardFaces.KING)) {
+			if (card.contains(CardFaces.KING) || card.contains(CardFaces.QUEEN)) {
 				finalScore += SCORE_TEN;
 			}
 		}
