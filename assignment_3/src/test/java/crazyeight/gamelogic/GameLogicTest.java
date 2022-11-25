@@ -113,4 +113,17 @@ public class GameLogicTest {
 		assertEquals(false, gameLogic.canPlay("P2", currentPlayerIndex, players));
 
 	}
+
+	@Test
+	public void givenItIsPlayersTurn_assertTheyCanPlay() {
+		Player p1 = new Player();
+		Player p2 = new Player();
+		p1.setName("P1");
+		p2.setName("P2");
+		int currentPlayerIndex = 0;
+		ArrayList<Player> players = new ArrayList<>(Arrays.asList(p1, p2));
+
+		assertEquals(true, gameLogic.canPlay("P1", currentPlayerIndex, players));
+
+	}
 }
