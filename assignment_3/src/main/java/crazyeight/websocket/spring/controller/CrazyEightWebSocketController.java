@@ -27,7 +27,7 @@ public class CrazyEightWebSocketController {
 
 	private final int TOTAL_NUMBER_OF_PLAYERS = 3;
 
-	private GameLogic gameLogic = new GameLogic();
+	private GameLogic gameLogic;
 	private String topCard = "";
 
 	private int currentPlayer = 0;
@@ -36,20 +36,11 @@ public class CrazyEightWebSocketController {
 
 	private boolean direction = true;
 
-	private ArrayList<String> deck = new ArrayList<>(Arrays.asList("2H", "3H", "4H", "5H", "6H", "7H", "8H", "9H",
-			"10H", "JH", "QH", "KH", "AH", "2S", "3S", "4S", "5S", "6S", "7S", "8S", "9S", "10S", "JS", "QS", "KS",
-			"AS", "2D", "3D", "4D", "5D", "6D", "7D", "8D", "9D", "10D", "JD", "QD", "KD", "AD", "2C", "3C", "4C", "5C",
-			"6C", "7C", "8C", "9C", "10C", "JC", "QC", "KC", "AC"));
-
 	public CrazyEightWebSocketController(SimpMessagingTemplate simpMessagingTemplate) {
 		this.simpMessagingTemplate = simpMessagingTemplate;
 		connectedPlayers = new ArrayList<>();
-		shuffleDeck();
-	}
-
-	private void shuffleDeck() {
-		Collections.shuffle(deck);
-		this.topCard = this.deck.remove(0);
+		gameLogic = new GameLogic();
+		this.topCard = gameLogic.takeCard();
 	}
 
 	@GetMapping
@@ -88,7 +79,7 @@ public class CrazyEightWebSocketController {
 		for (Player p : connectedPlayers) {
 			if (p.getName().equals(userName)) {
 				p.setCard(topCard);
-				p.setDeck(deck);
+				p.setDeck(gameLogic.getDeck());
 				p.setOtherPlayers(gameLogic.getOtherPlayers(userName, connectedPlayers));
 				return p;
 			}
@@ -115,7 +106,7 @@ public class CrazyEightWebSocketController {
 		List<String> hand = new ArrayList<>(Arrays.asList());
 
 		for (int i = 0; i < 5; i++) {
-			hand.add(deck.remove(i));
+			hand.add(gameLogic.takeCard());
 		}
 
 		player.setHand(new ArrayList<>(hand));

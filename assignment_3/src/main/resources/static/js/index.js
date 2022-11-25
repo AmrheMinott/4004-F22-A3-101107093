@@ -2,8 +2,8 @@ const BASE_URL = "http://localhost:8090";
 
 const CREATE_PLAYER_URL = `${BASE_URL}/createPlayer`;
 
-const GET_PLAYER = `${BASE_URL}/player`;
 const GET_CAN_PLAY = `${BASE_URL}/canPlay`;
+const POST_PLAYER = `${BASE_URL}/player`;
 
 const POST_CARD = `${BASE_URL}/postCard`;
 
@@ -40,7 +40,7 @@ async function registerUser() {
 }
 
 async function getPlayer() {
-  const response = await fetch(GET_PLAYER, {
+  const response = await fetch(POST_PLAYER, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -140,6 +140,15 @@ function renderScores() {
     playerScoreParagraph.id = "player-score";
     playerScoresDiv.appendChild(playerScoreParagraph);
   });
+}
+
+function renderDeck() {
+  let topCardPara = document.getElementById("top-card");
+  let deckCountPara = document.getElementById("deck-count");
+  topCardPara.innerHTML = playerObject.card;
+  deckCountPara.innerHTML = playerObject.deck
+    ? `Deck Count: ${playerObject.deck.length}`
+    : "Deck Count: Not Now";
 }
 
 /*
