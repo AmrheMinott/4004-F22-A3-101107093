@@ -73,4 +73,11 @@ public class GameLogicTest {
 
 		assertEquals(28, gameLogic.scoreRound(playerHand));
 	}
+
+	@Test
+	public void givenTopCardAce_andDirectionTrue_whenDetermineDirection_assertFalse() {
+		ArrayList<String> playerHand = new ArrayList<>(Arrays.asList("7H", "7C", "7D", "7S"));
+
+		assertEquals(false, gameLogic.determineDirection("AH", true));
+	}
 }
