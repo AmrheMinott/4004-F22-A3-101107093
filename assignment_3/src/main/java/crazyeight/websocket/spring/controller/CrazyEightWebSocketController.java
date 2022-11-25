@@ -72,7 +72,7 @@ public class CrazyEightWebSocketController {
 		int previousPlayer = currentPlayer;
 		if (direction) {
 			currentPlayer++;
-			if (currentPlayer >= connectedPlayers.size() - 1) {
+			if (currentPlayer >= connectedPlayers.size()) {
 				currentPlayer = 0;
 			}
 		} else {
