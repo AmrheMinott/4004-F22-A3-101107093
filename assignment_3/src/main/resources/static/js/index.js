@@ -3,9 +3,11 @@ const BASE_URL = "http://localhost:8090";
 const CREATE_PLAYER_URL = `${BASE_URL}/createPlayer`;
 
 const GET_CAN_PLAY = `${BASE_URL}/canPlay`;
-const POST_PLAYER = `${BASE_URL}/player`;
+const GET_DRAW_CARD = `${BASE_URL}/drawCard`;
+const GET_ROUND = `${BASE_URL}/round`;
 
 const POST_CARD = `${BASE_URL}/postCard`;
+const POST_PLAYER = `${BASE_URL}/player`;
 
 let playerObject = {};
 let userName = "";
@@ -98,6 +100,30 @@ async function playCard(card) {
       renderMessage("It is not your turn ATM.");
     }
   } catch {}
+}
+
+async function drawCard() {
+  const response = await fetch(GET_DRAW_CARD);
+
+  const cardDrawn = await response.json();
+
+  if (cardDrawn) {
+    playerObject.hand.push(cardDrawn);
+    renderPlayerHand(playerObject.hand);
+    renderDeck();
+  } else {
+    renderDeck();
+    renderMessage("Opps the Decks seems to be empty!")
+  }
+
+}
+
+async function getRound() {
+  const response = await fetch(GET_ROUND);
+
+  const roundValue = await response.json();
+
+  document.getElementById("round").innerHTML = `Round: ${roundValue}`;
 }
 
 function renderPlayerHand(handArray) {

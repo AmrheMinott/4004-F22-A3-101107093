@@ -11,6 +11,8 @@ public class GameLogic {
 	final int SCORE_ONE = 1;
 	final int SCORE_TEN = 10;
 	final int SCORE_FIFTY = 50;
+	private int amountDrawn = 0;
+
 	private String currentPlayerName = "";
 
 	private ArrayList<String> deck = new ArrayList<>(Arrays.asList("2H", "3H", "4H", "5H", "6H", "7H", "8H", "9H",
@@ -24,9 +26,17 @@ public class GameLogic {
 
 	public String drawCard(String playerName) {
 		if (!playerName.equals(currentPlayerName)) {
+			currentPlayerName = playerName;
+			amountDrawn ++;
 			return takeCard();
 		}
-
+		
+		if (playerName.equals(currentPlayerName) && amountDrawn < 3) {
+			amountDrawn ++;
+			return takeCard();
+		}
+		
+		amountDrawn ++;
 		return null;
 	}
 
