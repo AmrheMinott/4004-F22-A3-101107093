@@ -61,7 +61,7 @@ public class GameLogicTest {
 	}
 
 	@Test
-	public void givenAHandOfCardO_whenScoreRound_assertScore() {
+	public void givenAHandOfCardAces_whenScoreRound_assertScore() {
 		ArrayList<String> playerHand = new ArrayList<>(Arrays.asList("AH", "AC", "AD", "AS"));
 
 		assertEquals(4, gameLogic.scoreRound(playerHand));
@@ -76,8 +76,6 @@ public class GameLogicTest {
 
 	@Test
 	public void givenTopCardAce_andDirectionTrue_whenDetermineDirection_assertFalse() {
-		ArrayList<String> playerHand = new ArrayList<>(Arrays.asList("7H", "7C", "7D", "7S"));
-
 		assertEquals(false, gameLogic.determineDirection("AH", true));
 	}
 }
