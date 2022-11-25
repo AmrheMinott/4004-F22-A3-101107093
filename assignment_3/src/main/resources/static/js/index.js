@@ -104,18 +104,24 @@ async function playCard(card) {
 
 async function drawCard() {
   const response = await fetch(GET_DRAW_CARD);
+  const player = await response.json();
 
-  const cardDrawn = await response.json();
-
-  if (cardDrawn) {
-    playerObject.hand.push(cardDrawn);
-    renderPlayerHand(playerObject.hand);
+  if (player) {
+    renderPlayerHand(player.hand);
     renderDeck();
+    if (
+      player.hand.length == 0 ||
+      player.hand.length == playerObject.hand.length
+    ) {
+      renderMessage("Opps No Card was Given!");
+    } else {
+      renderMessage(`Card drawn: ${player.hand[player.hand.length - 1]}`);
+    }
+    playerObject = player;
   } else {
+    renderMessage("Oh no something went wrong");
     renderDeck();
-    renderMessage("Opps the Decks seems to be empty!")
   }
-
 }
 
 async function getRound() {

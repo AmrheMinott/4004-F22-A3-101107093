@@ -3,8 +3,8 @@ package crazyeight.websocket.spring.controller;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,10 +45,13 @@ public class CrazyEightWebSocketController {
 
 	@GetMapping
 	@RequestMapping("/drawCard")
-	public String drawCard() {
+	public Player drawCard() {
 		String card = gameLogic.drawCard(connectedPlayers.get(currentPlayer).getName());
 		connectedPlayers.get(currentPlayer).setDeck(gameLogic.getDeck());
-		return card;
+		if (!Objects.isNull(card)) {
+			connectedPlayers.get(currentPlayer).getHand().add(card);
+		}
+		return connectedPlayers.get(currentPlayer);
 	}
 
 	@GetMapping
@@ -69,7 +72,7 @@ public class CrazyEightWebSocketController {
 		int previousPlayer = currentPlayer;
 		if (direction) {
 			currentPlayer++;
-			if (currentPlayer > connectedPlayers.size()) {
+			if (currentPlayer >= connectedPlayers.size() - 1) {
 				currentPlayer = 0;
 			}
 		} else {
