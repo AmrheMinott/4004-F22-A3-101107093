@@ -7,6 +7,8 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
+import crazyeight.websocket.spring.model.Player;
+
 public class GameLogicTest {
 
 	private GameLogic gameLogic = new GameLogic();
@@ -87,5 +89,15 @@ public class GameLogicTest {
 	@Test
 	public void givenTopCardNonAce_andDirectionFalse_whenDetermineDirection_assertTrue() {
 		assertEquals(false, gameLogic.determineDirection("JH", false));
+	}
+
+	@Test
+	public void givenCurrentPlayer_assertTheRestOfPlayer() {
+		Player p1 = new Player();
+		Player p2 = new Player();
+		p1.setName("P1");
+		p2.setName("P2");
+
+		assertEquals("P1", gameLogic.getOtherPlayers("P2", new ArrayList<>(Arrays.asList(p1, p2))).get(0).getName());
 	}
 }
