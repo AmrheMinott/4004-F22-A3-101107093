@@ -161,4 +161,17 @@ public class GameLogicTest {
 
 		assertNotNull(gameLogic.drawCard(p1.getName()));
 	}
+	
+	
+	@Test
+	public void givenPlayerOneDrawnThreeCards_whenDrawCard_assertCardIsDrawn() {
+		Player p1 = new Player();
+
+		p1.setName("P1");
+
+		assertNotNull(gameLogic.drawCard(p1.getName()));
+		assertNotNull(gameLogic.drawCard(p1.getName()));
+		assertNotNull(gameLogic.drawCard(p1.getName()));
+
+	}
 }
