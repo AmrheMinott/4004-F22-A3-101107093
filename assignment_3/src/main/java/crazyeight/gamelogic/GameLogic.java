@@ -53,4 +53,13 @@ public class GameLogic {
 	public boolean canPlay(String userName, int currentPlayerIndex, ArrayList<Player> players) {
 		return players.get(currentPlayerIndex).getName().equals(userName);
 	}
+
+	public ArrayList<Player> updateAllPlayerScores(ArrayList<Player> players) {
+		ArrayList<Player> updatedPlayers = new ArrayList<Player>();
+		for (Player p : players) {
+			p.incrementScore(scoreRound(p.getHand()));
+			updatedPlayers.add(p);
+		}
+		return updatedPlayers;
+	}
 }

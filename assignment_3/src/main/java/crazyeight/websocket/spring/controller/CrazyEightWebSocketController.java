@@ -31,6 +31,7 @@ public class CrazyEightWebSocketController {
 	private String topCard = "";
 
 	private int currentPlayer = 0;
+
 	private int round = 1;
 
 	private boolean direction = true;
@@ -55,6 +56,20 @@ public class CrazyEightWebSocketController {
 	@RequestMapping("/canPlay")
 	public boolean canPlay(@RequestBody String userName) {
 		return gameLogic.canPlay(userName, currentPlayer, connectedPlayers);
+	}
+
+	@PostMapping
+	@RequestMapping("/postCard")
+	public Player postCard(@RequestBody Player player) throws URISyntaxException {
+		this.topCard = player.getCard();
+
+		connectedPlayers.get(currentPlayer).setCard(this.topCard);
+		connectedPlayers.get(currentPlayer).setHand(player.getHand());
+
+		direction = gameLogic.determineDirection(topCard, direction);
+		int previousPlayer = currentPlayer;
+		currentPlayer++;
+		return connectedPlayers.get(previousPlayer);
 	}
 
 	@PostMapping

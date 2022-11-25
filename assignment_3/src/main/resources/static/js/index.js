@@ -5,6 +5,7 @@ const CREATE_PLAYER_URL = `${BASE_URL}/createPlayer`;
 const GET_PLAYER = `${BASE_URL}/player`;
 const GET_CAN_PLAY = `${BASE_URL}/canPlay`;
 
+const POST_CARD = `${BASE_URL}/postCard`;
 
 let playerObject = {};
 let userName = "";
@@ -56,6 +57,21 @@ async function getPlayer() {
 }
 
 async function sendCardToDB() {
+  let response = await fetch(POST_CARD, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(playerObject),
+  });
+  try {
+    const body = await response.json();
+    playerObject = body;
+    renderPlayerHand(playerObject.hand);
+    renderScores();
+    renderDeck();
+  } catch {}
 }
 
 async function playCard(card) {
@@ -105,6 +121,25 @@ function renderMessage(message) {
   let messagePara = document.getElementById("message");
   messagePara.innerHTML = "";
   messagePara.innerHTML = message;
+}
+
+function renderScores() {
+  let playerScoresDiv = document.getElementById("player-scores-container");
+  playerScoresDiv.innerHTML = "";
+
+  let playerScoreParagraph = document.createElement("p");
+  playerScoreParagraph.innerHTML = `ME: ${playerObject.score}`;
+  playerScoreParagraph.id = "player-score";
+  playerScoresDiv.appendChild(playerScoreParagraph);
+
+  playerObject.otherPlayers.forEach((player) => {
+    let playerScoreParagraph = document.createElement("p");
+    playerScoreParagraph.innerHTML = `${JSON.parse(player.name)}: ${
+      player.score
+    }`;
+    playerScoreParagraph.id = "player-score";
+    playerScoresDiv.appendChild(playerScoreParagraph);
+  });
 }
 
 /*
