@@ -76,8 +76,10 @@ async function playCard(card) {
       });
 
       sendCardToDB(card);
+      renderMessage("Your move was captured.")
     } else {
       console.warn("It is not your turn!");
+      renderMessage("It is not your turn ATM.")
     }
   } catch {}
 }
@@ -97,6 +99,12 @@ function renderPlayerHand(handArray) {
 
     playerHandDiv.appendChild(input);
   });
+}
+
+function renderMessage(message) {
+  let messagePara = document.getElementById("message");
+  messagePara.innerHTML = "";
+  messagePara.innerHTML = message;
 }
 
 /*

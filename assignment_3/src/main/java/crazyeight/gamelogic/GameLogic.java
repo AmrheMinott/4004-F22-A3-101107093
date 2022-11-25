@@ -51,9 +51,6 @@ public class GameLogic {
 	}
 
 	public boolean canPlay(String userName, int currentPlayerIndex, ArrayList<Player> players) {
-		if (!players.get(currentPlayerIndex).getName().equals(userName)) {
-			return false;
-		}
-		return false;
+		return players.get(currentPlayerIndex).getName().equals(userName);
 	}
 }
