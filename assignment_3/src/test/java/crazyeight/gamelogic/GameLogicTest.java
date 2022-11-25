@@ -78,9 +78,14 @@ public class GameLogicTest {
 	public void givenTopCardAce_andDirectionTrue_whenDetermineDirection_assertFalse() {
 		assertEquals(false, gameLogic.determineDirection("AH", true));
 	}
-	
+
 	@Test
 	public void givenTopCardAce_andDirectionFalse_whenDetermineDirection_assertTrue() {
 		assertEquals(true, gameLogic.determineDirection("AH", false));
+	}
+
+	@Test
+	public void givenTopCardNonAce_andDirectionFalse_whenDetermineDirection_assertTrue() {
+		assertEquals(false, gameLogic.determineDirection("JH", false));
 	}
 }
