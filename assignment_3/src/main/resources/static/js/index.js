@@ -35,7 +35,7 @@ async function registerUser() {
       getRound();
     }
   } catch {
-    alert("This player name already exits uses another!");
+    renderMessage("This player name already exits uses another!");
   }
 }
 
@@ -92,10 +92,10 @@ async function playCard(card) {
       });
 
       sendCardToDB(card);
-      renderMessage("Your move was captured.")
+      renderMessage("Your move was captured.");
     } else {
       console.warn("It is not your turn!");
-      renderMessage("It is not your turn ATM.")
+      renderMessage("It is not your turn ATM.");
     }
   } catch {}
 }
