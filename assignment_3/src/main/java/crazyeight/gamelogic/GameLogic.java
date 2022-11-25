@@ -3,6 +3,7 @@ package crazyeight.gamelogic;
 import java.util.ArrayList;
 
 import constants.CardFaces;
+import crazyeight.websocket.spring.model.Player;
 
 public class GameLogic {
 	final int SCORE_ONE = 1;
@@ -37,4 +38,15 @@ public class GameLogic {
 		return direction;
 	}
 
+	public ArrayList<Player> getOtherPlayers(String currentPlayerName, ArrayList<Player> players) {
+		ArrayList<Player> otherPlayers = new ArrayList<>();
+		for (Player p : players) {
+			if (p.getName().equals(currentPlayerName)) {
+				continue;
+			} else {
+				otherPlayers.add(p);
+			}
+		}
+		return otherPlayers;
+	}
 }

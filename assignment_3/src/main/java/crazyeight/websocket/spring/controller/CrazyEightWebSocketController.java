@@ -1,56 +1,95 @@
 package crazyeight.websocket.spring.controller;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.annotation.SendToUser;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import crazyeight.websocket.spring.model.CrazyEightMessage;
+import crazyeight.gamelogic.GameLogic;
+import crazyeight.websocket.spring.model.Player;
 
-@Controller
+@RestController
 public class CrazyEightWebSocketController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CrazyEightWebSocketController.class);
 	private final SimpMessagingTemplate simpMessagingTemplate;
-	private final Set<String> connectedUsers;
+	private final ArrayList<Player> connectedPlayers;
+
+	private final int TOTAL_NUMBER_OF_PLAYERS = 3;
+
+	private GameLogic gameLogic = new GameLogic();
+	private String topCard = "";
+
+	private int currentPlayer = 0;
+	private int round = 1;
+
+	private boolean direction = true;
+
+	private ArrayList<String> deck = new ArrayList<>(Arrays.asList("2H", "3H", "4H", "5H", "6H", "7H", "8H", "9H",
+			"10H", "JH", "QH", "KH", "AH", "2S", "3S", "4S", "5S", "6S", "7S", "8S", "9S", "10S", "JS", "QS", "KS",
+			"AS", "2D", "3D", "4D", "5D", "6D", "7D", "8D", "9D", "10D", "JD", "QD", "KD", "AD", "2C", "3C", "4C", "5C",
+			"6C", "7C", "8C", "9C", "10C", "JC", "QC", "KC", "AC"));
 
 	public CrazyEightWebSocketController(SimpMessagingTemplate simpMessagingTemplate) {
 		this.simpMessagingTemplate = simpMessagingTemplate;
-		connectedUsers = new HashSet<>();
+		connectedPlayers = new ArrayList<>();
+		shuffleDeck();
 	}
 
-	@MessageMapping("/register")
-	@SendToUser("/queue/newMember")
-	public Set<String> registerUser(String webChatUsername) {
-		if (!connectedUsers.contains(webChatUsername)) {
-			LOGGER.info("Person has been added " + webChatUsername);
-			connectedUsers.add(webChatUsername);
-			simpMessagingTemplate.convertAndSend("/topic/newMember", webChatUsername);
-			return connectedUsers;
-		} else {
-			return new HashSet<>();
+	private void shuffleDeck() {
+		Collections.shuffle(deck);
+		this.topCard = this.deck.remove(0);
+	}
+
+	@PostMapping
+	@RequestMapping("/player")
+	public Player getCurrentPlayerByName(@RequestBody String userName) throws URISyntaxException {
+		for (Player p : connectedPlayers) {
+			if (p.getName().equals(userName)) {
+				p.setCard(topCard);
+				p.setDeck(deck);
+				p.setOtherPlayers(gameLogic.getOtherPlayers(userName, connectedPlayers));
+				return p;
+			}
 		}
+		return null;
 	}
 
-	@MessageMapping("/unregister")
-	@SendTo("/topic/disconnectedUser")
-	public String unregisterUser(String webChatUsername) {
-		connectedUsers.remove(webChatUsername);
-		LOGGER.info("Person has been REMOVED HIOE " + webChatUsername);
-		return webChatUsername;
+	@PostMapping
+	@RequestMapping("/createPlayer")
+	public Player createPlayer(@RequestBody String userName) throws URISyntaxException {
+		LOGGER.info("Post made an addition " + userName);
+
+		for (Player p : connectedPlayers) {
+			if (p.getName().equals(userName)) {
+				return null;
+			}
+		}
+		Player player = new Player();
+		player.setName(userName);
+		player.setRound(round);
+		player.setScore(0);
+		player.setCard(this.topCard);
+		connectedPlayers.add(player);
+		List<String> hand = new ArrayList<>(Arrays.asList());
+
+		for (int i = 0; i < 5; i++) {
+			hand.add(deck.remove(i));
+		}
+
+		player.setHand(new ArrayList<>(hand));
+		player.setOtherPlayers(gameLogic.getOtherPlayers(userName, connectedPlayers));
+
+		return player;
 	}
 
-	@MessageMapping("/message")
-	public void greeting(@Payload CrazyEightMessage message) {
-		LOGGER.info("Person has been messaged " + message);
-
-		simpMessagingTemplate.convertAndSendToUser(message.getToWhom(), "/msg", message);
-	}
 }

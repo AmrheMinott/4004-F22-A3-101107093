@@ -1,3 +1,83 @@
+const BASE_URL = "http://localhost:8090";
+
+const CREATE_PLAYER_URL = `${BASE_URL}/createPlayer`;
+
+const GET_PLAYER = `${BASE_URL}/player`;
+
+
+let playerObject = {};
+let userName = "";
+
+async function registerUser() {
+  let registerButton = document.getElementById("register-player");
+  let userNameInput = document.getElementById("user-id");
+
+  userName = userNameInput.value;
+  const response = await fetch(CREATE_PLAYER_URL, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userName),
+  });
+  try {
+    const body = await response.json();
+
+    if (body == null) {
+    } else {
+      playerObject = body;
+      renderPlayerHand(playerObject.hand);
+      registerButton.disabled = true;
+      getPlayer();
+      getRound();
+    }
+  } catch {
+    alert("This player name already exits uses another!");
+  }
+}
+
+async function getPlayer() {
+  const response = await fetch(GET_PLAYER, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userName),
+  });
+  try {
+    const body = await response.json();
+    playerObject = body;
+    renderScores();
+    renderDeck();
+  } catch {}
+}
+
+async function sendCardToDB() {
+}
+
+async function playCard(card) {
+}
+
+function renderPlayerHand(handArray) {
+  let playerHandDiv = document.getElementById("player-hands");
+  playerHandDiv.innerHTML = "";
+
+  handArray.forEach((card) => {
+    let input = document.createElement("input");
+    input.value = card;
+    input.type = "button";
+    input.id = `card`;
+    input.onclick = function () {
+      playCard(card);
+    };
+
+    playerHandDiv.appendChild(input);
+  });
+}
+
+/*
 (function () {
   function select(str) {
     return document.querySelector(str);
@@ -172,7 +252,7 @@
                   );
                 }
               })
-            )
+            )// CREATE nested thens that get the data from the server for each data point
             .then((stompClient) =>
               stompSubscribe(stompClient, "/topic/newMember", (data) => {
                 // 3
@@ -242,3 +322,4 @@
     );
   });
 })();
+*/
