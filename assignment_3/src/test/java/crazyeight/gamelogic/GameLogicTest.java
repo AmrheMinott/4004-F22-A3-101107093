@@ -1,17 +1,24 @@
 package crazyeight.gamelogic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import crazyeight.websocket.spring.model.Player;
 
 public class GameLogicTest {
 
-	private GameLogic gameLogic = new GameLogic();
+	private GameLogic gameLogic;
+
+	@BeforeEach
+	public void before() {
+		gameLogic = new GameLogic();
+	}
 
 	@Test
 	public void givenEmptyHand_whenScoreRound_assertScoreOfZero() {
@@ -144,5 +151,14 @@ public class GameLogicTest {
 		assertEquals(28, list.get(0).getScore());
 		assertEquals(64, list.get(1).getScore());
 		assertEquals(28, list.get(2).getScore());
+	}
+
+	@Test
+	public void givenPlayerOneDrawnCard_whenDrawCard_assertCardIsDrawn() {
+		Player p1 = new Player();
+
+		p1.setName("P1");
+
+		assertNotNull(gameLogic.drawCard(p1.getName()));
 	}
 }
