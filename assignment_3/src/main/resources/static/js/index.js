@@ -3,6 +3,7 @@ const BASE_URL = "http://localhost:8090";
 const CREATE_PLAYER_URL = `${BASE_URL}/createPlayer`;
 
 const GET_PLAYER = `${BASE_URL}/player`;
+const GET_CAN_PLAY = `${BASE_URL}/canPlay`;
 
 
 let playerObject = {};
@@ -58,6 +59,27 @@ async function sendCardToDB() {
 }
 
 async function playCard(card) {
+  const response = await fetch(GET_CAN_PLAY, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userName),
+  });
+  try {
+    const canPlayStatus = await response.json();
+    if (canPlayStatus) {
+      playerObject.card = card;
+      playerObject.hand = playerObject.hand.filter(function (item) {
+        return item !== card;
+      });
+
+      sendCardToDB(card);
+    } else {
+      console.warn("It is not your turn!");
+    }
+  } catch {}
 }
 
 function renderPlayerHand(handArray) {
