@@ -66,4 +66,11 @@ public class GameLogicTest {
 
 		assertEquals(4, gameLogic.scoreRound(playerHand));
 	}
+
+	@Test
+	public void givenAHandOfSevens_whenScoreRound_assertScore() {
+		ArrayList<String> playerHand = new ArrayList<>(Arrays.asList("7H", "7C", "7D", "7S"));
+
+		assertEquals(28, gameLogic.scoreRound(playerHand));
+	}
 }
