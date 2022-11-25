@@ -38,8 +38,19 @@
 
     <div id="container">
       <div id="round-details">
-        <p id="round">Round: 22</p>
-        <p id="winner">Winner: ----</p>
+        <p id="round">Round: ---</p>
+        <p id="winner">Winner: ---</p>
+      </div>
+
+      <!-- Need to hide here after user has logged in. -->
+      <div id="player-id-container">
+        <input id="user-id" />
+        <input
+          id="register-player"
+          type="button"
+          value="Access Game"
+          onclick="registerUser()"
+        />
       </div>
       <div id="center-frame">
         <div id="player-scores-container">
@@ -51,9 +62,7 @@
           <input id="draw-card-button" type="button" value="Draw Card" />
         </div>
       </div>
-      <div id="player-hands">
-        <input id="card" type="button" value="1C" />
-      </div>
+      <div id="player-hands"></div>
     </div>
 
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
