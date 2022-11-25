@@ -111,7 +111,6 @@ public class GameLogicTest {
 		ArrayList<Player> players = new ArrayList<>(Arrays.asList(p1, p2));
 
 		assertEquals(false, gameLogic.canPlay("P2", currentPlayerIndex, players));
-
 	}
 
 	@Test
@@ -124,6 +123,26 @@ public class GameLogicTest {
 		ArrayList<Player> players = new ArrayList<>(Arrays.asList(p1, p2));
 
 		assertEquals(true, gameLogic.canPlay("P1", currentPlayerIndex, players));
+	}
 
+	@Test
+	public void givenMultiplePlayers_assertAccurateScoreOfPlayers() {
+		Player p1 = new Player();
+		Player p2 = new Player();
+		Player p3 = new Player();
+		p1.setName("P1");
+		p2.setName("P2");
+		p3.setName("P2");
+
+		p1.setHand(new ArrayList<>(Arrays.asList("7H", "7C", "7D", "7S")));
+		p2.setHand(new ArrayList<>(Arrays.asList("8H", "7D", "7S")));
+		p3.setHand(new ArrayList<>(Arrays.asList("7H", "7C", "7D", "7S")));
+
+		ArrayList<Player> players = new ArrayList<>(Arrays.asList(p1, p2, p3));
+		ArrayList<Player> list = gameLogic.updateAllPlayerScores(players);
+
+		assertEquals(28, list.get(0).getScore());
+		assertEquals(64, list.get(1).getScore());
+		assertEquals(28, list.get(2).getScore());
 	}
 }
