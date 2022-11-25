@@ -30,4 +30,11 @@ public class GameLogic {
 		return finalScore;
 	}
 
+	public boolean determineDirection(String topCard, boolean direction) {
+		if (topCard.contains(CardFaces.ACE)) {
+			return !direction;
+		}
+		return direction;
+	}
+
 }
