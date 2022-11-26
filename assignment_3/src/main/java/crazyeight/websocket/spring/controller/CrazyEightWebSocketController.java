@@ -44,6 +44,12 @@ public class CrazyEightWebSocketController {
 	}
 
 	@GetMapping
+	@RequestMapping("/round")
+	public int getRound() {
+		return this.round;
+	}
+
+	@GetMapping
 	@RequestMapping("/drawCard")
 	public Player drawCard() {
 		String card = gameLogic.drawCard(connectedPlayers.get(currentPlayer).getName());
