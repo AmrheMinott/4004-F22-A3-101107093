@@ -91,17 +91,7 @@ public class CrazyEightWebSocketController {
 
 		direction = gameLogic.determineDirection(topCard, direction);
 		int previousPlayer = currentPlayer;
-		if (direction) {
-			currentPlayer++;
-			if (currentPlayer >= connectedPlayers.size()) {
-				currentPlayer = 0;
-			}
-		} else {
-			currentPlayer--;
-			if (currentPlayer < 0) {
-				currentPlayer = connectedPlayers.size() - 1;
-			}
-		}
+		currentPlayer = gameLogic.determineCurrentPlayer(currentPlayer, connectedPlayers, direction, topCard);
 		amountDrawn = 0;
 		connectedPlayers.get(currentPlayer).setCard(topCard);
 		this.simpMessagingTemplate.convertAndSend("/topic/playerWS", connectedPlayers.get(currentPlayer));

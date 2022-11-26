@@ -40,7 +40,7 @@ public class GameLogic {
 			return null;
 		}
 
-		if (userName.equals(currentPlayerName) && amountDrawn <= 3) {
+		if (userName.equals(currentPlayerName) && amountDrawn < 3) {
 			return takeCard();
 		}
 
@@ -48,8 +48,31 @@ public class GameLogic {
 	}
 
 	public String takeCard() {
-		if (this.deck.size() == 0) return null;
+		if (this.deck.size() == 0)
+			return null;
 		return this.deck.remove(0);
+	}
+
+	public int determineCurrentPlayer(int currentPlayerIndex, ArrayList<Player> players, boolean direction, String topCard) {
+		if (direction) {
+			currentPlayerIndex++;
+			if (topCard.contains("Q")) {
+				currentPlayerIndex++;
+			}
+			if (currentPlayerIndex >= players.size()) {
+				currentPlayerIndex = 0;
+			}
+		} else {
+			currentPlayerIndex--;
+			if (topCard.contains("Q")) {
+				currentPlayerIndex--;
+			}
+			if (currentPlayerIndex < 0) {
+				currentPlayerIndex = players.size() - 1;
+			}
+		}
+		
+		return currentPlayerIndex;
 	}
 
 	public int scoreRound(ArrayList<String> playerHand) {
