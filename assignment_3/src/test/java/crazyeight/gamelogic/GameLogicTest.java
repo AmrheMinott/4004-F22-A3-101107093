@@ -351,7 +351,7 @@ public class GameLogicTest {
 
 		assertEquals(1, nextPlayerIndex);
 	}
-	
+
 	@Test
 	public void givenPositionDirection_andQueenCard_whenUserDeterminePlayer_AssertIncrementOfOne() {
 		Player p1 = new Player();
@@ -375,7 +375,7 @@ public class GameLogicTest {
 
 		assertEquals(2, nextPlayerIndex);
 	}
-	
+
 	@Test
 	public void givenNegativeDirection_andQueenCard_whenUserDeterminePlayer_AssertIncrementOfOne() {
 		Player p1 = new Player();

@@ -54,21 +54,42 @@ public class GameLogic {
 	}
 
 	public int determineCurrentPlayer(int currentPlayerIndex, ArrayList<Player> players, boolean direction, String topCard) {
+		if (topCard.contains("Q")) {
+			if (direction) {
+				currentPlayerIndex++;
+				if (currentPlayerIndex >= players.size()) {
+					currentPlayerIndex = 0;
+				}
+				currentPlayerIndex++;
+				if (currentPlayerIndex >= players.size()) {
+					currentPlayerIndex = 0;
+				}
+			} else {
+				currentPlayerIndex--;
+				if (currentPlayerIndex < 0) {
+					currentPlayerIndex = players.size() - 1;
+				}
+				currentPlayerIndex--;
+				if (currentPlayerIndex < 0) {
+					currentPlayerIndex = players.size() - 1;
+				}
+			}
+			return currentPlayerIndex;
+		}
+		
 		if (direction) {
 			currentPlayerIndex++;
-			if (topCard.contains("Q")) {
-				currentPlayerIndex++;
-			}
 			if (currentPlayerIndex >= players.size()) {
 				currentPlayerIndex = 0;
 			}
+			
 		} else {
 			currentPlayerIndex--;
-			if (topCard.contains("Q")) {
-				currentPlayerIndex--;
-			}
 			if (currentPlayerIndex < 0) {
 				currentPlayerIndex = players.size() - 1;
+			}
+			if (topCard.contains("Q")) {
+				currentPlayerIndex--;
 			}
 		}
 		
