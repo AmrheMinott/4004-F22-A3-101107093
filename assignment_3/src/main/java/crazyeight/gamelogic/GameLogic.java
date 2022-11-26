@@ -48,6 +48,7 @@ public class GameLogic {
 	}
 
 	public String takeCard() {
+		if (this.deck.size() == 0) return null;
 		return this.deck.remove(0);
 	}
 
