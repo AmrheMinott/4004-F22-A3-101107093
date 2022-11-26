@@ -56,13 +56,14 @@ public class CrazyEightWebSocketController {
 	@RequestMapping("/drawCard")
 	public Player drawCard(@RequestBody String userName) {
 		amountDrawn++;
-		if (amountDrawn < MAX_DRAWS) {
-			String card = gameLogic.drawCard(connectedPlayers.get(currentPlayer).getName(), userName, amountDrawn);
-			connectedPlayers.get(currentPlayer).setDeck(gameLogic.getDeck());
-			if (!Objects.isNull(card)) {
-				connectedPlayers.get(currentPlayer).getHand().add(card);
-			}
+		String card = gameLogic.drawCard(connectedPlayers.get(currentPlayer).getName(), userName, amountDrawn);
+		LOGGER.info("Draw Card {} {} ", card, amountDrawn);
+
+		connectedPlayers.get(currentPlayer).setDeck(gameLogic.getDeck());
+		if (!Objects.isNull(card)) {
+			connectedPlayers.get(currentPlayer).getHand().add(card);
 		}
+
 		return connectedPlayers.get(currentPlayer);
 	}
 

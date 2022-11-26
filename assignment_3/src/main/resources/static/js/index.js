@@ -103,7 +103,7 @@ async function playCard(card) {
 }
 
 async function drawCard() {
-  const response = await fetch(GET_DRAW_CARD, {
+  const res = await fetch(GET_CAN_PLAY, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -111,24 +111,36 @@ async function drawCard() {
     },
     body: JSON.stringify(userName),
   });
-  const player = await response.json();
+  const canPlayStatus = await res.json();
 
-  if (player) {
-    renderPlayerHand(player.hand);
-    renderDeck();
-    if (
-      player.hand.length == 0 ||
-      player.hand.length == playerObject.hand.length
-    ) {
-      renderMessage("Opps No Card was Given!");
+  if (canPlayStatus) {
+    const response = await fetch(GET_DRAW_CARD, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userName),
+    });
+    const player = await response.json();
+    if (player) {
+      renderPlayerHand(player.hand);
+      if (
+        player.hand.length == 0 ||
+        player.hand.length == playerObject.hand.length
+      ) {
+        renderMessage("Opps No Card was Given!");
+      } else {
+        renderMessage(`Card drawn: ${player.hand[player.hand.length - 1]}`);
+      }
+      playerObject = player;
     } else {
-      renderMessage(`Card drawn: ${player.hand[player.hand.length - 1]}`);
+      renderMessage("Oh no something went wrong!");
     }
-    playerObject = player;
   } else {
-    renderMessage("Oh no something went wrong");
-    renderDeck();
+    renderMessage("You can not draw not your turn!");
   }
+  renderDeck();
 }
 
 async function getRound() {
