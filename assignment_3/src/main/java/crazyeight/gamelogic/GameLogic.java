@@ -40,7 +40,7 @@ public class GameLogic {
 			return null;
 		}
 
-		if (userName.equals(currentPlayerName) && amountDrawn < 3) {
+		if (userName.equals(currentPlayerName) && amountDrawn <= 3) {
 			return takeCard();
 		}
 
