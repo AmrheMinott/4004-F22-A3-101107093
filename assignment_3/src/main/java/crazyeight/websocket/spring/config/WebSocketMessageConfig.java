@@ -12,12 +12,12 @@ public class WebSocketMessageConfig implements WebSocketMessageBrokerConfigurer 
 
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
-		config.enableSimpleBroker("/user", "/topic", "/queue");
+		config.enableSimpleBroker("/topic");
 		config.setApplicationDestinationPrefixes("/app");
 	}
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/websocket-chat").withSockJS();
+		registry.addEndpoint("/crazy-eight-game-ws").withSockJS();
 	}
 }

@@ -8,6 +8,8 @@ import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -73,6 +75,12 @@ public class CrazyEightWebSocketController {
 		return gameLogic.canPlay(userName, connectedPlayers.get(currentPlayer).getName());
 	}
 
+	@MessageMapping("/playerUpdate")
+	@SendTo("/topic/playerWS")
+	public Player playerUpdate() throws Exception {
+		return connectedPlayers.get(currentPlayer);
+	}
+
 	@PostMapping
 	@RequestMapping("/postCard")
 	public Player postCard(@RequestBody Player player) throws URISyntaxException {
@@ -95,6 +103,8 @@ public class CrazyEightWebSocketController {
 			}
 		}
 		amountDrawn = 0;
+		connectedPlayers.get(currentPlayer).setCard(topCard);
+		this.simpMessagingTemplate.convertAndSend("/topic/playerWS", connectedPlayers.get(currentPlayer));
 		return connectedPlayers.get(previousPlayer);
 	}
 

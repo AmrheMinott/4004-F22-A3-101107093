@@ -12,10 +12,12 @@ const POST_PLAYER = `${BASE_URL}/player`;
 let playerObject = {};
 let userName = "";
 
+var stompClient = null;
+
 async function registerUser() {
   let registerButton = document.getElementById("register-player");
   let userNameInput = document.getElementById("user-id");
-
+  wsConnect();
   userName = userNameInput.value;
   const response = await fetch(CREATE_PLAYER_URL, {
     method: "POST",
@@ -202,6 +204,21 @@ function renderDeck() {
     : "Deck Count: Not Now";
 }
 
+function wsConnect() {
+  var socket = new SockJS("/crazy-eight-game-ws");
+  stompClient = Stomp.over(socket);
+  stompClient.connect({}, function (frame) {
+    console.log("Connected: " + frame);
+    stompClient.subscribe("/topic/playerWS", function (player) {
+      let parsedPlayer = JSON.parse(player.body);
+      playerObject.card = parsedPlayer.card;
+      playerObject.deck = parsedPlayer.deck;
+      renderDeck();
+      renderScores();
+      renderMessage('Updated player data from Web Socket');
+    });
+  });
+}
 /*
 (function () {
   function select(str) {
