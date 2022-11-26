@@ -118,7 +118,7 @@ public class GameLogicTest {
 		int currentPlayerIndex = 0;
 		ArrayList<Player> players = new ArrayList<>(Arrays.asList(p1, p2));
 
-		assertEquals(false, gameLogic.canPlay("P2", currentPlayerIndex, players));
+		assertEquals(false, gameLogic.canPlay("P2", players.get(currentPlayerIndex).getName()));
 	}
 
 	@Test
@@ -130,7 +130,7 @@ public class GameLogicTest {
 		int currentPlayerIndex = 0;
 		ArrayList<Player> players = new ArrayList<>(Arrays.asList(p1, p2));
 
-		assertEquals(true, gameLogic.canPlay("P1", currentPlayerIndex, players));
+		assertEquals(true, gameLogic.canPlay("P1", players.get(currentPlayerIndex).getName()));
 	}
 
 	@Test
@@ -160,20 +160,23 @@ public class GameLogicTest {
 
 		p1.setName("P1");
 
-		assertNotNull(gameLogic.drawCard(p1.getName()));
+		assertNotNull(gameLogic.drawCard(p1.getName(), "P1"));
 	}
 
 	@Test
 	public void givenPlayerOneDrawnThreeCards_whenDrawCard_assertCardIsDrawn() {
 		Player p1 = new Player();
-
+		int amtDrawn = 0;
 		p1.setName("P1");
 
-		assertNotNull(gameLogic.drawCard(p1.getName()));
-		assertNotNull(gameLogic.drawCard(p1.getName()));
-		assertNotNull(gameLogic.drawCard(p1.getName()));
+		assertNotNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
+		amtDrawn++;
+		assertNotNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
+		amtDrawn++;
+		assertNotNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
+		amtDrawn++;
 
-		assertNull(gameLogic.drawCard(p1.getName()));
+		assertNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
 	}
 
 	@Test
@@ -181,25 +184,43 @@ public class GameLogicTest {
 		Player p1 = new Player();
 		Player p2 = new Player();
 
+		int amtDrawn = 0;
+
 		p1.setName("P1");
 		p2.setName("P2");
 
-		assertNotNull(gameLogic.drawCard(p1.getName()));
-		assertNotNull(gameLogic.drawCard(p1.getName()));
-		assertNotNull(gameLogic.drawCard(p1.getName()));
+		assertNotNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
+		amtDrawn++;
+		assertNotNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
+		amtDrawn++;
+		assertNotNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
+		amtDrawn++;
 
-		assertNull(gameLogic.drawCard(p1.getName()));
+		assertNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
+		amtDrawn++;
+		assertNull(gameLogic.drawCard(p1.getName(), p2.getName(), amtDrawn));
+		amtDrawn++;
 
-		assertNotNull(gameLogic.drawCard(p2.getName()));
-		assertNotNull(gameLogic.drawCard(p2.getName()));
-		assertNotNull(gameLogic.drawCard(p2.getName()));
+		amtDrawn = 0;
+		assertNotNull(gameLogic.drawCard(p2.getName(), p2.getName(), amtDrawn));
+		amtDrawn++;
+		assertNotNull(gameLogic.drawCard(p2.getName(), p2.getName(), amtDrawn));
+		amtDrawn++;
+		assertNotNull(gameLogic.drawCard(p2.getName(), p2.getName(), amtDrawn));
+		amtDrawn++;
 
-		assertNull(gameLogic.drawCard(p2.getName()));
+		assertNull(gameLogic.drawCard(p2.getName(), p2.getName(), amtDrawn));
+		amtDrawn++;
 
-		assertNotNull(gameLogic.drawCard(p1.getName()));
-		assertNotNull(gameLogic.drawCard(p1.getName()));
-		assertNotNull(gameLogic.drawCard(p1.getName()));
-		
-		assertNull(gameLogic.drawCard(p1.getName()));
+		amtDrawn = 0;
+		assertNotNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
+		amtDrawn++;
+		assertNotNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
+		amtDrawn++;
+		assertNotNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
+		amtDrawn++;
+
+		assertNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
+		amtDrawn++;
 	}
 }

@@ -26,9 +26,12 @@ public class CrazyEightWebSocketController {
 	private final ArrayList<Player> connectedPlayers;
 
 	private final int TOTAL_NUMBER_OF_PLAYERS = 3;
+	private final int MAX_DRAWS = 3;
 
 	private GameLogic gameLogic;
 	private String topCard = "";
+
+	private int amountDrawn = 0;
 
 	private int currentPlayer = 0;
 
@@ -51,11 +54,14 @@ public class CrazyEightWebSocketController {
 
 	@GetMapping
 	@RequestMapping("/drawCard")
-	public Player drawCard() {
-		String card = gameLogic.drawCard(connectedPlayers.get(currentPlayer).getName());
-		connectedPlayers.get(currentPlayer).setDeck(gameLogic.getDeck());
-		if (!Objects.isNull(card)) {
-			connectedPlayers.get(currentPlayer).getHand().add(card);
+	public Player drawCard(@RequestBody String userName) {
+		amountDrawn++;
+		if (amountDrawn < MAX_DRAWS) {
+			String card = gameLogic.drawCard(connectedPlayers.get(currentPlayer).getName(), userName, amountDrawn);
+			connectedPlayers.get(currentPlayer).setDeck(gameLogic.getDeck());
+			if (!Objects.isNull(card)) {
+				connectedPlayers.get(currentPlayer).getHand().add(card);
+			}
 		}
 		return connectedPlayers.get(currentPlayer);
 	}
@@ -63,7 +69,7 @@ public class CrazyEightWebSocketController {
 	@GetMapping
 	@RequestMapping("/canPlay")
 	public boolean canPlay(@RequestBody String userName) {
-		return gameLogic.canPlay(userName, currentPlayer, connectedPlayers);
+		return gameLogic.canPlay(userName, connectedPlayers.get(currentPlayer).getName());
 	}
 
 	@PostMapping
@@ -87,6 +93,7 @@ public class CrazyEightWebSocketController {
 				currentPlayer = connectedPlayers.size() - 1;
 			}
 		}
+		amountDrawn = 0;
 		return connectedPlayers.get(previousPlayer);
 	}
 

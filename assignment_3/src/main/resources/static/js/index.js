@@ -103,7 +103,14 @@ async function playCard(card) {
 }
 
 async function drawCard() {
-  const response = await fetch(GET_DRAW_CARD);
+  const response = await fetch(GET_DRAW_CARD, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userName),
+  });
   const player = await response.json();
 
   if (player) {

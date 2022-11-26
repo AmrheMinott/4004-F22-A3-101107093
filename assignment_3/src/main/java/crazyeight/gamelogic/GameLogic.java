@@ -11,9 +11,6 @@ public class GameLogic {
 	final int SCORE_ONE = 1;
 	final int SCORE_TEN = 10;
 	final int SCORE_FIFTY = 50;
-	private int amountDrawn = 0;
-
-	private String currentPlayerName = "";
 
 	private ArrayList<String> deck = new ArrayList<>(Arrays.asList("2H", "3H", "4H", "5H", "6H", "7H", "8H", "9H",
 			"10H", "JH", "QH", "KH", "AH", "2S", "3S", "4S", "5S", "6S", "7S", "8S", "9S", "10S", "JS", "QS", "KS",
@@ -24,19 +21,29 @@ public class GameLogic {
 		Collections.shuffle(deck);
 	}
 
-	public String drawCard(String playerName) {
-		if (!playerName.equals(currentPlayerName)) {
-			currentPlayerName = playerName;
-			amountDrawn ++;
+	public String drawCard(String currentPlayerName, String userName) {
+
+		if (!canPlay(userName, currentPlayerName)) {
+			return null;
+		}
+
+		if (userName.equals(currentPlayerName)) {
 			return takeCard();
 		}
-		
-		if (playerName.equals(currentPlayerName) && amountDrawn < 3) {
-			amountDrawn ++;
+
+		return null;
+	}
+
+	public String drawCard(String currentPlayerName, String userName, int amountDrawn) {
+
+		if (!canPlay(userName, currentPlayerName)) {
+			return null;
+		}
+
+		if (userName.equals(currentPlayerName) && amountDrawn < 3) {
 			return takeCard();
 		}
-		
-		amountDrawn ++;
+
 		return null;
 	}
 
@@ -84,8 +91,8 @@ public class GameLogic {
 		return otherPlayers;
 	}
 
-	public boolean canPlay(String userName, int currentPlayerIndex, ArrayList<Player> players) {
-		return players.get(currentPlayerIndex).getName().equals(userName);
+	public boolean canPlay(String userName, String currentPlayer) {
+		return currentPlayer.equals(userName);
 	}
 
 	public ArrayList<Player> updateAllPlayerScores(ArrayList<Player> players) {
