@@ -158,6 +158,40 @@ public class GameLogicTest {
 	}
 
 	@Test
+	public void givenMultiPlayerRoundEnd_assertScoreOfPlayers() {
+		Player p1 = new Player();
+		Player p2 = new Player();
+		Player p3 = new Player();
+
+		LOGGER.info("{} is Initialised.", p1.getName());
+		LOGGER.info("{} is Initialised.", p2.getName());
+		LOGGER.info("{} is Initialised.", p3.getName());
+
+		p1.setName("P1");
+		p2.setName("P2");
+		p3.setName("P2");
+
+		p1.setHand(new ArrayList<>(Arrays.asList()));
+		p2.setHand(new ArrayList<>(Arrays.asList("8H", "7D", "7S")));
+		p3.setHand(new ArrayList<>(Arrays.asList("7H", "7C", "7D", "7S")));
+
+		LOGGER.info("{} hand is {}.", p1.getName(), p1.getHand());
+		LOGGER.info("{} hand is {}.", p2.getName(), p2.getHand());
+		LOGGER.info("{} hand is {}.", p3.getName(), p3.getHand());
+
+		ArrayList<Player> players = new ArrayList<>(Arrays.asList(p1, p2, p3));
+		ArrayList<Player> list = gameLogic.updateAllPlayerScores(players);
+
+		assertEquals(0, list.get(0).getScore());
+		assertEquals(64, list.get(1).getScore());
+		assertEquals(28, list.get(2).getScore());
+
+		LOGGER.info("{} score is {}.", p1.getName(), p1.getScore());
+		LOGGER.info("{} score is {}.", p2.getName(), p2.getScore());
+		LOGGER.info("{} score is {}.", p3.getName(), p3.getScore());
+	}
+
+	@Test
 	public void givenPlayerOneDrawnCard_whenDrawCard_assertCardIsDrawn() {
 		Player p1 = new Player();
 
@@ -280,13 +314,13 @@ public class GameLogicTest {
 		assertNull(cardDrawn);
 		amtDrawn++;
 	}
-	
+
 	@Test
 	public void givenEmptyDeck_whenDrawCard_assertNoCardIsDrawn() {
 		Player p1 = new Player();
 		int amtDrawn = 0;
 		p1.setName("P1");
-		
+
 		gameLogic.setDeck(new ArrayList<>());
 
 		String cardDrawn = gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn);
