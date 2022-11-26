@@ -2,6 +2,7 @@ package crazyeight.gamelogic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -161,8 +162,7 @@ public class GameLogicTest {
 
 		assertNotNull(gameLogic.drawCard(p1.getName()));
 	}
-	
-	
+
 	@Test
 	public void givenPlayerOneDrawnThreeCards_whenDrawCard_assertCardIsDrawn() {
 		Player p1 = new Player();
@@ -173,5 +173,33 @@ public class GameLogicTest {
 		assertNotNull(gameLogic.drawCard(p1.getName()));
 		assertNotNull(gameLogic.drawCard(p1.getName()));
 
+		assertNull(gameLogic.drawCard(p1.getName()));
+	}
+
+	@Test
+	public void givenPlayerOne_andTwo_whenDrawCard_assertNullForCyclingPlayers() {
+		Player p1 = new Player();
+		Player p2 = new Player();
+
+		p1.setName("P1");
+		p2.setName("P2");
+
+		assertNotNull(gameLogic.drawCard(p1.getName()));
+		assertNotNull(gameLogic.drawCard(p1.getName()));
+		assertNotNull(gameLogic.drawCard(p1.getName()));
+
+		assertNull(gameLogic.drawCard(p1.getName()));
+
+		assertNotNull(gameLogic.drawCard(p2.getName()));
+		assertNotNull(gameLogic.drawCard(p2.getName()));
+		assertNotNull(gameLogic.drawCard(p2.getName()));
+
+		assertNull(gameLogic.drawCard(p2.getName()));
+
+		assertNotNull(gameLogic.drawCard(p1.getName()));
+		assertNotNull(gameLogic.drawCard(p1.getName()));
+		assertNotNull(gameLogic.drawCard(p1.getName()));
+		
+		assertNull(gameLogic.drawCard(p1.getName()));
 	}
 }
