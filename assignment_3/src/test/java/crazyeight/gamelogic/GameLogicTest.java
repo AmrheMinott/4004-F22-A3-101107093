@@ -9,12 +9,15 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import crazyeight.websocket.spring.model.Player;
 
 public class GameLogicTest {
 
 	private GameLogic gameLogic;
+	private static final Logger LOGGER = LoggerFactory.getLogger(GameLogicTest.class);
 
 	@BeforeEach
 	public void before() {
@@ -169,14 +172,25 @@ public class GameLogicTest {
 		int amtDrawn = 0;
 		p1.setName("P1");
 
-		assertNotNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
-		amtDrawn++;
-		assertNotNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
-		amtDrawn++;
-		assertNotNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
+		String cardDrawn = gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn);
+		LOGGER.info("{} - Drawn {}", p1.getName(), cardDrawn);
+		assertNotNull(cardDrawn);
 		amtDrawn++;
 
-		assertNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
+		cardDrawn = gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn);
+		LOGGER.info("{} - Drawn {}", p1.getName(), cardDrawn);
+		assertNotNull(cardDrawn);
+		amtDrawn++;
+
+		cardDrawn = gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn);
+		LOGGER.info("{} - Drawn {}", p1.getName(), cardDrawn);
+		assertNotNull(cardDrawn);
+		amtDrawn++;
+
+		cardDrawn = gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn);
+		LOGGER.info("{} - Drawn {}", p1.getName(), cardDrawn);
+		assertNull(cardDrawn);
+		amtDrawn++;
 	}
 
 	@Test
@@ -186,41 +200,84 @@ public class GameLogicTest {
 
 		int amtDrawn = 0;
 
-		p1.setName("P1");
-		p2.setName("P2");
+		p1.setName("Player 1");
+		p2.setName("Player 2");
 
-		assertNotNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
-		amtDrawn++;
-		assertNotNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
-		amtDrawn++;
-		assertNotNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
+		LOGGER.info("It is {} turn.", p1.getName());
+
+		String cardDrawn = gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn);
+		LOGGER.info("{} - Drawn {}", p1.getName(), cardDrawn);
+		assertNotNull(cardDrawn);
 		amtDrawn++;
 
-		assertNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
+		cardDrawn = gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn);
+		LOGGER.info("{} - Drawn {}", p1.getName(), cardDrawn);
+		assertNotNull(cardDrawn);
 		amtDrawn++;
-		assertNull(gameLogic.drawCard(p1.getName(), p2.getName(), amtDrawn));
+
+		cardDrawn = gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn);
+		LOGGER.info("{} - Drawn {}", p1.getName(), cardDrawn);
+		assertNotNull(cardDrawn);
+		amtDrawn++;
+
+		cardDrawn = gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn);
+		LOGGER.info("{} - Drawn {}", p1.getName(), cardDrawn);
+		assertNull(cardDrawn);
+		amtDrawn++;
+
+		cardDrawn = gameLogic.drawCard(p1.getName(), p2.getName(), amtDrawn);
+		LOGGER.info("{} attempted to Draw card on {} turn -> {}", p2.getName(), p1.getName(), cardDrawn);
+		assertNull(cardDrawn);
 		amtDrawn++;
 
 		amtDrawn = 0;
-		assertNotNull(gameLogic.drawCard(p2.getName(), p2.getName(), amtDrawn));
-		amtDrawn++;
-		assertNotNull(gameLogic.drawCard(p2.getName(), p2.getName(), amtDrawn));
-		amtDrawn++;
-		assertNotNull(gameLogic.drawCard(p2.getName(), p2.getName(), amtDrawn));
+		LOGGER.info("It is {} turn.", p2.getName());
+
+		cardDrawn = gameLogic.drawCard(p2.getName(), p2.getName(), amtDrawn);
+		LOGGER.info("{} - Drawn {}", p2.getName(), cardDrawn);
+		assertNotNull(cardDrawn);
 		amtDrawn++;
 
-		assertNull(gameLogic.drawCard(p2.getName(), p2.getName(), amtDrawn));
+		cardDrawn = gameLogic.drawCard(p2.getName(), p2.getName(), amtDrawn);
+		LOGGER.info("{} - Drawn {}", p2.getName(), cardDrawn);
+		assertNotNull(cardDrawn);
+		amtDrawn++;
+
+		cardDrawn = gameLogic.drawCard(p2.getName(), p2.getName(), amtDrawn);
+		LOGGER.info("{} - Drawn {}", p2.getName(), cardDrawn);
+		assertNotNull(cardDrawn);
+		amtDrawn++;
+
+		cardDrawn = gameLogic.drawCard(p2.getName(), p2.getName(), amtDrawn);
+		LOGGER.info("{} ran out of draws -> {}", p2.getName(), cardDrawn);
+		assertNull(cardDrawn);
 		amtDrawn++;
 
 		amtDrawn = 0;
-		assertNotNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
-		amtDrawn++;
-		assertNotNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
-		amtDrawn++;
-		assertNotNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
+		LOGGER.info("It is {} turn.", p1.getName());
+		cardDrawn = gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn);
+		LOGGER.info("{} - Drawn {}", p1.getName(), cardDrawn);
+		assertNotNull(cardDrawn);
 		amtDrawn++;
 
-		assertNull(gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn));
+		cardDrawn = gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn);
+		LOGGER.info("{} - Drawn {}", p1.getName(), cardDrawn);
+		assertNotNull(cardDrawn);
+		amtDrawn++;
+
+		cardDrawn = gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn);
+		LOGGER.info("{} - Drawn {}", p1.getName(), cardDrawn);
+		assertNotNull(cardDrawn);
+		amtDrawn++;
+
+		cardDrawn = gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn);
+		LOGGER.info("{} - Drawn {}", p1.getName(), cardDrawn);
+		assertNull(cardDrawn);
+		amtDrawn++;
+
+		cardDrawn = gameLogic.drawCard(p1.getName(), p2.getName(), amtDrawn);
+		LOGGER.info("{} attempted to Draw card on {} turn -> {}", p2.getName(), p1.getName(), cardDrawn);
+		assertNull(cardDrawn);
 		amtDrawn++;
 	}
 }
