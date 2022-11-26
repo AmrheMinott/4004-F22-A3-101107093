@@ -280,4 +280,17 @@ public class GameLogicTest {
 		assertNull(cardDrawn);
 		amtDrawn++;
 	}
+	
+	@Test
+	public void givenEmptyDeck_whenDrawCard_assertNoCardIsDrawn() {
+		Player p1 = new Player();
+		int amtDrawn = 0;
+		p1.setName("P1");
+		
+		gameLogic.setDeck(new ArrayList<>());
+
+		String cardDrawn = gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn);
+		LOGGER.info("Deck is empty so {} - Drew {}", p1.getName(), cardDrawn);
+		assertNull(cardDrawn);
+	}
 }
