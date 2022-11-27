@@ -503,7 +503,7 @@ public class GameLogicTest {
 
 	@Test
 	public void givenPlayerHasNoPLayableCard_andOverTheDrawLimit_whenCheckingIfCanSkip_assertTrue() {
-		
+
 		Player p1 = new Player();
 		p1.setHand(new ArrayList<>(Arrays.asList("7H", "7C", "9S", "7S")));
 		p1.setCard("9D");
@@ -511,14 +511,25 @@ public class GameLogicTest {
 
 		assertTrue(value);
 	}
-	
+
 	@Test
 	public void givenPlayerHasPlayable8Card_andOverTheDrawLimit_whenCheckingIfCanSkip_assertTrue() {
-		
+
 		Player p1 = new Player();
 		p1.setHand(new ArrayList<>(Arrays.asList("7H", "8C", "9S", "7S")));
 		p1.setCard("9D");
 		boolean value = gameLogic.shouldSkipPlayer(p1, 4);
+
+		assertFalse(value);
+	}
+
+	@Test
+	public void givenPlayerIsUnderTheDrawLimit_whenCheckingIfCanSkip_assertFalse() {
+
+		Player p1 = new Player();
+		p1.setHand(new ArrayList<>(Arrays.asList("7H", "8C", "9S", "7S")));
+		p1.setCard("9D");
+		boolean value = gameLogic.shouldSkipPlayer(p1, 3);
 
 		assertFalse(value);
 	}
