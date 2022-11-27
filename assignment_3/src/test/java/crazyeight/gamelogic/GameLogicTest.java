@@ -400,4 +400,36 @@ public class GameLogicTest {
 
 		assertEquals(2, nextPlayerIndex);
 	}
+
+	@Test
+	public void givenPlayerPlacesTwoCard_whenUserDeterminePlayer_AssertTwoCardsAdded() {
+		Player p1 = new Player();
+		Player p2 = new Player();
+		Player p3 = new Player();
+		Player p4 = new Player();
+
+		LOGGER.info("{} is Initialised.", p1.getName());
+		LOGGER.info("{} is Initialised.", p2.getName());
+		LOGGER.info("{} is Initialised.", p3.getName());
+
+		p1.setName("P1");
+		p2.setName("P2");
+		p3.setName("P2");
+
+		ArrayList<Player> players = new ArrayList<>(Arrays.asList(p1, p2, p3, p4));
+		int currentPlayerIndex = 0;
+
+		p1.setHand(new ArrayList<>(Arrays.asList("7H", "7C", "7D", "7S")));
+		p2.setHand(new ArrayList<>(Arrays.asList("7H", "7C", "7D", "7S")));
+		p3.setHand(new ArrayList<>(Arrays.asList("7H", "7C", "7D", "7S")));
+
+		LOGGER.info("{} placed 2H on the top.", p1.getName());
+		p1.setCard("2H");
+
+		LOGGER.info("{} attempts to draw 2 cards.", p2.getName());
+
+		gameLogic.addTwoCardToPlayer(players.get(currentPlayerIndex + 1), "2H");
+
+		assertEquals(6, p2.getHand().size());
+	}
 }
