@@ -12,6 +12,7 @@ public class GameLogic {
 	final int SCORE_ONE = 1;
 	final int SCORE_TEN = 10;
 	final int SCORE_FIFTY = 50;
+	private final int MAX_DRAWS = 3;
 
 	private ArrayList<String> deck = new ArrayList<>(Arrays.asList("2H", "3H", "4H", "5H", "6H", "7H", "8H", "9H",
 			"10H", "JH", "QH", "KH", "AH", "2S", "3S", "4S", "5S", "6S", "7S", "8S", "9S", "10S", "JS", "QS", "KS",
@@ -41,7 +42,7 @@ public class GameLogic {
 			return null;
 		}
 
-		if (userName.equals(currentPlayerName) && amountDrawn < 3) {
+		if (userName.equals(currentPlayerName) && amountDrawn <= MAX_DRAWS) {
 			return takeCard();
 		}
 
@@ -61,7 +62,7 @@ public class GameLogic {
 			for (int i = 0; i < 2; i++) {
 				card = takeCard();
 				if (Objects.nonNull(card)) {
-					player.getHand().add(card);					
+					player.getHand().add(card);
 				}
 			}
 		}
@@ -105,6 +106,23 @@ public class GameLogic {
 			}
 			if (topCard.contains(CardFaces.QUEEN)) {
 				currentPlayerIndex--;
+			}
+		}
+
+		return currentPlayerIndex;
+	}
+
+	public int changeSimpleDirection(int currentPlayerIndex, ArrayList<Player> players, boolean direction) {
+		if (direction) {
+			currentPlayerIndex++;
+			if (currentPlayerIndex >= players.size()) {
+				currentPlayerIndex = 0;
+			}
+
+		} else {
+			currentPlayerIndex--;
+			if (currentPlayerIndex < 0) {
+				currentPlayerIndex = players.size() - 1;
 			}
 		}
 
@@ -170,5 +188,23 @@ public class GameLogic {
 
 	public void setDeck(ArrayList<String> deck) {
 		this.deck = deck;
+	}
+
+	public boolean shouldSkipPlayer(Player player, int amountDrawn) {
+		
+		boolean hasPlayableCard = false;
+		for (String s : player.getHand()) {
+			
+			if (s.contains(Character.toString((player.getCard().charAt(player.getCard().length() - 1))))) {
+				hasPlayableCard = true;
+				break;
+			}
+		}
+		if (hasPlayableCard) {
+			return false;
+		} else if (!hasPlayableCard && amountDrawn >= MAX_DRAWS) {
+			return true;
+		}
+		return false;
 	}
 }
