@@ -90,46 +90,46 @@ async function playCard(card) {
   });
   try {
     const canPlayStatus = await response.json();
-    if (canPlayStatus) {
-      if (playerObject.card.includes(card.charAt(1))) {
-        if (card.charAt(0) == "8") {
-          renderMessage("Pick the next suit for the eight card.");
-          let suits = ["H", "D", "S", "C"];
-          let playerSuitSelection = document.getElementById("player-suit");
-          playerSuitSelection.innerHTML = "";
-
-          suits.forEach((suit) => {
-            let input = document.createElement("input");
-            input.value = suit;
-            input.type = "button";
-            input.id = `card`;
-            input.onclick = function () {
-              suitSelection(suit, card);
-            };
-
-            playerSuitSelection.appendChild(input);
-          });
-        } else {
-          playerObject.card = card;
-          playerObject.hand = playerObject.hand.filter(function (item) {
-            return item !== card;
-          });
-
-          sendCardToDB();
-          renderMessage("Your move was captured.");
-        }
-      } else {
-        renderMessage("Please choose a card of similar suit.");
-      }
-    } else {
+    if (!canPlayStatus) {
       console.warn("It is not your turn!");
       renderMessage("It is not your turn ATM.");
+      return;
+    }
+    if (!playerObject.card.includes(card.charAt(1))) {
+      renderMessage("Please choose a card of similar suit.");
+      return;
+    }
+    if (card.charAt(0) == "8") {
+      renderMessage("Pick the next suit for the eight card.");
+      let suits = ["H", "D", "S", "C"];
+      let playerSuitSelection = document.getElementById("player-suit");
+      playerSuitSelection.innerHTML = "";
+
+      suits.forEach((suit) => {
+        let input = document.createElement("input");
+        input.value = suit;
+        input.type = "button";
+        input.id = `card`;
+        input.onclick = function () {
+          suitSelection(suit, card);
+        };
+
+        playerSuitSelection.appendChild(input);
+      });
+    } else {
+      playerObject.card = card;
+      playerObject.hand = playerObject.hand.filter(function (item) {
+        return item !== card;
+      });
+
+      sendCardToDB();
+      renderMessage("Your move was captured.");
     }
   } catch {}
 }
 
 function suitSelection(suit, card) {
-  suitChosen = '8' + suit;
+  suitChosen = "8" + suit;
   playerObject.hand = playerObject.hand.filter(function (item) {
     return item !== card;
   });
