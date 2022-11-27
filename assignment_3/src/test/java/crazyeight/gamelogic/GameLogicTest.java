@@ -91,17 +91,17 @@ public class GameLogicTest {
 
 	@Test
 	public void givenTopCardAce_andDirectionTrue_whenDetermineDirection_assertFalse() {
-		assertEquals(false, gameLogic.determineDirection("AH", true));
+		assertFalse(gameLogic.determineDirection("AH", true));
 	}
 
 	@Test
 	public void givenTopCardAce_andDirectionFalse_whenDetermineDirection_assertTrue() {
-		assertEquals(true, gameLogic.determineDirection("AH", false));
+		assertTrue(gameLogic.determineDirection("AH", false));
 	}
 
 	@Test
 	public void givenTopCardNonAce_andDirectionFalse_whenDetermineDirection_assertTrue() {
-		assertEquals(false, gameLogic.determineDirection("JH", false));
+		assertFalse(gameLogic.determineDirection("JH", false));
 	}
 
 	@Test
@@ -331,7 +331,7 @@ public class GameLogicTest {
 	}
 
 	@Test
-	public void givenPositionDirection_whenUserDeterminePlayer_AssertIncrementOfOne() {
+	public void givenPositionDirection_whenUserDeterminePlayer_assertIncrementOfOne() {
 		Player p1 = new Player();
 		Player p2 = new Player();
 		Player p3 = new Player();
@@ -355,7 +355,7 @@ public class GameLogicTest {
 	}
 
 	@Test
-	public void givenPositionDirection_andQueenCard_whenUserDeterminePlayer_AssertIncrementOfOne() {
+	public void givenPositionDirection_andQueenCard_whenUserDeterminePlayer_assertIncrementOfOne() {
 		Player p1 = new Player();
 		Player p2 = new Player();
 		Player p3 = new Player();
@@ -373,13 +373,16 @@ public class GameLogicTest {
 		boolean direction = true;
 		String topCard = "QH";
 
+		LOGGER.info("{} is the Top Card.", topCard);
+
 		int nextPlayerIndex = gameLogic.determineCurrentPlayer(currentPlayerIndex, players, direction, topCard);
+		LOGGER.info("{} is the next player index.", nextPlayerIndex);
 
 		assertEquals(2, nextPlayerIndex);
 	}
 
 	@Test
-	public void givenNegativeDirection_andQueenCard_whenUserDeterminePlayer_AssertIncrementOfOne() {
+	public void givenNegativeDirection_andQueenCard_whenUserDeterminePlayer_assertIncrementOfOne() {
 		Player p1 = new Player();
 		Player p2 = new Player();
 		Player p3 = new Player();
@@ -397,8 +400,10 @@ public class GameLogicTest {
 		int currentPlayerIndex = 0;
 		boolean direction = false;
 		String topCard = "QH";
+		LOGGER.info("{} is the Top Card.", topCard);
 
 		int nextPlayerIndex = gameLogic.determineCurrentPlayer(currentPlayerIndex, players, direction, topCard);
+		LOGGER.info("{} is the next player index.", nextPlayerIndex);
 
 		assertEquals(2, nextPlayerIndex);
 	}
@@ -421,7 +426,7 @@ public class GameLogicTest {
 		ArrayList<Player> players = new ArrayList<>(Arrays.asList(p1, p2, p3, p4));
 		int currentPlayerIndex = 0;
 
-		p1.setHand(new ArrayList<>(Arrays.asList("7H", "7C", "7D", "7S")));
+		p1.setHand(new ArrayList<>(Arrays.asList("7H", "2H", "7D", "7S")));
 		p2.setHand(new ArrayList<>(Arrays.asList("7H", "7C", "7D", "7S")));
 		p3.setHand(new ArrayList<>(Arrays.asList("7H", "7C", "7D", "7S")));
 
@@ -430,7 +435,9 @@ public class GameLogicTest {
 
 		LOGGER.info("{} attempts to draw 2 cards.", p2.getName());
 
+		LOGGER.info("{} has {} cards before.", p2.getName(), p2.getHand().size());
 		gameLogic.addTwoCardToPlayer(players.get(currentPlayerIndex + 1), "2H");
+		LOGGER.info("{} has {} cards after.", p2.getName(), p2.getHand().size());
 
 		assertEquals(6, p2.getHand().size());
 	}
@@ -454,7 +461,7 @@ public class GameLogicTest {
 		ArrayList<Player> players = new ArrayList<>(Arrays.asList(p1, p2, p3, p4));
 		int currentPlayerIndex = 0;
 
-		p1.setHand(new ArrayList<>(Arrays.asList("7H", "7C", "7D", "7S")));
+		p1.setHand(new ArrayList<>(Arrays.asList("7H", "2H", "7D", "7S")));
 		p2.setHand(new ArrayList<>(Arrays.asList("7H", "7C", "7D", "7S")));
 		p3.setHand(new ArrayList<>(Arrays.asList("7H", "7C", "7D", "7S")));
 
@@ -462,8 +469,9 @@ public class GameLogicTest {
 		p1.setCard("2H");
 
 		LOGGER.info("{} attempts to draw 2 cards.", p2.getName());
-
+		LOGGER.info("{} has {} cards before.", p2.getName(), p2.getHand().size());
 		gameLogic.addTwoCardToPlayer(players.get(currentPlayerIndex + 1), "2H");
+		LOGGER.info("{} has {} cards after.", p2.getName(), p2.getHand().size());
 
 		assertEquals(5, p2.getHand().size());
 	}
@@ -487,7 +495,7 @@ public class GameLogicTest {
 		ArrayList<Player> players = new ArrayList<>(Arrays.asList(p1, p2, p3, p4));
 		int currentPlayerIndex = 0;
 
-		p1.setHand(new ArrayList<>(Arrays.asList("7H", "7C", "7D", "7S")));
+		p1.setHand(new ArrayList<>(Arrays.asList("7H", "2H", "7D", "7S")));
 		p2.setHand(new ArrayList<>(Arrays.asList("7H", "7C", "7D", "7S")));
 		p3.setHand(new ArrayList<>(Arrays.asList("7H", "7C", "7D", "7S")));
 
@@ -495,29 +503,32 @@ public class GameLogicTest {
 		p1.setCard("2H");
 
 		LOGGER.info("{} attempts to draw 2 cards.", p2.getName());
-
+		LOGGER.info("{} has {} cards before.", p2.getName(), p2.getHand().size());
 		gameLogic.addTwoCardToPlayer(players.get(currentPlayerIndex + 1), "2H");
+		LOGGER.info("{} has {} cards after.", p2.getName(), p2.getHand().size());
 
 		assertEquals(4, p2.getHand().size());
 	}
 
 	@Test
-	public void givenPlayerHasNoPLayableCard_andOverTheDrawLimit_whenCheckingIfCanSkip_assertTrue() {
+	public void givenPlayerHasNoPlayableCard_andOverTheDrawLimit_whenCheckingIfCanSkip_assertTrue() {
 
 		Player p1 = new Player();
 		p1.setHand(new ArrayList<>(Arrays.asList("7H", "7C", "9S", "7S")));
 		p1.setCard("9D");
+
 		boolean value = gameLogic.shouldSkipPlayer(p1, 4);
 
 		assertTrue(value);
 	}
 
 	@Test
-	public void givenPlayerHasPlayable8Card_andOverTheDrawLimit_whenCheckingIfCanSkip_assertTrue() {
+	public void givenPlayerHasEightCard_andOverTheDrawLimit_whenCheckingIfCanSkip_assertFalse() {
 
 		Player p1 = new Player();
 		p1.setHand(new ArrayList<>(Arrays.asList("7H", "8C", "9S", "7S")));
 		p1.setCard("9D");
+
 		boolean value = gameLogic.shouldSkipPlayer(p1, 4);
 
 		assertFalse(value);
@@ -529,6 +540,7 @@ public class GameLogicTest {
 		Player p1 = new Player();
 		p1.setHand(new ArrayList<>(Arrays.asList("7H", "8C", "9S", "7S")));
 		p1.setCard("9D");
+
 		boolean value = gameLogic.shouldSkipPlayer(p1, 3);
 
 		assertFalse(value);

@@ -71,14 +71,16 @@ public class CrazyEightWebSocketController {
 	@GetMapping
 	@RequestMapping("/canPlay")
 	public boolean canPlay(@RequestBody String userName) {
+		int previousPlayerIndex = currentPlayer;
 		if (userName.equals(connectedPlayers.get(currentPlayer).getName())) {
 			if (gameLogic.shouldSkipPlayer(connectedPlayers.get(currentPlayer), amountDrawn)) {
 				currentPlayer = gameLogic.changeSimpleDirection(currentPlayer, connectedPlayers, direction);
+				amountDrawn = 0;
 				return false;
 			}
 		}
 
-		return gameLogic.canPlay(userName, connectedPlayers.get(currentPlayer).getName());
+		return gameLogic.canPlay(userName, connectedPlayers.get(previousPlayerIndex).getName());
 	}
 
 	@MessageMapping("/playerUpdate")

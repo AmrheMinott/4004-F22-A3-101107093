@@ -108,9 +108,6 @@ public class GameLogic {
 			if (currentPlayerIndex < 0) {
 				currentPlayerIndex = players.size() - 1;
 			}
-			if (topCard.contains(CardFaces.QUEEN)) {
-				currentPlayerIndex--;
-			}
 		}
 
 		return currentPlayerIndex;
