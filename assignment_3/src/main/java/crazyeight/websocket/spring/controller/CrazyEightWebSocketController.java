@@ -88,12 +88,20 @@ public class CrazyEightWebSocketController {
 
 		connectedPlayers.get(currentPlayer).setCard(this.topCard);
 		connectedPlayers.get(currentPlayer).setHand(player.getHand());
+		connectedPlayers.get(currentPlayer).setDeck(gameLogic.getDeck());
 
 		direction = gameLogic.determineDirection(topCard, direction);
 		int previousPlayer = currentPlayer;
 		currentPlayer = gameLogic.determineCurrentPlayer(currentPlayer, connectedPlayers, direction, topCard);
+
+		// Add two cards to player hands.
+		gameLogic.addTwoCardToPlayer(connectedPlayers.get(currentPlayer), topCard);
 		amountDrawn = 0;
+
+		// set the top card for the player
 		connectedPlayers.get(currentPlayer).setCard(topCard);
+		connectedPlayers.get(currentPlayer).setDeck(gameLogic.getDeck());
+
 		this.simpMessagingTemplate.convertAndSend("/topic/playerWS", connectedPlayers.get(currentPlayer));
 		return connectedPlayers.get(previousPlayer);
 	}
