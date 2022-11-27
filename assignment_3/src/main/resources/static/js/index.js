@@ -13,6 +13,8 @@ let playerObject = {};
 let userName = "";
 let suitChosen = "";
 
+let amountDrawn = 0;
+
 var stompClient = null;
 
 async function registerUser() {
@@ -95,10 +97,12 @@ async function playCard(card) {
       renderMessage("It is not your turn ATM.");
       return;
     }
-    if (!playerObject.card.includes(card.charAt(1))) {
+    if (!playerObject.card.includes(card.charAt(card.length - 1))) {
       renderMessage("Please choose a card of similar suit.");
       return;
     }
+    amountDrawn = 0;
+
     if (card.charAt(0) == "8") {
       renderMessage("Pick the next suit for the eight card.");
       let suits = ["H", "D", "S", "C"];
@@ -174,9 +178,43 @@ async function drawCard() {
       renderMessage("Oh no something went wrong!");
     }
   } else {
+    amountDrawn++;
+    shouldSkipTurn();
     renderMessage("You can not draw not your turn!");
   }
   renderDeck();
+}
+
+function shouldSkipTurn() {
+  let shouldSkip = false;
+
+  playerObject.hand.forEach((handCard) => {
+    if (playerObject.card.includes("8") && handCard.includes("8")) {
+      shouldSkip = false;
+      return;
+    }
+    if (
+      (playerObject.card.includes("H") && handCard.includes("H")) ||
+      (playerObject.card.includes("D") && handCard.includes("D")) ||
+      (playerObject.card.includes("S") && handCard.includes("S")) ||
+      (playerObject.card.includes("C") && handCard.includes("C"))
+    ) {
+      shouldSkip = true;
+    }
+  });
+
+  if (playerObject.deck.length == 0 && shouldSkip) {
+    renderMessage("Deck is empty and you have no suit to play!");
+    return shouldSkip;
+  }
+
+  if (amountDrawn >= 3) {
+    renderMessage(
+      "You have maxed your number of turns!"
+    );
+    return shouldSkip;
+  }
+  return shouldSkip;
 }
 
 async function getRound() {

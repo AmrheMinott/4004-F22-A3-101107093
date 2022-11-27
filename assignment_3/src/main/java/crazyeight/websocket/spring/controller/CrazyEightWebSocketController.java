@@ -28,7 +28,6 @@ public class CrazyEightWebSocketController {
 	private final ArrayList<Player> connectedPlayers;
 
 	private final int TOTAL_NUMBER_OF_PLAYERS = 3;
-	private final int MAX_DRAWS = 3;
 
 	private GameLogic gameLogic;
 	private String topCard = "";
@@ -72,6 +71,13 @@ public class CrazyEightWebSocketController {
 	@GetMapping
 	@RequestMapping("/canPlay")
 	public boolean canPlay(@RequestBody String userName) {
+		if (userName.equals(connectedPlayers.get(currentPlayer).getName())) {
+			if (gameLogic.shouldSkipPlayer(connectedPlayers.get(currentPlayer), amountDrawn)) {
+				currentPlayer = gameLogic.changeSimpleDirection(currentPlayer, connectedPlayers, direction);
+				return false;
+			}
+		}
+
 		return gameLogic.canPlay(userName, connectedPlayers.get(currentPlayer).getName());
 	}
 
