@@ -8,7 +8,9 @@ public class CardFaces {
 
 	public static final String JACK = "J";
 
-	public static final String EIGHT = "8";
-
 	public static final CharSequence ACE = "A";
+
+	public static final CharSequence TWO = "2";
+
+	public static final String EIGHT = "8";
 }

@@ -53,8 +53,20 @@ public class GameLogic {
 		return this.deck.remove(0);
 	}
 
-	public int determineCurrentPlayer(int currentPlayerIndex, ArrayList<Player> players, boolean direction, String topCard) {
-		if (topCard.contains("Q")) {
+	public void addTwoCardToPlayer(Player player, String topCard) {
+
+		if (topCard.contains(CardFaces.TWO)) {
+			String card = "";
+			for (int i = 0; i < 2; i++) {
+				card = takeCard();
+				player.getHand().add(card);
+			}
+		}
+	}
+
+	public int determineCurrentPlayer(int currentPlayerIndex, ArrayList<Player> players, boolean direction,
+			String topCard) {
+		if (topCard.contains(CardFaces.QUEEN)) {
 			if (direction) {
 				currentPlayerIndex++;
 				if (currentPlayerIndex >= players.size()) {
@@ -76,23 +88,23 @@ public class GameLogic {
 			}
 			return currentPlayerIndex;
 		}
-		
+
 		if (direction) {
 			currentPlayerIndex++;
 			if (currentPlayerIndex >= players.size()) {
 				currentPlayerIndex = 0;
 			}
-			
+
 		} else {
 			currentPlayerIndex--;
 			if (currentPlayerIndex < 0) {
 				currentPlayerIndex = players.size() - 1;
 			}
-			if (topCard.contains("Q")) {
+			if (topCard.contains(CardFaces.QUEEN)) {
 				currentPlayerIndex--;
 			}
 		}
-		
+
 		return currentPlayerIndex;
 	}
 
