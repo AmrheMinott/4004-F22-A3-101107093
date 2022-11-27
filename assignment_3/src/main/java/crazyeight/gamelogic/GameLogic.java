@@ -3,6 +3,7 @@ package crazyeight.gamelogic;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Objects;
 
 import constants.CardFaces;
 import crazyeight.websocket.spring.model.Player;
@@ -59,7 +60,9 @@ public class GameLogic {
 			String card = "";
 			for (int i = 0; i < 2; i++) {
 				card = takeCard();
-				player.getHand().add(card);
+				if (Objects.nonNull(card)) {
+					player.getHand().add(card);					
+				}
 			}
 		}
 	}
