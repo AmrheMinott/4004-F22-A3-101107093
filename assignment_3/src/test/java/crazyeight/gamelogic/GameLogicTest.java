@@ -533,4 +533,17 @@ public class GameLogicTest {
 
 		assertFalse(value);
 	}
+
+	@Test
+	public void givenPlayerHasNoPlayableCard_andUnderLimit_andDeckIsEmpty_whenCheckingIfCanSkip_assertTrue() {
+
+		Player p1 = new Player();
+		p1.setHand(new ArrayList<>(Arrays.asList("7H", "7C", "9S", "7S")));
+		p1.setCard("9D");
+
+		gameLogic.setDeck(new ArrayList<>(Arrays.asList()));
+		boolean value = gameLogic.shouldSkipPlayer(p1, 2);
+
+		assertTrue(value);
+	}
 }
