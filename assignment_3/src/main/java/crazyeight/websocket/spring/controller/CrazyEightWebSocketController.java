@@ -68,7 +68,7 @@ public class CrazyEightWebSocketController {
 		return connectedPlayers.get(currentPlayer);
 	}
 
-	@GetMapping
+	@PostMapping
 	@RequestMapping("/canPlay")
 	public boolean canPlay(@RequestBody String userName) {
 		int previousPlayerIndex = currentPlayer;
@@ -81,12 +81,6 @@ public class CrazyEightWebSocketController {
 		}
 
 		return gameLogic.canPlay(userName, connectedPlayers.get(previousPlayerIndex).getName());
-	}
-
-	@MessageMapping("/playerUpdate")
-	@SendTo("/topic/playerWS")
-	public Player playerUpdate() throws Exception {
-		return connectedPlayers.get(currentPlayer);
 	}
 
 	@PostMapping
@@ -154,6 +148,12 @@ public class CrazyEightWebSocketController {
 		player.setOtherPlayers(gameLogic.getOtherPlayers(userName, connectedPlayers));
 
 		return player;
+	}
+
+	@MessageMapping("/playerUpdate")
+	@SendTo("/topic/playerWS")
+	public Player playerUpdate() throws Exception {
+		return connectedPlayers.get(currentPlayer);
 	}
 
 }

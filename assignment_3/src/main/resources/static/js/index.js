@@ -2,10 +2,10 @@ const BASE_URL = "http://localhost:8090";
 
 const CREATE_PLAYER_URL = `${BASE_URL}/createPlayer`;
 
-const GET_CAN_PLAY = `${BASE_URL}/canPlay`;
 const GET_DRAW_CARD = `${BASE_URL}/drawCard`;
 const GET_ROUND = `${BASE_URL}/round`;
 
+const POST_CAN_PLAY = `${BASE_URL}/canPlay`;
 const POST_CARD = `${BASE_URL}/postCard`;
 const POST_PLAYER = `${BASE_URL}/player`;
 
@@ -22,7 +22,7 @@ async function registerUser() {
   let userNameInput = document.getElementById("user-id");
   wsConnect();
   userName = userNameInput.value;
-  const response = await fetch(CREATE_PLAYER_URL, {
+  const createPlayerResponse = await fetch(CREATE_PLAYER_URL, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -31,7 +31,7 @@ async function registerUser() {
     body: JSON.stringify(userName),
   });
   try {
-    const body = await response.json();
+    const body = await createPlayerResponse.json();
 
     if (body == null) {
     } else {
@@ -47,7 +47,7 @@ async function registerUser() {
 }
 
 async function getPlayer() {
-  const response = await fetch(POST_PLAYER, {
+  const getPlayerResponse = await fetch(POST_PLAYER, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -56,7 +56,7 @@ async function getPlayer() {
     body: JSON.stringify(userName),
   });
   try {
-    const body = await response.json();
+    const body = await getPlayerResponse.json();
     playerObject = body;
     renderScores();
     renderDeck();
@@ -64,7 +64,7 @@ async function getPlayer() {
 }
 
 async function sendCardToDB() {
-  let response = await fetch(POST_CARD, {
+  let postCardResponse = await fetch(POST_CARD, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -73,7 +73,7 @@ async function sendCardToDB() {
     body: JSON.stringify(playerObject),
   });
   try {
-    const body = await response.json();
+    const body = await postCardResponse.json();
     playerObject = body;
     renderPlayerHand(playerObject.hand);
     renderScores();
@@ -82,7 +82,7 @@ async function sendCardToDB() {
 }
 
 async function playCard(card) {
-  const response = await fetch(GET_CAN_PLAY, {
+  const canPlayResponse = await fetch(POST_CAN_PLAY, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -91,7 +91,7 @@ async function playCard(card) {
     body: JSON.stringify(userName),
   });
   try {
-    const canPlayStatus = await response.json();
+    const canPlayStatus = await canPlayResponse.json();
     if (!canPlayStatus) {
       console.warn("It is not your turn!");
       renderMessage("It is not your turn ATM.");
@@ -147,7 +147,7 @@ function suitSelection(suit, card) {
 }
 
 async function drawCard() {
-  const res = await fetch(GET_CAN_PLAY, {
+  const canPlayResponse = await fetch(POST_CAN_PLAY, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -155,10 +155,10 @@ async function drawCard() {
     },
     body: JSON.stringify(userName),
   });
-  const canPlayStatus = await res.json();
+  const canPlayStatus = await canPlayResponse.json();
 
   if (canPlayStatus) {
-    const response = await fetch(GET_DRAW_CARD, {
+    const drawResponse = await fetch(GET_DRAW_CARD, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -166,7 +166,7 @@ async function drawCard() {
       },
       body: JSON.stringify(userName),
     });
-    const player = await response.json();
+    const player = await drawResponse.json();
     if (player) {
       renderPlayerHand(player.hand);
       if (
@@ -220,9 +220,9 @@ function shouldSkipTurn() {
 }
 
 async function getRound() {
-  const response = await fetch(GET_ROUND);
+  const roundResponse = await fetch(GET_ROUND);
 
-  const roundValue = await response.json();
+  const roundValue = await roundResponse.json();
 
   document.getElementById("round").innerHTML = `Round: ${roundValue}`;
 }
