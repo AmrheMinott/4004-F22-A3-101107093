@@ -3,6 +3,7 @@ package crazyeight.gamelogic;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -203,7 +204,7 @@ public class GameLogicTest {
 	@Test
 	public void givenPlayerOneDrawnThreeCards_whenDrawCard_assertCardIsDrawn() {
 		Player p1 = new Player();
-		int amtDrawn = 0;
+		int amtDrawn = 1;
 		p1.setName("P1");
 
 		String cardDrawn = gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn);
@@ -232,7 +233,7 @@ public class GameLogicTest {
 		Player p1 = new Player();
 		Player p2 = new Player();
 
-		int amtDrawn = 0;
+		int amtDrawn = 1;
 
 		p1.setName("Player 1");
 		p2.setName("Player 2");
@@ -264,7 +265,7 @@ public class GameLogicTest {
 		assertNull(cardDrawn);
 		amtDrawn++;
 
-		amtDrawn = 0;
+		amtDrawn = 1;
 		LOGGER.info("It is {} turn.", p2.getName());
 
 		cardDrawn = gameLogic.drawCard(p2.getName(), p2.getName(), amtDrawn);
@@ -287,7 +288,7 @@ public class GameLogicTest {
 		assertNull(cardDrawn);
 		amtDrawn++;
 
-		amtDrawn = 0;
+		amtDrawn = 1;
 		LOGGER.info("It is {} turn.", p1.getName());
 		cardDrawn = gameLogic.drawCard(p1.getName(), p1.getName(), amtDrawn);
 		LOGGER.info("{} - Drawn {}", p1.getName(), cardDrawn);
@@ -432,7 +433,7 @@ public class GameLogicTest {
 
 		assertEquals(6, p2.getHand().size());
 	}
-	
+
 	@Test
 	public void givenPlayerPlacesTwoCard_andDeckPartialFull_whenDrawsCard_assertOneCardsAdded() {
 		Player p1 = new Player();
@@ -465,7 +466,7 @@ public class GameLogicTest {
 
 		assertEquals(5, p2.getHand().size());
 	}
-	
+
 	@Test
 	public void givenPlayerPlacesTwoCard_andDeckEmpty_whenDrawsCard_assertZeroCardsAdded() {
 		Player p1 = new Player();
@@ -497,5 +498,16 @@ public class GameLogicTest {
 		gameLogic.addTwoCardToPlayer(players.get(currentPlayerIndex + 1), "2H");
 
 		assertEquals(4, p2.getHand().size());
+	}
+
+	@Test
+	public void givenPlayerHasNoPLayableCard_andOverTheDrawLimit_whenCheckingIfCanSkip_assertTrue() {
+		
+		Player p1 = new Player();
+		p1.setHand(new ArrayList<>(Arrays.asList("7H", "7C", "9S", "7S")));
+		p1.setCard("9D");
+		boolean value = gameLogic.shouldSkipPlayer(p1, 4);
+
+		assertTrue(value);
 	}
 }
