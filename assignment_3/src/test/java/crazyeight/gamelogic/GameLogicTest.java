@@ -1,6 +1,7 @@
 package crazyeight.gamelogic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -509,5 +510,16 @@ public class GameLogicTest {
 		boolean value = gameLogic.shouldSkipPlayer(p1, 4);
 
 		assertTrue(value);
+	}
+	
+	@Test
+	public void givenPlayerHasPlayable8Card_andOverTheDrawLimit_whenCheckingIfCanSkip_assertTrue() {
+		
+		Player p1 = new Player();
+		p1.setHand(new ArrayList<>(Arrays.asList("7H", "8C", "9S", "7S")));
+		p1.setCard("9D");
+		boolean value = gameLogic.shouldSkipPlayer(p1, 4);
+
+		assertFalse(value);
 	}
 }
