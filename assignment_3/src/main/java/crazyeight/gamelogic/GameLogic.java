@@ -194,7 +194,10 @@ public class GameLogic {
 		
 		boolean hasPlayableCard = false;
 		for (String s : player.getHand()) {
-			
+			if (s.contains(CardFaces.EIGHT)) {
+				hasPlayableCard = true;
+				break;
+			}
 			if (s.contains(Character.toString((player.getCard().charAt(player.getCard().length() - 1))))) {
 				hasPlayableCard = true;
 				break;
