@@ -50,7 +50,7 @@ public class CrazyEightWebSocketController {
 	@GetMapping
 	@RequestMapping("/round")
 	public int getRound() {
-		return this.round;
+		return gameLogic.getRound();
 	}
 
 	@GetMapping
@@ -134,7 +134,7 @@ public class CrazyEightWebSocketController {
 		}
 		Player player = new Player();
 		player.setName(userName);
-		player.setRound(round);
+		player.setRound(gameLogic.getRound());
 		player.setScore(0);
 		player.setCard(this.topCard);
 		connectedPlayers.add(player);

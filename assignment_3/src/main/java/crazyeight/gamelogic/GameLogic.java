@@ -17,10 +17,13 @@ public class GameLogic {
 	final int SCORE_FIFTY = 50;
 	private final int MAX_DRAWS = 3;
 
-	private ArrayList<String> deck = new ArrayList<>(Arrays.asList("2H", "3H", "4H", "5H", "6H", "7H", "8H", "9H",
-			"10H", "JH", "QH", "KH", "AH", "2S", "3S", "4S", "5S", "6S", "7S", "8S", "9S", "10S", "JS", "QS", "KS",
-			"AS", "2D", "3D", "4D", "5D", "6D", "7D", "8D", "9D", "10D", "JD", "QD", "KD", "AD", "2C", "3C", "4C", "5C",
-			"6C", "7C", "8C", "9C", "10C", "JC", "QC", "KC", "AC"));
+	private final ArrayList<String> DECK_CARD = new ArrayList<>(Arrays.asList("2H", "3H", "4H", "5H", "6H", "7H", "8H",
+			"9H", "10H", "JH", "QH", "KH", "AH", "2S", "3S", "4S", "5S", "6S", "7S", "8S", "9S", "10S", "JS", "QS",
+			"KS", "AS", "2D", "3D", "4D", "5D", "6D", "7D", "8D", "9D", "10D", "JD", "QD", "KD", "AD", "2C", "3C", "4C",
+			"5C", "6C", "7C", "8C", "9C", "10C", "JC", "QC", "KC", "AC"));
+
+	private ArrayList<String> deck = DECK_CARD;
+	private int round = 1;
 	private static final Logger LOGGER = LoggerFactory.getLogger(GameLogic.class);
 
 	public GameLogic() {
@@ -183,6 +186,16 @@ public class GameLogic {
 		return updatedPlayers;
 	}
 
+	public void handleRoundCompletion(ArrayList<Player> players, String topCard) {
+
+		for (Player p : players) {
+			if (p.getHand().size() == 0) {
+				round += 1;
+				return;
+			}
+		}
+	}
+
 	public ArrayList<String> getDeck() {
 		return deck;
 	}
@@ -192,7 +205,7 @@ public class GameLogic {
 	}
 
 	public boolean shouldSkipPlayer(Player player, int amountDrawn) {
-		
+
 		boolean hasPlayableCard = false;
 		for (String s : player.getHand()) {
 			if (s.contains(CardFaces.EIGHT)) {
@@ -212,7 +225,11 @@ public class GameLogic {
 		}
 		if (hasPlayableCard) {
 			return false;
-		} 
+		}
 		return false;
+	}
+
+	public int getRound() {
+		return round;
 	}
 }
