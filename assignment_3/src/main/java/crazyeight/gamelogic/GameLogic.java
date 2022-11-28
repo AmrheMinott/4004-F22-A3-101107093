@@ -203,6 +203,7 @@ public class GameLogic {
 
 		for (Player p : players) {
 			if (p.getHand().size() == 0) {
+				updateAllPlayerScores(players);
 				round += 1;
 				resetDeckAndPlayers(players);
 				return;
