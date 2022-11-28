@@ -201,6 +201,9 @@ public class GameLogic {
 
 	public void handleRoundCompletion(ArrayList<Player> players, String topCard) {
 
+		String topCardSuit = Character.toString(topCard.charAt(topCard.length() - 1));
+		boolean shouldEnd = true;
+
 		for (Player p : players) {
 			if (p.getHand().size() == 0) {
 				updateAllPlayerScores(players);
@@ -208,6 +211,21 @@ public class GameLogic {
 				resetDeckAndPlayers(players);
 				return;
 			}
+
+			for (String s : p.getHand()) {
+				String playerHandCardNumber = Character.toString(s.charAt(0));
+				String playerHandCardSuit = Character.toString(s.charAt(s.length() - 1));
+				if (topCardSuit.equals(playerHandCardSuit) || (playerHandCardNumber.equals(CardFaces.EIGHT))) {
+					shouldEnd = false;
+				}
+			}
+		}
+
+		if (this.deck.size() == 0 && shouldEnd) {
+			updateAllPlayerScores(players);
+			// round is over update players
+			round += 1;
+			resetDeckAndPlayers(players);
 		}
 	}
 
