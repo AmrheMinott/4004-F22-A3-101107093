@@ -287,6 +287,7 @@ function wsConnect() {
       let parsedPlayer = JSON.parse(player.body);
       playerObject.card = parsedPlayer.card;
       playerObject.deck = parsedPlayer.deck;
+      playerObject.otherPlayers = parsedPlayer.otherPlayers;
       renderDeck();
       renderScores();
       if (parsedPlayer.name === playerObject.name) {

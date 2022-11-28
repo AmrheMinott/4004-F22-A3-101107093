@@ -36,8 +36,6 @@ public class CrazyEightWebSocketController {
 
 	private int currentPlayer = 0;
 
-	private int round = 1;
-
 	private boolean direction = true;
 
 	public CrazyEightWebSocketController(SimpMessagingTemplate simpMessagingTemplate) {
@@ -103,6 +101,8 @@ public class CrazyEightWebSocketController {
 		// set the top card for the player
 		connectedPlayers.get(currentPlayer).setCard(topCard);
 		connectedPlayers.get(currentPlayer).setDeck(gameLogic.getDeck());
+
+		gameLogic.handleRoundCompletion(connectedPlayers, topCard);
 
 		this.simpMessagingTemplate.convertAndSend("/topic/playerWS", connectedPlayers.get(currentPlayer));
 		return connectedPlayers.get(previousPlayer);
