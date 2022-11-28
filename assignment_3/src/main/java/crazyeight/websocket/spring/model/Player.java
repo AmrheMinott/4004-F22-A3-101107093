@@ -6,7 +6,7 @@ public class Player {
 
 	private ArrayList<String> deck;
 	private ArrayList<String> hand;
-	private ArrayList<Player> otherPlayers;
+	private ArrayList<PlayerScore> otherPlayersScore;
 
 	private String card;
 	private String name;
@@ -31,12 +31,12 @@ public class Player {
 		this.hand = hand;
 	}
 
-	public ArrayList<Player> getOtherPlayers() {
-		return otherPlayers;
+	public ArrayList<PlayerScore> getOtherPlayersScore() {
+		return otherPlayersScore;
 	}
 
-	public void setOtherPlayers(ArrayList<Player> otherPlayers) {
-		this.otherPlayers = otherPlayers;
+	public void setOtherPlayersScore(ArrayList<PlayerScore> otherPlayersScore) {
+		this.otherPlayersScore = otherPlayersScore;
 	}
 
 	public String getCard() {

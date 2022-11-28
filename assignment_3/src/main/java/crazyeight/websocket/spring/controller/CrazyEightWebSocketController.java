@@ -63,6 +63,7 @@ public class CrazyEightWebSocketController {
 			connectedPlayers.get(currentPlayer).getHand().add(card);
 		}
 
+		this.simpMessagingTemplate.convertAndSend("/topic/playerWS", connectedPlayers);
 		return connectedPlayers.get(currentPlayer);
 	}
 
@@ -70,6 +71,11 @@ public class CrazyEightWebSocketController {
 	@RequestMapping("/canPlay")
 	public boolean canPlay(@RequestBody String userName) {
 		int previousPlayerIndex = currentPlayer;
+
+		if (gameLogic.handleRoundCompletion(connectedPlayers, topCard)) {
+			this.simpMessagingTemplate.convertAndSend("/topic/playerWS", connectedPlayers);
+		}
+
 		if (userName.equals(connectedPlayers.get(currentPlayer).getName())) {
 			if (gameLogic.shouldSkipPlayer(connectedPlayers.get(currentPlayer), amountDrawn)) {
 				currentPlayer = gameLogic.changeSimpleDirection(currentPlayer, connectedPlayers, direction);
@@ -86,9 +92,11 @@ public class CrazyEightWebSocketController {
 	public Player postCard(@RequestBody Player player) throws URISyntaxException {
 		this.topCard = player.getCard();
 
-		connectedPlayers.get(currentPlayer).setCard(this.topCard);
+		if (gameLogic.handleRoundCompletion(connectedPlayers, topCard)) {
+			this.simpMessagingTemplate.convertAndSend("/topic/playerWS", connectedPlayers);
+			return connectedPlayers.get(currentPlayer);
+		}
 		connectedPlayers.get(currentPlayer).setHand(player.getHand());
-		connectedPlayers.get(currentPlayer).setDeck(gameLogic.getDeck());
 
 		direction = gameLogic.determineDirection(topCard, direction);
 		int previousPlayer = currentPlayer;
@@ -98,13 +106,14 @@ public class CrazyEightWebSocketController {
 		gameLogic.addTwoCardToPlayer(connectedPlayers.get(currentPlayer), topCard);
 		amountDrawn = 0;
 
-		// set the top card for the player
-		connectedPlayers.get(currentPlayer).setCard(topCard);
-		connectedPlayers.get(currentPlayer).setDeck(gameLogic.getDeck());
+		for (Player p : connectedPlayers) {
+			p.setCard(topCard);
+			p.setDeck(gameLogic.getDeck());
+			p.setOtherPlayersScore(gameLogic.getOtherPlayers(connectedPlayers));
+		}
 
-		gameLogic.handleRoundCompletion(connectedPlayers, topCard);
+		this.simpMessagingTemplate.convertAndSend("/topic/playerWS", connectedPlayers);
 
-		this.simpMessagingTemplate.convertAndSend("/topic/playerWS", connectedPlayers.get(currentPlayer));
 		return connectedPlayers.get(previousPlayer);
 	}
 
@@ -115,7 +124,7 @@ public class CrazyEightWebSocketController {
 			if (p.getName().equals(userName)) {
 				p.setCard(topCard);
 				p.setDeck(gameLogic.getDeck());
-				p.setOtherPlayers(gameLogic.getOtherPlayers(userName, connectedPlayers));
+				p.setOtherPlayersScore(gameLogic.getOtherPlayers(connectedPlayers));
 				return p;
 			}
 		}
@@ -145,15 +154,15 @@ public class CrazyEightWebSocketController {
 		}
 
 		player.setHand(new ArrayList<>(hand));
-		player.setOtherPlayers(gameLogic.getOtherPlayers(userName, connectedPlayers));
+		player.setOtherPlayersScore(gameLogic.getOtherPlayers(connectedPlayers));
 
+		this.simpMessagingTemplate.convertAndSend("/topic/playerWS", connectedPlayers);
 		return player;
 	}
 
 	@MessageMapping("/playerUpdate")
 	@SendTo("/topic/playerWS")
-	public Player playerUpdate() throws Exception {
-		return connectedPlayers.get(currentPlayer);
+	public ArrayList<Player> playerUpdate() throws Exception {
+		return connectedPlayers;
 	}
-
 }

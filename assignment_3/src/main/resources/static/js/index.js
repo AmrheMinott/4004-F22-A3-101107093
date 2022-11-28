@@ -254,16 +254,13 @@ function renderScores() {
   let playerScoresDiv = document.getElementById("player-scores-container");
   playerScoresDiv.innerHTML = "";
 
-  let playerScoreParagraph = document.createElement("p");
-  playerScoreParagraph.innerHTML = `ME: ${playerObject.score}`;
-  playerScoreParagraph.id = "player-score";
-  playerScoresDiv.appendChild(playerScoreParagraph);
-
-  playerObject.otherPlayers.forEach((player) => {
+  playerObject.otherPlayersScore.forEach((playerScore) => {
     let playerScoreParagraph = document.createElement("p");
-    playerScoreParagraph.innerHTML = `${JSON.parse(player.name)}: ${
-      player.score
-    }`;
+    if (playerScore.name == playerObject.name) {
+      playerScoreParagraph.innerHTML = `ME: ${playerScore.score}`;
+    } else {
+      playerScoreParagraph.innerHTML = `${playerScore.name}: ${playerScore.score}`;
+    }
     playerScoreParagraph.id = "player-score";
     playerScoresDiv.appendChild(playerScoreParagraph);
   });
@@ -283,20 +280,27 @@ function wsConnect() {
   stompClient = Stomp.over(socket);
   stompClient.connect({}, function (frame) {
     console.log("Connected: " + frame);
-    stompClient.subscribe("/topic/playerWS", function (player) {
-      let parsedPlayer = JSON.parse(player.body);
-      playerObject.card = parsedPlayer.card;
-      playerObject.deck = parsedPlayer.deck;
-      playerObject.otherPlayers = parsedPlayer.otherPlayers;
-      renderDeck();
-      renderScores();
-      if (parsedPlayer.name === playerObject.name) {
-        if (playerObject.hand.length !== parsedPlayer.hand.length) {
-          playerObject.hand = parsedPlayer.hand;
+    stompClient.subscribe("/topic/playerWS", function (players) {
+      let parsedPlayers = JSON.parse(players.body);
+      
+      parsedPlayers.forEach((player) => {
+        if (player.name == playerObject.name) {
+          playerObject.card = player.card;
+          playerObject.deck = player.deck;
+          playerObject.otherPlayersScore = player.otherPlayersScore;
+          renderDeck();
+          renderScores();
+
+          console.log(playerObject.name);
+          console.log(player.name);
+          console.log(player);
+
+          playerObject.hand = player.hand;
           renderPlayerHand(playerObject.hand);
+
+          renderMessage("Updated player data from Web Socket");
         }
-      }
-      renderMessage("Updated player data from Web Socket");
+      });
     });
   });
 }
