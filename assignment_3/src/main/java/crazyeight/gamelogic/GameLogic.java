@@ -186,11 +186,25 @@ public class GameLogic {
 		return updatedPlayers;
 	}
 
+	private void resetDeckAndPlayers(ArrayList<Player> players) {
+		setDeck(DECK_CARD);
+		Collections.shuffle(deck);
+		for (Player p : players) {
+			p.getHand().clear();
+			for (int i = 0; i < 5; i++) {
+				p.getHand().add(takeCard());
+			}
+			p.setRound(round);
+			p.setOtherPlayers(getOtherPlayers(p.getName(), players));
+		}
+	}
+
 	public void handleRoundCompletion(ArrayList<Player> players, String topCard) {
 
 		for (Player p : players) {
 			if (p.getHand().size() == 0) {
 				round += 1;
+				resetDeckAndPlayers(players);
 				return;
 			}
 		}
