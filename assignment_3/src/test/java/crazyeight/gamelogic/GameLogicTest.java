@@ -714,4 +714,33 @@ public class GameLogicTest {
 
 		assertEquals(1, gameLogic.getRound());
 	}
+
+	@Test
+	public void givenNoPlayerCanPlay_andDeckEmpty_whenRoundEnds_assertScoreUpdated() {
+		Player p1 = new Player();
+		Player p2 = new Player();
+		Player p3 = new Player();
+		Player p4 = new Player();
+
+		p1.setName("P1");
+		p2.setName("P2");
+		p3.setName("P3");
+		p4.setName("P4");
+
+		gameLogic.setDeck(new ArrayList<>(Arrays.asList()));
+
+		p1.setHand(new ArrayList<>(Arrays.asList("7H", "7H", "7D", "7S")));
+		p2.setHand(new ArrayList<>(Arrays.asList("7H", "7H", "7D", "7S")));
+		p3.setHand(new ArrayList<>(Arrays.asList("7H", "7H", "7D", "7S")));
+		p4.setHand(new ArrayList<>(Arrays.asList("7H", "7H", "7D", "7S")));
+
+		ArrayList<Player> players = new ArrayList<>(Arrays.asList(p1, p2, p3, p4));
+		gameLogic.handleRoundCompletion(players, "2C");
+
+		assertEquals(28, p1.getScore());
+		assertEquals(28, p2.getScore());
+		assertEquals(28, p3.getScore());
+		assertEquals(28, p4.getScore());
+	}
+
 }
