@@ -76,6 +76,7 @@ public class CrazyEightWebSocketController {
 		if (gameLogic.handleRoundCompletion(connectedPlayers, topCard)) {
 			amountDrawn = 0;
 			this.simpMessagingTemplate.convertAndSend("/topic/playerWS", connectedPlayers);
+			determineAndSendWinner();
 			return false;
 		}
 
@@ -100,8 +101,10 @@ public class CrazyEightWebSocketController {
 
 		if (gameLogic.handleRoundCompletion(connectedPlayers, topCard)) {
 			this.simpMessagingTemplate.convertAndSend("/topic/playerWS", connectedPlayers);
+			determineAndSendWinner();
 			return connectedPlayers.get(currentPlayer);
 		}
+
 		connectedPlayers.get(currentPlayer).setHand(player.getHand());
 
 		direction = gameLogic.determineDirection(topCard, direction);
@@ -161,17 +164,19 @@ public class CrazyEightWebSocketController {
 		return player;
 	}
 
-	@MessageMapping("/playerUpdate")
-	@SendTo("/topic/playerWS")
-	public ArrayList<Player> playerUpdate() throws Exception {
-		return connectedPlayers;
-	}
-
 	private void updateBasicPlayerInformation() {
 		for (Player p : connectedPlayers) {
 			p.setCard(topCard);
 			p.setDeck(gameLogic.getDeck());
 			p.setOtherPlayersScore(gameLogic.getOtherPlayers(connectedPlayers));
+		}
+	}
+
+	private void determineAndSendWinner() {
+		String winner = gameLogic.determineWinner(connectedPlayers);
+		if (Objects.nonNull(winner)) {
+			this.simpMessagingTemplate.convertAndSend("/topic/winner", winner);
+			System.exit(1);
 		}
 	}
 }

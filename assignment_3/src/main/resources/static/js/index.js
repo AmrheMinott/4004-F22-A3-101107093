@@ -275,6 +275,11 @@ function renderDeck() {
     : "Deck Count: Not Now";
 }
 
+function renderWinner(winnerName) {
+  let winnerPara = document.getElementById("winner");
+  winnerPara.innerHTML = `Winner: ${winnerName}`;
+}
+
 function wsConnect() {
   var socket = new SockJS("/crazy-eight-game-ws");
   stompClient = Stomp.over(socket);
@@ -297,6 +302,12 @@ function wsConnect() {
           renderMessage("Updated player data from Web Socket");
         }
       });
+    });
+
+    stompClient.subscribe("/topic/winner", function (winnerName) {
+      renderWinner(JSON.parse(winnerName.body));
+      renderMessage("GAME OVER Disconnecting!");
+      stompClient.disconnect();
     });
   });
 }

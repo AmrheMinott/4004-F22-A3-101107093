@@ -786,6 +786,4 @@ public class GameLogicTest {
 
 		assertNull(gameLogic.determineWinner(players));
 	}
-
-
 }
