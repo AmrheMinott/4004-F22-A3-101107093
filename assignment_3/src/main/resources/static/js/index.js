@@ -259,7 +259,7 @@ function renderScores() {
     if (playerScore.name == playerObject.name) {
       playerScoreParagraph.innerHTML = `ME: ${playerScore.score}`;
     } else {
-      playerScoreParagraph.innerHTML = `${playerScore.name}: ${playerScore.score}`;
+      playerScoreParagraph.innerHTML = `${JSON.parse(playerScore.name)}: ${playerScore.score}`;
     }
     playerScoreParagraph.id = "player-score";
     playerScoresDiv.appendChild(playerScoreParagraph);
@@ -290,10 +290,6 @@ function wsConnect() {
           playerObject.otherPlayersScore = player.otherPlayersScore;
           renderDeck();
           renderScores();
-
-          console.log(playerObject.name);
-          console.log(player.name);
-          console.log(player);
 
           playerObject.hand = player.hand;
           renderPlayerHand(playerObject.hand);

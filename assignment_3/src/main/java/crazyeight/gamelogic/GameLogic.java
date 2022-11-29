@@ -64,8 +64,8 @@ public class GameLogic {
 	}
 
 	public void addTwoCardToPlayer(Player player, String topCard) {
-
 		if (topCard.contains(CardFaces.TWO)) {
+			LOGGER.info("Attempting to add two cards to {}.", player.getName());
 			String card = "";
 			for (int i = 0; i < 2; i++) {
 				card = takeCard();
