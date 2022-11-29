@@ -743,4 +743,26 @@ public class GameLogicTest {
 		assertEquals(28, p4.getScore());
 	}
 
+	@Test
+	public void givenPlayerWithOver100Point_whenDeterminingWinner_assertPlayerNameWithLowestPoints() {
+		Player p1 = new Player();
+		Player p2 = new Player();
+		Player p3 = new Player();
+		Player p4 = new Player();
+
+		p1.setName("P1");
+		p2.setName("P2");
+		p3.setName("P3");
+		p4.setName("P4");
+
+		p1.setScore(100);
+		p2.setScore(2);
+		p3.setScore(4);
+		p4.setScore(88);
+
+		ArrayList<Player> players = new ArrayList<>(Arrays.asList(p1, p2, p3, p4));
+
+		assertEquals("P2", gameLogic.determineWinner(players));
+	}
+
 }
