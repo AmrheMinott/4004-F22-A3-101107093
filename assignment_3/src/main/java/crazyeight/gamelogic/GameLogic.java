@@ -3,6 +3,7 @@ package crazyeight.gamelogic;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Objects;
 
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import crazyeight.websocket.spring.model.Player;
 import crazyeight.websocket.spring.model.PlayerScore;
 
 public class GameLogic {
+	private static final int SCORE_ENDING_POINTS = 100;
 	final int SCORE_ONE = 1;
 	final int SCORE_TEN = 10;
 	final int SCORE_FIFTY = 50;
@@ -186,6 +188,22 @@ public class GameLogic {
 			updatedPlayers.add(p);
 		}
 		return updatedPlayers;
+	}
+
+	public String determineWinner(ArrayList<Player> players) {
+		int minValue = players.stream().min(Comparator.comparing(p -> p.getScore())).get().getScore();
+
+		for (Player p : players) {
+			if (p.getScore() >= SCORE_ENDING_POINTS) {
+				for (Player p2 : players) {
+					if (p2.getScore() == minValue) {
+						return p2.getName();
+					}
+				}
+			}
+		}
+	
+		return null;
 	}
 
 	private void resetDeckAndPlayers(ArrayList<Player> players) {
