@@ -259,7 +259,9 @@ function renderScores() {
     if (playerScore.name == playerObject.name) {
       playerScoreParagraph.innerHTML = `ME: ${playerScore.score}`;
     } else {
-      playerScoreParagraph.innerHTML = `${JSON.parse(playerScore.name)}: ${playerScore.score}`;
+      playerScoreParagraph.innerHTML = `${JSON.parse(playerScore.name)}: ${
+        playerScore.score
+      }`;
     }
     playerScoreParagraph.id = "player-score";
     playerScoresDiv.appendChild(playerScoreParagraph);
@@ -280,6 +282,18 @@ function renderWinner(winnerName) {
   winnerPara.innerHTML = `Winner: ${winnerName}`;
 }
 
+function renderCurrentPlayer(playerName) {
+  let currentPlayerPara = document.getElementById("current-player");
+  currentPlayerPara.innerHTML = `Current Player: ${playerName}`;
+}
+
+function renderDirection(direction) {
+  let directionPara = document.getElementById("direction");
+  directionPara.innerHTML = `Current Direction: ${
+    direction ? "Right -> Left" : "Left -> Right"
+  }`;
+}
+
 function wsConnect() {
   var socket = new SockJS("/crazy-eight-game-ws");
   stompClient = Stomp.over(socket);
@@ -287,7 +301,7 @@ function wsConnect() {
     console.log("Connected: " + frame);
     stompClient.subscribe("/topic/playerWS", function (players) {
       let parsedPlayers = JSON.parse(players.body);
-      
+
       parsedPlayers.forEach((player) => {
         if (player.name == playerObject.name) {
           playerObject.card = player.card;
@@ -303,6 +317,24 @@ function wsConnect() {
         }
       });
     });
+
+    stompClient.subscribe(
+      "/topic/currentPlayerName",
+      function (currentPlayerName) {
+        renderCurrentPlayer(JSON.parse(currentPlayerName.body));
+      }
+    );
+
+    stompClient.subscribe("/topic/direction", function (direction) {
+      renderDirection(JSON.parse(direction.body));
+    });
+
+    stompClient.subscribe(
+      `/user/"${userName}"/queen`,
+      function (skipTurnMessage) {
+        renderMessage(skipTurnMessage.body);
+      }
+    );
 
     stompClient.subscribe("/topic/winner", function (winnerName) {
       renderWinner(JSON.parse(winnerName.body));
