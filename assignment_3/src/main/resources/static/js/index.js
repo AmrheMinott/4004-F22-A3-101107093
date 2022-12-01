@@ -16,11 +16,11 @@ let suitChosen = "";
 let amountDrawn = 0;
 
 var stompClient = null;
-
+wsConnect();
 async function registerUser() {
   let registerButton = document.getElementById("register-player");
   let userNameInput = document.getElementById("user-id");
-  wsConnect();
+
   userName = userNameInput.value;
   const createPlayerResponse = await fetch(CREATE_PLAYER_URL, {
     method: "POST",
@@ -235,7 +235,8 @@ function renderPlayerHand(handArray) {
     let input = document.createElement("input");
     input.value = card;
     input.type = "button";
-    input.id = `card`;
+    input.id = "card";
+    input.className = card;
     input.onclick = function () {
       playCard(card);
     };
@@ -259,7 +260,7 @@ function renderScores() {
     if (playerScore.name == playerObject.name) {
       playerScoreParagraph.innerHTML = `ME: ${playerScore.score}`;
     } else {
-      playerScoreParagraph.innerHTML = `${JSON.parse(playerScore.name)}: ${
+      playerScoreParagraph.innerHTML = `${(playerScore.name)}: ${
         playerScore.score
       }`;
     }
@@ -298,7 +299,7 @@ function wsConnect() {
   var socket = new SockJS("/crazy-eight-game-ws");
   stompClient = Stomp.over(socket);
   stompClient.connect({}, function (frame) {
-    console.log("Connected: " + frame);
+    console.log("Connected: ");
     stompClient.subscribe("/topic/playerWS", function (players) {
       let parsedPlayers = JSON.parse(players.body);
 
@@ -321,12 +322,12 @@ function wsConnect() {
     stompClient.subscribe(
       "/topic/currentPlayerName",
       function (currentPlayerName) {
-        renderCurrentPlayer(JSON.parse(currentPlayerName.body));
+        renderCurrentPlayer((currentPlayerName.body));
       }
     );
 
     stompClient.subscribe("/topic/direction", function (direction) {
-      renderDirection(JSON.parse(direction.body));
+      renderDirection((direction.body));
     });
 
     stompClient.subscribe(

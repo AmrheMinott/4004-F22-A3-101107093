@@ -53,6 +53,7 @@ public class CrazyEightWebSocketController {
 	@GetMapping
 	@RequestMapping("/drawCard")
 	public Player drawCard(@RequestBody String userName) {
+		userName = userName.replace("\"", "");
 		amountDrawn++;
 
 		String card = gameLogic.drawCard(connectedPlayers.get(currentPlayer).getName(), userName, amountDrawn);
@@ -71,6 +72,9 @@ public class CrazyEightWebSocketController {
 	@RequestMapping("/canPlay")
 	public boolean canPlay(@RequestBody String userName) {
 		int previousPlayerIndex = currentPlayer;
+		userName = userName.replace("\"", "");
+
+		LOGGER.info("Can {} {} play?", connectedPlayers.get(currentPlayer).getName(), userName);
 
 		this.simpMessagingTemplate.convertAndSend("/topic/currentPlayerName",
 				connectedPlayers.get(currentPlayer).getName());
@@ -80,6 +84,7 @@ public class CrazyEightWebSocketController {
 		}
 
 		if (gameLogic.handleRoundCompletion(connectedPlayers, topCard)) {
+			LOGGER.info("Round Complete!");
 			amountDrawn = 0;
 			this.simpMessagingTemplate.convertAndSend("/topic/playerWS", connectedPlayers);
 			determineAndSendWinner();
@@ -102,10 +107,12 @@ public class CrazyEightWebSocketController {
 	@RequestMapping("/postCard")
 	public Player postCard(@RequestBody Player player) throws URISyntaxException {
 		this.topCard = player.getCard();
+		LOGGER.info("Card {} has been placed by {} ", topCard, player.getName());
 
 		amountDrawn = 0;
 
 		if (gameLogic.handleRoundCompletion(connectedPlayers, topCard)) {
+			LOGGER.info("Round Complete !!");
 			this.simpMessagingTemplate.convertAndSend("/topic/playerWS", connectedPlayers);
 			determineAndSendWinner();
 			return connectedPlayers.get(currentPlayer);
@@ -142,6 +149,7 @@ public class CrazyEightWebSocketController {
 	@PostMapping
 	@RequestMapping("/player")
 	public Player getCurrentPlayerByName(@RequestBody String userName) throws URISyntaxException {
+		userName = userName.replace("\"", "");
 		for (Player p : connectedPlayers) {
 			if (p.getName().equals(userName)) {
 				p.setCard(topCard);
@@ -156,6 +164,7 @@ public class CrazyEightWebSocketController {
 	@PostMapping
 	@RequestMapping("/createPlayer")
 	public Player createPlayer(@RequestBody String userName) throws URISyntaxException {
+		userName = userName.replace("\"", "");
 		LOGGER.info("Post made an addition " + userName);
 
 		for (Player p : connectedPlayers) {
@@ -184,6 +193,29 @@ public class CrazyEightWebSocketController {
 
 		this.simpMessagingTemplate.convertAndSend("/topic/playerWS", connectedPlayers);
 		return player;
+	}
+
+	@PostMapping
+	@RequestMapping("/testSetPlayers")
+	public void setPlayers(@RequestBody ArrayList<Player> players) {
+		connectedPlayers.clear();
+		for (Player p : players) {
+			connectedPlayers.add(p);
+		}
+
+		this.simpMessagingTemplate.convertAndSend("/topic/direction", direction);
+		this.simpMessagingTemplate.convertAndSend("/topic/currentPlayerName",
+				connectedPlayers.get(currentPlayer).getName());
+
+		this.simpMessagingTemplate.convertAndSend("/topic/playerWS", connectedPlayers);
+	}
+
+	@GetMapping
+	@RequestMapping("/reset")
+	public void resetBackEnd() {
+		currentPlayer = 0;
+		connectedPlayers.clear();
+		gameLogic.resetDeck();
 	}
 
 	private void updateBasicPlayerInformation() {
