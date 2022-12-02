@@ -33,6 +33,8 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class AcceptanceTest {
 
+	private static final String DRAW_CARD_BUTTON = "draw-card-button";
+
 	private static final String DIRECTION = "direction";
 
 	private static final int THREAD_SLEEP_TIME = 500;
@@ -91,7 +93,7 @@ public class AcceptanceTest {
 		players.clear();
 	}
 
-	@Test
+	// @Test
 	public void row41() throws InterruptedException, IOException {
 		map.get(USER_1).get("http://localhost:8090/");
 		map.get(USER_2).get("http://localhost:8090/");
@@ -119,7 +121,7 @@ public class AcceptanceTest {
 		assertCurrentPlayerViaSeleniumOfTwoPlayers(USER_2);
 	}
 
-	@Test
+	// @Test
 	public void row43() throws InterruptedException, IOException {
 		map.get(USER_1).get("http://localhost:8090/");
 		map.get(USER_2).get("http://localhost:8090/");
@@ -159,7 +161,7 @@ public class AcceptanceTest {
 		assertCurrentDirection("Current Direction: Left -> Right");
 	}
 
-	@Test
+	// @Test
 	public void row44() throws InterruptedException, IOException {
 		map.get(USER_1).get("http://localhost:8090/");
 		map.get(USER_2).get("http://localhost:8090/");
@@ -191,7 +193,7 @@ public class AcceptanceTest {
 		assertTextIsOnScreenWithQueenCard(map.get(USER_2));
 	}
 
-	@Test
+	// @Test
 	public void row45() throws InterruptedException, IOException {
 		map.get(USER_1).get("http://localhost:8090/");
 		map.get(USER_2).get("http://localhost:8090/");
@@ -226,7 +228,7 @@ public class AcceptanceTest {
 		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_1);
 	}
 
-	@Test
+	// @Test
 	public void row47() throws InterruptedException, IOException {
 		map.get(USER_1).get("http://localhost:8090/");
 		map.get(USER_2).get("http://localhost:8090/");
@@ -270,7 +272,7 @@ public class AcceptanceTest {
 		assertCurrentDirection("Current Direction: Left -> Right");
 	}
 
-	@Test
+	// @Test
 	public void row48() throws InterruptedException, IOException {
 		map.get(USER_1).get("http://localhost:8090/");
 		map.get(USER_2).get("http://localhost:8090/");
@@ -306,7 +308,7 @@ public class AcceptanceTest {
 		assertTextIsOnScreenWithQueenCard(map.get(USER_1));
 	}
 
-	@Test
+	// @Test
 	public void row51() throws InterruptedException, IOException {
 		map.get(USER_1).get("http://localhost:8090/");
 		map.get(USER_2).get("http://localhost:8090/");
@@ -337,7 +339,7 @@ public class AcceptanceTest {
 		assertTextIsOnScreenAfterPlayCard(map.get(USER_1), "Please choose a card of similar suit.");
 	}
 
-	@Test
+	// @Test
 	public void row52() throws InterruptedException, IOException {
 		map.get(USER_1).get("http://localhost:8090/");
 		map.get(USER_2).get("http://localhost:8090/");
@@ -368,7 +370,7 @@ public class AcceptanceTest {
 		assertTextIsOnScreenAfterPlayCard(map.get(USER_1), "Updated player data from Web Socket");
 	}
 
-	@Test
+	// @Test
 	public void row53() throws InterruptedException, IOException {
 		map.get(USER_1).get("http://localhost:8090/");
 		map.get(USER_2).get("http://localhost:8090/");
@@ -399,7 +401,7 @@ public class AcceptanceTest {
 		assertTextIsOnScreenAfterPlayCard(map.get(USER_1), "Pick the next suit for the eight card.");
 	}
 
-	@Test
+	// @Test
 	public void row54() throws InterruptedException, IOException {
 		map.get(USER_1).get("http://localhost:8090/");
 		map.get(USER_2).get("http://localhost:8090/");
@@ -430,6 +432,36 @@ public class AcceptanceTest {
 		assertTextIsOnScreenAfterPlayCard(map.get(USER_1), "Please choose a card of similar suit.");
 	}
 
+//	@Test
+	public void row58() throws InterruptedException, IOException {
+		map.get(USER_1).get("http://localhost:8090/");
+
+		String topCard = "7C";
+
+		resetBackend();
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		initOnePlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
+				new ArrayList<>(Arrays.asList("3H")));
+
+		registerPlayerViaSelenium(USER_1);
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		rigGameWithPlayersData(players);
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
+
+		players.get(0).setHand(new ArrayList<>(Arrays.asList("3H", "6C")));
+
+		rigGameAfterDrawCard(players);
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		map.get(USER_1).findElement(By.className("6C")).click();
+	}
+
 	private void assertTextIsOnScreenWithQueenCard(WebDriver driver) {
 		assertTrue(hasText(driver, "You lost your turn due to a queen."));
 	}
@@ -445,12 +477,31 @@ public class AcceptanceTest {
 				map.get(USER_2).findElement(By.id(CURRENT_PLAYER_ID)).getText());
 	}
 
+	private void registerPlayerViaSelenium(String playerName) {
+		map.get(playerName).findElement(By.id(USER_ID)).sendKeys(playerName);
+		map.get(playerName).findElement(By.id(REGISTER_PLAYER)).click();
+	}
+
 	private void registerViaSeleniumTwoPlayers() {
 		map.get(USER_1).findElement(By.id(USER_ID)).sendKeys(USER_1);
 		map.get(USER_1).findElement(By.id(REGISTER_PLAYER)).click();
 
 		map.get(USER_2).findElement(By.id(USER_ID)).sendKeys(USER_2);
 		map.get(USER_2).findElement(By.id(REGISTER_PLAYER)).click();
+	}
+
+	private void registerViaSeleniumFourPlayers() {
+		map.get(USER_1).findElement(By.id(USER_ID)).sendKeys(USER_1);
+		map.get(USER_1).findElement(By.id(REGISTER_PLAYER)).click();
+
+		map.get(USER_2).findElement(By.id(USER_ID)).sendKeys(USER_2);
+		map.get(USER_2).findElement(By.id(REGISTER_PLAYER)).click();
+
+		map.get(USER_3).findElement(By.id(USER_ID)).sendKeys(USER_3);
+		map.get(USER_3).findElement(By.id(REGISTER_PLAYER)).click();
+
+		map.get(USER_4).findElement(By.id(USER_ID)).sendKeys(USER_4);
+		map.get(USER_4).findElement(By.id(REGISTER_PLAYER)).click();
 	}
 
 	private void assertCurrentDirection(String direction) {
@@ -471,18 +522,21 @@ public class AcceptanceTest {
 				map.get(USER_4).findElement(By.id(CURRENT_PLAYER_ID)).getText());
 	}
 
-	private void registerViaSeleniumFourPlayers() {
-		map.get(USER_1).findElement(By.id(USER_ID)).sendKeys(USER_1);
-		map.get(USER_1).findElement(By.id(REGISTER_PLAYER)).click();
+	private void initOnePlayers(String topCard, ArrayList<String> deck, ArrayList<String> hand_1) {
+		PlayerScore playerScore = new PlayerScore();
+		playerScore.setName(USER_1);
+		playerScore.setScore(0);
 
-		map.get(USER_2).findElement(By.id(USER_ID)).sendKeys(USER_2);
-		map.get(USER_2).findElement(By.id(REGISTER_PLAYER)).click();
+		Player player_1 = new Player();
+		player_1.setName(USER_1);
+		player_1.setCard(topCard);
+		player_1.setScore(0);
+		player_1.setRound(0);
+		player_1.setHand(hand_1);
+		player_1.setDeck(deck);
+		player_1.setOtherPlayersScore(new ArrayList<>(Arrays.asList(playerScore)));
 
-		map.get(USER_3).findElement(By.id(USER_ID)).sendKeys(USER_3);
-		map.get(USER_3).findElement(By.id(REGISTER_PLAYER)).click();
-
-		map.get(USER_4).findElement(By.id(USER_ID)).sendKeys(USER_4);
-		map.get(USER_4).findElement(By.id(REGISTER_PLAYER)).click();
+		players.add(player_1);
 	}
 
 	private void initTwoPlayers(String topCard, ArrayList<String> deck, ArrayList<String> hand_1,
@@ -577,6 +631,19 @@ public class AcceptanceTest {
 		client.send(request, HttpResponse.BodyHandlers.ofString());
 
 		LOGGER.info("Game Data rigged.");
+	}
+
+	private void rigGameAfterDrawCard(ArrayList<Player> players)
+			throws JsonProcessingException, IOException, InterruptedException {
+		var objectMapper = new ObjectMapper();
+		String requestBody = objectMapper.writeValueAsString(players);
+
+		client = HttpClient.newHttpClient();
+		request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8090/drawCardTest"))
+				.POST(HttpRequest.BodyPublishers.ofString(requestBody)).header("Content-Type", "application/json")
+				.build();
+
+		client.send(request, HttpResponse.BodyHandlers.ofString());
 	}
 
 	private void resetBackend() throws IOException, InterruptedException {
