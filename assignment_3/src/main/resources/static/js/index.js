@@ -327,7 +327,7 @@ function wsConnect() {
     );
 
     stompClient.subscribe("/topic/direction", function (direction) {
-      renderDirection((direction.body));
+      renderDirection(JSON.parse(direction.body));
     });
 
     stompClient.subscribe(

@@ -125,6 +125,7 @@ public class CrazyEightWebSocketController {
 
 		currentPlayer = gameLogic.determineCurrentPlayer(currentPlayer, connectedPlayers, direction, topCard);
 
+		LOGGER.info("Current player {} is now {}", currentPlayer, connectedPlayers.get(currentPlayer).getName());
 		// Add two cards to player hands.
 		if (connectedPlayers.get(currentPlayer).getHand().size() == 1) {
 			gameLogic.addTwoCardToPlayer(connectedPlayers.get(currentPlayer), topCard);
@@ -214,6 +215,7 @@ public class CrazyEightWebSocketController {
 	@RequestMapping("/reset")
 	public void resetBackEnd() {
 		currentPlayer = 0;
+		direction = true;
 		connectedPlayers.clear();
 		gameLogic.resetDeck();
 	}

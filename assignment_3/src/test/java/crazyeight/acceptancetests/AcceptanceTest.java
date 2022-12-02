@@ -34,7 +34,7 @@ public class AcceptanceTest {
 
 	private static final String DIRECTION = "direction";
 
-	private static final int THREAD_SLEEP_TIME = 3000;
+	private static final int THREAD_SLEEP_TIME = 1000;
 
 	private static final String USER_4 = "user_4";
 
@@ -52,12 +52,15 @@ public class AcceptanceTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AcceptanceTest.class);
 
-	WebDriver driver_1;
-	WebDriver driver_2;
-	WebDriver driver_3;
-	WebDriver driver_4;
+	private HttpClient client;
+	private HttpRequest request;
+	private ArrayList<Player> players;
+	private WebDriver driver_1;
+	private WebDriver driver_2;
+	private WebDriver driver_3;
+	private WebDriver driver_4;
 
-	HashMap<String, WebDriver> map = new HashMap<>();
+	private HashMap<String, WebDriver> map = new HashMap<>();
 
 	@BeforeAll
 	static void setupAll() {
@@ -75,6 +78,8 @@ public class AcceptanceTest {
 		map.put(USER_2, driver_2);
 		map.put(USER_3, driver_3);
 		map.put(USER_4, driver_4);
+
+		players = new ArrayList<>();
 	}
 
 	@AfterEach
@@ -82,10 +87,8 @@ public class AcceptanceTest {
 		for (String user : map.keySet()) {
 			map.get(user).close();
 		}
+		players.clear();
 	}
-
-	private HttpClient client;
-	private HttpRequest request;
 
 	@Test
 	public void row41() throws InterruptedException, IOException {
@@ -93,44 +96,11 @@ public class AcceptanceTest {
 		map.get(USER_2).get("http://localhost:8090/");
 		resetBackend();
 		Thread.sleep(THREAD_SLEEP_TIME);
-		LOGGER.info("Opening browsers for both players.");
 
-		PlayerScore playerScore = new PlayerScore();
-		playerScore.setName(USER_1);
-		playerScore.setScore(0);
+		initTwoPlayers("KC", new ArrayList<>(Arrays.asList("4C", "QH", "KC", "AH", "AC", "AD", "AS")),
+				new ArrayList<>(Arrays.asList("3C", "4H", "8C")), new ArrayList<>(Arrays.asList("9H", "JH", "QC")));
 
-		ArrayList<Player> players = new ArrayList<>();
-
-		Player player = new Player();
-		player.setName(USER_1);
-		player.setCard("KC");
-		player.setScore(0);
-		player.setRound(0);
-		player.setHand(new ArrayList<>(Arrays.asList("3C", "4H", "8C")));
-		player.setDeck(new ArrayList<>(Arrays.asList("4C", "QH", "KC", "AH", "AC", "AD", "AS")));
-		player.setOtherPlayersScore(new ArrayList<>(Arrays.asList(playerScore)));
-
-		Player player_2 = new Player();
-		player_2.setName(USER_2);
-		player_2.setCard("KC");
-		player_2.setScore(0);
-		player_2.setRound(0);
-		player_2.setHand(new ArrayList<>(Arrays.asList("9H", "JH", "QC")));
-		player_2.setDeck(new ArrayList<>(Arrays.asList("4C", "QH", "KC", "AH", "AC", "AD", "AS")));
-		player_2.setOtherPlayersScore(new ArrayList<>(Arrays.asList(playerScore)));
-
-		players.add(player);
-		players.add(player_2);
-
-		LOGGER.info("Regsitering {} in the game.", USER_1);
-
-		map.get(USER_1).findElement(By.id(USER_ID)).sendKeys(USER_1);
-		map.get(USER_1).findElement(By.id(REGISTER_PLAYER)).click();
-
-		LOGGER.info("Regsitering {} in the game.", USER_2);
-
-		map.get(USER_2).findElement(By.id(USER_ID)).sendKeys(USER_2);
-		map.get(USER_2).findElement(By.id(REGISTER_PLAYER)).click();
+		registerViaSeleniumTwoPlayers();
 
 		Thread.sleep(THREAD_SLEEP_TIME);
 
@@ -138,23 +108,14 @@ public class AcceptanceTest {
 
 		Thread.sleep(THREAD_SLEEP_TIME);
 
-		LOGGER.info("Confirming Socket connection opened and asserting current player is {}.", USER_1);
-
-		assertEquals(String.format("Current Player: %s", USER_1),
-				map.get(USER_1).findElement(By.id(CURRENT_PLAYER_ID)).getText());
-		assertEquals(String.format("Current Player: %s", USER_1),
-				map.get(USER_2).findElement(By.id(CURRENT_PLAYER_ID)).getText());
+		assertCurrentPlayerViaSeleniumOfTwoPlayers(USER_1);
 
 		LOGGER.info("{} Playing 3C card.", USER_1);
 
 		map.get(USER_1).findElement(By.className("3C")).click();
 		Thread.sleep(THREAD_SLEEP_TIME);
-		LOGGER.info("Asserting the current player has changed and is {}.", USER_2);
 
-		assertEquals(String.format("Current Player: %s", USER_2),
-				map.get(USER_1).findElement(By.id(CURRENT_PLAYER_ID)).getText());
-		assertEquals(String.format("Current Player: %s", USER_2),
-				map.get(USER_2).findElement(By.id(CURRENT_PLAYER_ID)).getText());
+		assertCurrentPlayerViaSeleniumOfTwoPlayers(USER_2);
 	}
 
 	@Test
@@ -168,61 +129,71 @@ public class AcceptanceTest {
 
 		resetBackend();
 		Thread.sleep(THREAD_SLEEP_TIME);
-		LOGGER.info("Opening browsers for both players.");
 
-		PlayerScore playerScore = new PlayerScore();
-		playerScore.setName(USER_1);
-		playerScore.setScore(0);
+		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("4C", "QH", topCard, "AH", "AC", "AD", "AS")),
+				new ArrayList<>(Arrays.asList("AH", "4H", "8C")), new ArrayList<>(Arrays.asList("9H", "JH", "QC")),
+				new ArrayList<>(Arrays.asList("9H", "JH", "QC")), new ArrayList<>(Arrays.asList("7H", "JH", "QC")));
 
-		ArrayList<Player> players = new ArrayList<>();
+		registerViaSeleniumFourPlayers();
 
-		Player player = new Player();
-		player.setName(USER_1);
-		player.setCard(topCard);
-		player.setScore(0);
-		player.setRound(0);
-		player.setHand(new ArrayList<>(Arrays.asList("AH", "4H", "8C")));
-		player.setDeck(new ArrayList<>(Arrays.asList("4C", "QH", topCard, "AH", "AC", "AD", "AS")));
-		player.setOtherPlayersScore(new ArrayList<>(Arrays.asList(playerScore)));
+		Thread.sleep(THREAD_SLEEP_TIME);
 
-		Player player_2 = new Player();
-		player_2.setName(USER_2);
-		player_2.setCard(topCard);
-		player_2.setScore(0);
-		player_2.setRound(0);
-		player_2.setHand(new ArrayList<>(Arrays.asList("9H", "JH", "QC")));
-		player_2.setDeck(new ArrayList<>(Arrays.asList("4C", "QH", topCard, "AH", "AC", "AD", "AS")));
-		player_2.setOtherPlayersScore(new ArrayList<>(Arrays.asList(playerScore)));
+		rigGameWithPlayersData(players);
 
-		Player player_3 = new Player();
-		player_3.setName(USER_3);
-		player_3.setCard(topCard);
-		player_3.setScore(0);
-		player_3.setRound(0);
-		player_3.setHand(new ArrayList<>(Arrays.asList("9H", "JH", "QC")));
-		player_3.setDeck(new ArrayList<>(Arrays.asList("4C", "QH", topCard, "AH", "AC", "AD", "AS")));
-		player_3.setOtherPlayersScore(new ArrayList<>(Arrays.asList(playerScore)));
+		Thread.sleep(THREAD_SLEEP_TIME);
 
-		Player player_4 = new Player();
-		player_4.setName(USER_4);
-		player_4.setCard(topCard);
-		player_4.setScore(0);
-		player_4.setRound(0);
-		player_4.setHand(new ArrayList<>(Arrays.asList("7H", "JH", "QC")));
-		player_4.setDeck(new ArrayList<>(Arrays.asList("4C", "QH", topCard, "AH", "AC", "AD", "AS")));
-		player_4.setOtherPlayersScore(new ArrayList<>(Arrays.asList(playerScore)));
+		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_1);
 
-		players.add(player);
-		players.add(player_2);
-		players.add(player_3);
-		players.add(player_4);
+		LOGGER.info("{} Playing AH card.", USER_1);
+		Thread.sleep(THREAD_SLEEP_TIME);
+		map.get(USER_1).findElement(By.className("AH")).click();
 
-		LOGGER.info("Regsitering {} in the game.", USER_1);
+		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_4);
 
+		Thread.sleep(THREAD_SLEEP_TIME);
+		map.get(USER_4).findElement(By.className("7H")).click();
+
+		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_3);
+
+		assertCurrentDirection("Current Direction: Left -> Right");
+	}
+
+	private void assertCurrentPlayerViaSeleniumOfTwoPlayers(String player) {
+		assertEquals(String.format("Current Player: %s", player),
+				map.get(USER_1).findElement(By.id(CURRENT_PLAYER_ID)).getText());
+		assertEquals(String.format("Current Player: %s", player),
+				map.get(USER_2).findElement(By.id(CURRENT_PLAYER_ID)).getText());
+	}
+
+	private void registerViaSeleniumTwoPlayers() {
 		map.get(USER_1).findElement(By.id(USER_ID)).sendKeys(USER_1);
 		map.get(USER_1).findElement(By.id(REGISTER_PLAYER)).click();
 
-		LOGGER.info("Regsitering {} in the game.", USER_2);
+		map.get(USER_2).findElement(By.id(USER_ID)).sendKeys(USER_2);
+		map.get(USER_2).findElement(By.id(REGISTER_PLAYER)).click();
+	}
+
+	private void assertCurrentDirection(String direction) {
+		assertEquals(direction, map.get(USER_1).findElement(By.id(DIRECTION)).getText());
+		assertEquals(direction, map.get(USER_2).findElement(By.id(DIRECTION)).getText());
+		assertEquals(direction, map.get(USER_3).findElement(By.id(DIRECTION)).getText());
+		assertEquals(direction, map.get(USER_4).findElement(By.id(DIRECTION)).getText());
+	}
+
+	private void assertCurrentPlayerViaSeleniumOfFourPlayers(String player) {
+		assertEquals(String.format("Current Player: %s", player),
+				map.get(USER_1).findElement(By.id(CURRENT_PLAYER_ID)).getText());
+		assertEquals(String.format("Current Player: %s", player),
+				map.get(USER_2).findElement(By.id(CURRENT_PLAYER_ID)).getText());
+		assertEquals(String.format("Current Player: %s", player),
+				map.get(USER_3).findElement(By.id(CURRENT_PLAYER_ID)).getText());
+		assertEquals(String.format("Current Player: %s", player),
+				map.get(USER_4).findElement(By.id(CURRENT_PLAYER_ID)).getText());
+	}
+
+	private void registerViaSeleniumFourPlayers() {
+		map.get(USER_1).findElement(By.id(USER_ID)).sendKeys(USER_1);
+		map.get(USER_1).findElement(By.id(REGISTER_PLAYER)).click();
 
 		map.get(USER_2).findElement(By.id(USER_ID)).sendKeys(USER_2);
 		map.get(USER_2).findElement(By.id(REGISTER_PLAYER)).click();
@@ -232,50 +203,83 @@ public class AcceptanceTest {
 
 		map.get(USER_4).findElement(By.id(USER_ID)).sendKeys(USER_4);
 		map.get(USER_4).findElement(By.id(REGISTER_PLAYER)).click();
+	}
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+	private void initTwoPlayers(String topCard, ArrayList<String> deck, ArrayList<String> hand_1,
+			ArrayList<String> hand_2) {
+		PlayerScore playerScore = new PlayerScore();
+		playerScore.setName(USER_1);
+		playerScore.setScore(0);
 
-		rigGameWithPlayersData(players);
+		Player player_1 = new Player();
+		player_1.setName(USER_1);
+		player_1.setCard(topCard);
+		player_1.setScore(0);
+		player_1.setRound(0);
+		player_1.setHand(hand_1);
+		player_1.setDeck(deck);
+		player_1.setOtherPlayersScore(new ArrayList<>(Arrays.asList(playerScore)));
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Player player_2 = new Player();
+		player_2.setName(USER_2);
+		player_2.setCard(topCard);
+		player_2.setScore(0);
+		player_2.setRound(0);
+		player_2.setHand(hand_2);
+		player_2.setDeck(deck);
+		player_2.setOtherPlayersScore(new ArrayList<>(Arrays.asList(playerScore)));
 
-		LOGGER.info("Confirming Socket connection opened and asserting current player is {}.", USER_1);
+		players.add(player_1);
+		players.add(player_2);
+	}
 
-		assertEquals(String.format("Current Player: %s", USER_1),
-				map.get(USER_1).findElement(By.id(CURRENT_PLAYER_ID)).getText());
-		assertEquals(String.format("Current Player: %s", USER_1),
-				map.get(USER_2).findElement(By.id(CURRENT_PLAYER_ID)).getText());
+	private void initFourPlayers(String topCard, ArrayList<String> deck, ArrayList<String> hand_1,
+			ArrayList<String> hand_2, ArrayList<String> hand_3, ArrayList<String> hand_4) {
+		PlayerScore playerScore = new PlayerScore();
+		playerScore.setName(USER_1);
+		playerScore.setScore(0);
 
-		LOGGER.info("{} Playing AH card.", USER_1);
-		Thread.sleep(THREAD_SLEEP_TIME);
-		map.get(USER_1).findElement(By.className("AH")).click();
+		Player player_1 = new Player();
+		player_1.setName(USER_1);
+		player_1.setCard(topCard);
+		player_1.setScore(0);
+		player_1.setRound(0);
+		player_1.setHand(hand_1);
+		player_1.setDeck(deck);
+		player_1.setOtherPlayersScore(new ArrayList<>(Arrays.asList(playerScore)));
 
-		LOGGER.info("Asserting the current player has changed and is {}.", USER_2);
+		Player player_2 = new Player();
+		player_2.setName(USER_2);
+		player_2.setCard(topCard);
+		player_2.setScore(0);
+		player_2.setRound(0);
+		player_2.setHand(hand_2);
+		player_2.setDeck(deck);
+		player_2.setOtherPlayersScore(new ArrayList<>(Arrays.asList(playerScore)));
 
-		assertEquals(String.format("Current Player: %s", USER_4),
-				map.get(USER_1).findElement(By.id(CURRENT_PLAYER_ID)).getText());
-		assertEquals(String.format("Current Player: %s", USER_4),
-				map.get(USER_2).findElement(By.id(CURRENT_PLAYER_ID)).getText());
-		assertEquals(String.format("Current Player: %s", USER_4),
-				map.get(USER_3).findElement(By.id(CURRENT_PLAYER_ID)).getText());
-		assertEquals(String.format("Current Player: %s", USER_4),
-				map.get(USER_4).findElement(By.id(CURRENT_PLAYER_ID)).getText());
+		Player player_3 = new Player();
+		player_3.setName(USER_3);
+		player_3.setCard(topCard);
+		player_3.setScore(0);
+		player_3.setRound(0);
+		player_3.setHand(hand_3);
+		player_3.setDeck(deck);
+		player_3.setOtherPlayersScore(new ArrayList<>(Arrays.asList(playerScore)));
 
-		Thread.sleep(THREAD_SLEEP_TIME);
-		map.get(USER_4).findElement(By.className("7H")).click();
-		assertEquals(String.format("Current Player: %s", USER_3),
-				map.get(USER_1).findElement(By.id(CURRENT_PLAYER_ID)).getText());
-		assertEquals(String.format("Current Player: %s", USER_3),
-				map.get(USER_2).findElement(By.id(CURRENT_PLAYER_ID)).getText());
-		assertEquals(String.format("Current Player: %s", USER_3),
-				map.get(USER_3).findElement(By.id(CURRENT_PLAYER_ID)).getText());
-		assertEquals(String.format("Current Player: %s", USER_3),
-				map.get(USER_4).findElement(By.id(CURRENT_PLAYER_ID)).getText());
+		Player player_4 = new Player();
+		player_4.setName(USER_4);
+		player_4.setCard(topCard);
+		player_4.setScore(0);
+		player_4.setRound(0);
+		player_4.setHand(hand_4);
+		player_4.setDeck(hand_4);
+		player_4.setOtherPlayersScore(new ArrayList<>(Arrays.asList(playerScore)));
 
-		assertEquals("Current Direction: Left -> Right", map.get(USER_1).findElement(By.id(DIRECTION)).getText());
-		assertEquals("Current Direction: Left -> Right", map.get(USER_2).findElement(By.id(DIRECTION)).getText());
-		assertEquals("Current Direction: Left -> Right", map.get(USER_3).findElement(By.id(DIRECTION)).getText());
-		assertEquals("Current Direction: Left -> Right", map.get(USER_4).findElement(By.id(DIRECTION)).getText());
+		players.add(player_1);
+		players.add(player_2);
+		players.add(player_3);
+		players.add(player_4);
+
 	}
 
 	private void rigGameWithPlayersData(ArrayList<Player> players)
