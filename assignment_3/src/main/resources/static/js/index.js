@@ -22,6 +22,15 @@ async function registerUser() {
   let userNameInput = document.getElementById("user-id");
 
   userName = userNameInput.value;
+
+  stompClient.subscribe(
+    `/user/${userName}/queen`,
+    function (skipTurnMessage) {
+      console.log('skipTurnMessage.body', skipTurnMessage.body);
+      renderMessage(skipTurnMessage.body);
+    }
+  );
+
   const createPlayerResponse = await fetch(CREATE_PLAYER_URL, {
     method: "POST",
     headers: {
@@ -329,13 +338,6 @@ function wsConnect() {
     stompClient.subscribe("/topic/direction", function (direction) {
       renderDirection(JSON.parse(direction.body));
     });
-
-    stompClient.subscribe(
-      `/user/"${userName}"/queen`,
-      function (skipTurnMessage) {
-        renderMessage(skipTurnMessage.body);
-      }
-    );
 
     stompClient.subscribe("/topic/winner", function (winnerName) {
       renderWinner(JSON.parse(winnerName.body));
