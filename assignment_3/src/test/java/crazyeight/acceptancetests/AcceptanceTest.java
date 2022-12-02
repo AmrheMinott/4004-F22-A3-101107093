@@ -191,6 +191,41 @@ public class AcceptanceTest {
 		assertTextIsOnScreenWithQueenCard(map.get(USER_2));
 	}
 
+	@Test
+	public void row45() throws InterruptedException, IOException {
+		map.get(USER_1).get("http://localhost:8090/");
+		map.get(USER_2).get("http://localhost:8090/");
+		map.get(USER_3).get("http://localhost:8090/");
+		map.get(USER_4).get("http://localhost:8090/");
+
+		String topCard = "4C";
+
+		resetBackend();
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("4C", "QH", "AS", "AH", "AC", "AD", "AS")),
+				new ArrayList<>(Arrays.asList("QC", "4H", "8C")), new ArrayList<>(Arrays.asList("9H", "JH", "QC")),
+				new ArrayList<>(Arrays.asList("9H", "JH", "QC")), new ArrayList<>(Arrays.asList("3C", "JH", "QC")));
+
+		registerViaSeleniumFourPlayers();
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		rigGameWithPlayersData(players);
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		resetCurrentPlayer(3);
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_4);
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+		map.get(USER_4).findElement(By.className("3C")).click();
+		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_1);
+	}
+
 	private void assertTextIsOnScreenWithQueenCard(WebDriver driver) {
 		assertTrue(hasText(driver, "You lost your turn due to a queen."));
 	}
@@ -339,6 +374,17 @@ public class AcceptanceTest {
 	private void resetBackend() throws IOException, InterruptedException {
 		client = HttpClient.newHttpClient();
 		request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8090/reset")).GET().build();
+
+		client.send(request, HttpResponse.BodyHandlers.ofString());
+	}
+
+	private void resetCurrentPlayer(int currentPlayer) throws IOException, InterruptedException {
+		var objectMapper = new ObjectMapper();
+		String requestBody = objectMapper.writeValueAsString(currentPlayer);
+		client = HttpClient.newHttpClient();
+		request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8090/editCurrentPlayer"))
+				.POST(HttpRequest.BodyPublishers.ofString(requestBody)).header("Content-Type", "application/json")
+				.build();
 
 		client.send(request, HttpResponse.BodyHandlers.ofString());
 	}

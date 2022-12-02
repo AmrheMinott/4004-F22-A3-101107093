@@ -244,6 +244,15 @@ public class CrazyEightWebSocketController {
 		gameLogic.resetDeck();
 	}
 
+	@PostMapping
+	@RequestMapping("/editCurrentPlayer")
+	public void editCurrentPlayerbackEnd(@RequestBody int playerIndex) {
+		LOGGER.info("playerIndex -> {}", playerIndex);
+		currentPlayer = playerIndex;
+		this.simpMessagingTemplate.convertAndSend("/topic/currentPlayerName",
+				connectedPlayers.get(currentPlayer).getName());
+	}
+
 	private void updateBasicPlayerInformation() {
 		for (Player p : connectedPlayers) {
 			p.setCard(topCard);
