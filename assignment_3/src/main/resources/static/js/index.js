@@ -13,6 +13,8 @@ let playerObject = {};
 let userName = "";
 let suitChosen = "";
 
+let cardDrawn = "";
+
 let amountDrawn = 0;
 
 var stompClient = null;
@@ -23,13 +25,9 @@ async function registerUser() {
 
   userName = userNameInput.value;
 
-  stompClient.subscribe(
-    `/user/${userName}/queen`,
-    function (skipTurnMessage) {
-      console.log('skipTurnMessage.body', skipTurnMessage.body);
-      renderMessage(skipTurnMessage.body);
-    }
-  );
+  stompClient.subscribe(`/user/${userName}/queen`, function (skipTurnMessage) {
+    renderMessage(skipTurnMessage.body);
+  });
 
   const createPlayerResponse = await fetch(CREATE_PLAYER_URL, {
     method: "POST",
@@ -178,13 +176,16 @@ async function drawCard() {
     const player = await drawResponse.json();
     if (player) {
       renderPlayerHand(player.hand);
-      if (
-        player.hand.length == 0 ||
-        player.hand.length == playerObject.hand.length
-      ) {
+
+      if (player.hand.length == 0) {
         renderMessage("Opps No Card was Given!");
       } else {
-        renderMessage(`Card drawn: ${player.hand[player.hand.length - 1]}`);
+        if (cardDrawn === player.hand[player.hand.length - 1]) {
+          renderMessage(`No Card Given`);
+        } else {
+          renderMessage(`Card drawn: ${player.hand[player.hand.length - 1]}`);
+          cardDrawn = player.hand[player.hand.length - 1];
+        }
       }
       playerObject = player;
     } else {
@@ -269,9 +270,7 @@ function renderScores() {
     if (playerScore.name == playerObject.name) {
       playerScoreParagraph.innerHTML = `ME: ${playerScore.score}`;
     } else {
-      playerScoreParagraph.innerHTML = `${(playerScore.name)}: ${
-        playerScore.score
-      }`;
+      playerScoreParagraph.innerHTML = `${playerScore.name}: ${playerScore.score}`;
     }
     playerScoreParagraph.id = "player-score";
     playerScoresDiv.appendChild(playerScoreParagraph);
@@ -331,7 +330,7 @@ function wsConnect() {
     stompClient.subscribe(
       "/topic/currentPlayerName",
       function (currentPlayerName) {
-        renderCurrentPlayer((currentPlayerName.body));
+        renderCurrentPlayer(currentPlayerName.body);
       }
     );
 
