@@ -1,6 +1,7 @@
 package crazyeight.acceptancetests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.net.URI;
@@ -156,6 +157,42 @@ public class AcceptanceTest {
 		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_3);
 
 		assertCurrentDirection("Current Direction: Left -> Right");
+	}
+
+	@Test
+	public void row44() throws InterruptedException, IOException {
+		map.get(USER_1).get("http://localhost:8090/");
+		map.get(USER_2).get("http://localhost:8090/");
+		map.get(USER_3).get("http://localhost:8090/");
+		map.get(USER_4).get("http://localhost:8090/");
+
+		String topCard = "KC";
+
+		resetBackend();
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("4C", "QH", "AS", "AH", "AC", "AD", "AS")),
+				new ArrayList<>(Arrays.asList("QC", "4H", "8C")), new ArrayList<>(Arrays.asList("9H", "JH", "QC")),
+				new ArrayList<>(Arrays.asList("9H", "JH", "QC")), new ArrayList<>(Arrays.asList("7H", "JH", "QC")));
+
+		registerViaSeleniumFourPlayers();
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		rigGameWithPlayersData(players);
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_1);
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+		map.get(USER_1).findElement(By.className("QC")).click();
+		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_3);
+		assertTextIsOnScreenWithQueenCard(map.get(USER_2));
+	}
+
+	private void assertTextIsOnScreenWithQueenCard(WebDriver driver) {
+		assertTrue(hasText(driver, "You lost your turn due to a queen."));
 	}
 
 	private void assertCurrentPlayerViaSeleniumOfTwoPlayers(String player) {
