@@ -35,7 +35,7 @@ public class AcceptanceTest {
 
 	private static final String DIRECTION = "direction";
 
-	private static final int THREAD_SLEEP_TIME = 1000;
+	private static final int THREAD_SLEEP_TIME = 500;
 
 	private static final String USER_4 = "user_4";
 
@@ -268,6 +268,42 @@ public class AcceptanceTest {
 		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_2);
 
 		assertCurrentDirection("Current Direction: Left -> Right");
+	}
+	
+	@Test
+	public void row48() throws InterruptedException, IOException {
+		map.get(USER_1).get("http://localhost:8090/");
+		map.get(USER_2).get("http://localhost:8090/");
+		map.get(USER_3).get("http://localhost:8090/");
+		map.get(USER_4).get("http://localhost:8090/");
+
+		String topCard = "KC";
+
+		resetBackend();
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("4C", "QH", "AS", "AH", "AC", "AD", "AS")),
+				new ArrayList<>(Arrays.asList("QC", "4H", "8C")), new ArrayList<>(Arrays.asList("9H", "JH", "QC")),
+				new ArrayList<>(Arrays.asList("9H", "JH", "QC")), new ArrayList<>(Arrays.asList("7H", "JH", "QC")));
+
+		registerViaSeleniumFourPlayers();
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		rigGameWithPlayersData(players);
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		resetCurrentPlayer(3);
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_4);
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+		map.get(USER_4).findElement(By.className("QC")).click();
+		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_2);
+		assertTextIsOnScreenWithQueenCard(map.get(USER_1));
 	}
 
 	private void assertTextIsOnScreenWithQueenCard(WebDriver driver) {
