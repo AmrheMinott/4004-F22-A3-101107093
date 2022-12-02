@@ -313,7 +313,7 @@ function wsConnect() {
       let parsedPlayers = JSON.parse(players.body);
 
       parsedPlayers.forEach((player) => {
-        if (player.name == playerObject.name) {
+        if (player.name == userName) {
           playerObject.card = player.card;
           playerObject.deck = player.deck;
           playerObject.otherPlayersScore = player.otherPlayersScore;

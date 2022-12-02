@@ -252,6 +252,20 @@ public class CrazyEightWebSocketController {
 		this.simpMessagingTemplate.convertAndSend("/topic/currentPlayerName",
 				connectedPlayers.get(currentPlayer).getName());
 	}
+	
+	@PostMapping
+	@RequestMapping("/drawCardTest")
+	public void drawCardTest(@RequestBody ArrayList<Player> players) {
+		connectedPlayers.clear();
+		for (Player p : players) {
+			connectedPlayers.add(p);
+		}
+
+		this.simpMessagingTemplate.convertAndSend("/topic/currentPlayerName",
+				connectedPlayers.get(currentPlayer).getName());
+
+		this.simpMessagingTemplate.convertAndSend("/topic/playerWS", connectedPlayers);
+	}
 
 	private void updateBasicPlayerInformation() {
 		for (Player p : connectedPlayers) {
