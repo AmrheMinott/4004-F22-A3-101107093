@@ -124,6 +124,7 @@ async function playCard(card) {
         let input = document.createElement("input");
         input.value = suit;
         input.type = "button";
+        input.className = suit;
         input.id = `card`;
         input.onclick = function () {
           suitSelection(suit, card);
