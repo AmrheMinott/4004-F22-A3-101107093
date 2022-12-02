@@ -592,6 +592,37 @@ public class AcceptanceTest {
 		map.get(USER_1).findElement(By.className("H")).click();
 	}
 
+	
+	@Test
+	public void row63() throws InterruptedException, IOException {
+		map.get(USER_1).get("http://localhost:8090/");
+
+		String topCard = "7C";
+
+		resetBackend();
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		initOnePlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
+				new ArrayList<>(Arrays.asList("KS", "3C")));
+
+		registerPlayerViaSelenium(USER_1);
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		rigGameWithPlayersData(players);
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
+
+		players.get(0).setHand(new ArrayList<>(Arrays.asList("KS", "3C", "6C")));
+
+		rigGameAfterDrawCard(players);
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		map.get(USER_1).findElement(By.className("6C")).click();
+	}
 	private void assertTextIsOnScreenWithQueenCard(WebDriver driver) {
 		assertTrue(hasText(driver, "You lost your turn due to a queen."));
 	}
