@@ -10,15 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import constants.CardFaces;
+import constants.GameLogicConstants;
 import crazyeight.websocket.spring.model.Player;
 import crazyeight.websocket.spring.model.PlayerScore;
 
 public class GameLogic {
 	private static final int SCORE_ENDING_POINTS = 100;
-	final int SCORE_ONE = 1;
-	final int SCORE_TEN = 10;
-	final int SCORE_FIFTY = 50;
-	private final int MAX_DRAWS = 3;
+	
 
 	private final ArrayList<String> DECK_CARD = new ArrayList<>(Arrays.asList("2H", "3H", "4H", "5H", "6H", "7H", "8H",
 			"9H", "10H", "JH", "QH", "KH", "AH", "2S", "3S", "4S", "5S", "6S", "7S", "8S", "9S", "10S", "JS", "QS",
@@ -52,7 +50,7 @@ public class GameLogic {
 			return null;
 		}
 
-		if (userName.equals(currentPlayerName) && amountDrawn <= MAX_DRAWS) {
+		if (userName.equals(currentPlayerName) && amountDrawn <= GameLogicConstants.MAX_DRAWS) {
 			return takeCard();
 		}
 
@@ -81,6 +79,7 @@ public class GameLogic {
 	public int determineCurrentPlayer(int currentPlayerIndex, ArrayList<Player> players, boolean direction,
 			String topCard) {
 		if (topCard.contains(CardFaces.QUEEN)) {
+			LOGGER.info("Skipping player due to QUEEN card being placed.");
 			if (direction) {
 				currentPlayerIndex++;
 				if (currentPlayerIndex >= players.size()) {
@@ -144,11 +143,11 @@ public class GameLogic {
 
 		for (String card : playerHand) {
 			if (card.contains(CardFaces.KING) || card.contains(CardFaces.QUEEN) || card.contains(CardFaces.JACK)) {
-				finalScore += SCORE_TEN;
+				finalScore += GameLogicConstants.SCORE_TEN;
 			} else if (card.contains(CardFaces.EIGHT)) {
-				finalScore += SCORE_FIFTY;
+				finalScore += GameLogicConstants.SCORE_FIFTY;
 			} else if (card.contains(CardFaces.ACE)) {
-				finalScore += SCORE_ONE;
+				finalScore += GameLogicConstants.SCORE_ONE;
 			} else {
 				finalScore += Integer.parseInt(Character.toString(card.charAt(0)));
 			}
@@ -282,7 +281,7 @@ public class GameLogic {
 		if (!hasPlayableCard && this.deck.size() == 0) {
 			return true;
 		}
-		if (!hasPlayableCard && amountDrawn >= MAX_DRAWS && this.deck.size() > 0) {
+		if (!hasPlayableCard && amountDrawn >= GameLogicConstants.MAX_DRAWS && this.deck.size() > 0) {
 			return true;
 		}
 		if (hasPlayableCard) {

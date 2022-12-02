@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import constants.CardFaces;
+import constants.GameLogicConstants;
 import crazyeight.gamelogic.GameLogic;
 import crazyeight.websocket.spring.model.Player;
 
@@ -100,6 +101,28 @@ public class CrazyEightWebSocketController {
 			}
 		}
 
+		if (userName.equals(connectedPlayers.get(currentPlayer).getName())) {
+			String topCardSuit = Character.toString(topCard.charAt(topCard.length() - 1));
+			boolean canPlay = false;
+			for (String card : connectedPlayers.get(currentPlayer).getHand()) {
+				String playerHandCardNumber = Character.toString(card.charAt(0));
+				String playerHandCardSuit = Character.toString(card.charAt(card.length() - 1));
+				if (topCardSuit.equals(playerHandCardSuit) || (playerHandCardNumber.equals(CardFaces.EIGHT))) {
+					canPlay = true;
+				}
+			}
+
+			if (canPlay) {
+				return canPlay;
+			} else {
+				if (amountDrawn > GameLogicConstants.MAX_DRAWS) {
+					currentPlayer = gameLogic.changeSimpleDirection(currentPlayer, connectedPlayers, direction);
+					amountDrawn = 0;
+					return canPlay;
+				}
+			}
+		}
+
 		return gameLogic.canPlay(userName, connectedPlayers.get(previousPlayerIndex).getName());
 	}
 
@@ -108,7 +131,7 @@ public class CrazyEightWebSocketController {
 	public Player postCard(@RequestBody Player player) throws URISyntaxException {
 		this.topCard = player.getCard();
 		LOGGER.info("Card {} has been placed by {} ", topCard, player.getName());
-
+		int priorCurrentPlayer = currentPlayer;
 		amountDrawn = 0;
 
 		if (gameLogic.handleRoundCompletion(connectedPlayers, topCard)) {
@@ -139,9 +162,10 @@ public class CrazyEightWebSocketController {
 		this.simpMessagingTemplate.convertAndSend("/topic/playerWS", connectedPlayers);
 
 		if (topCard.contains(CardFaces.QUEEN)) {
-			simpMessagingTemplate.convertAndSend(
-					String.format("/user/%s/queen", connectedPlayers.get(currentPlayer).getName()),
-					"You lost your turn due to a queen.");
+			String urlPath = String.format("/user/%s/queen", connectedPlayers
+					.get(gameLogic.changeSimpleDirection(priorCurrentPlayer, connectedPlayers, direction)).getName());
+
+			simpMessagingTemplate.convertAndSend(urlPath, "You lost your turn due to a queen.");
 		}
 
 		return connectedPlayers.get(previousPlayer);
