@@ -399,6 +399,37 @@ public class AcceptanceTest {
 		assertTextIsOnScreenAfterPlayCard(map.get(USER_1), "Pick the next suit for the eight card.");
 	}
 
+	@Test
+	public void row54() throws InterruptedException, IOException {
+		map.get(USER_1).get("http://localhost:8090/");
+		map.get(USER_2).get("http://localhost:8090/");
+		map.get(USER_3).get("http://localhost:8090/");
+		map.get(USER_4).get("http://localhost:8090/");
+
+		String topCard = "KC";
+
+		resetBackend();
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
+				new ArrayList<>(Arrays.asList("5S", "4H", "8C")), new ArrayList<>(Arrays.asList("9H", "JH", "QC")),
+				new ArrayList<>(Arrays.asList("9H", "JH", "QC")), new ArrayList<>(Arrays.asList("7H", "JH", "QC")));
+
+		registerViaSeleniumFourPlayers();
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		rigGameWithPlayersData(players);
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		map.get(USER_1).findElement(By.className("5S")).click();
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		assertTextIsOnScreenAfterPlayCard(map.get(USER_1), "Please choose a card of similar suit.");
+	}
+
 	private void assertTextIsOnScreenWithQueenCard(WebDriver driver) {
 		assertTrue(hasText(driver, "You lost your turn due to a queen."));
 	}
