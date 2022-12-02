@@ -37,7 +37,7 @@ public class AcceptanceTest {
 
 	private static final String DIRECTION = "direction";
 
-	private static final int THREAD_SLEEP_TIME = 500;
+	private static final int THREAD_SLEEP_TIME = 2500;
 
 	private static final String USER_4 = "user_4";
 
@@ -493,7 +493,7 @@ public class AcceptanceTest {
 		map.get(USER_1).findElement(By.className("5C")).click();
 	}
 
-	@Test
+//	@Test
 	public void row60() throws InterruptedException, IOException {
 		map.get(USER_1).get("http://localhost:8090/");
 
@@ -521,6 +521,37 @@ public class AcceptanceTest {
 		rigGameAfterDrawCard(players);
 
 		Thread.sleep(THREAD_SLEEP_TIME);
+	}
+
+//	@Test
+	public void row61() throws InterruptedException, IOException {
+		map.get(USER_1).get("http://localhost:8090/");
+
+		String topCard = "7C";
+
+		resetBackend();
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		initOnePlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
+				new ArrayList<>(Arrays.asList("3H")));
+
+		registerPlayerViaSelenium(USER_1);
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		rigGameWithPlayersData(players);
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
+		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
+		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
+		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
+		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
+
+		assertTextIsOnScreenAfterPlayCard(map.get(USER_1), "No Card Given");
+		players.get(0).setHand(new ArrayList<>(Arrays.asList("3H", "6D", "5S", "4H")));
+
+		rigGameAfterDrawCard(players);
 	}
 
 	private void assertTextIsOnScreenWithQueenCard(WebDriver driver) {
