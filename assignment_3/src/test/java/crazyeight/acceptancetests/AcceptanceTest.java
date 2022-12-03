@@ -1,17 +1,11 @@
 package crazyeight.acceptancetests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 import org.json.JSONException;
 import org.junit.jupiter.api.AfterEach;
@@ -20,14 +14,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 
 import crazyeight.websocket.spring.model.Player;
 import crazyeight.websocket.spring.model.PlayerScore;
@@ -35,30 +24,8 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class AcceptanceTest {
 
-	private static final String DRAW_CARD_BUTTON = "draw-card-button";
-
-	private static final String DIRECTION = "direction";
-
-	private static final int THREAD_SLEEP_TIME = 500;
-
-	private static final String USER_4 = "user_4";
-
-	private static final String USER_3 = "user_3";
-
-	private static final String USER_1 = "user_1";
-
-	private static final String USER_2 = "user_2";
-
-	private static final String REGISTER_PLAYER = "register-player";
-
-	private static final String USER_ID = "user-id";
-
-	private static final String CURRENT_PLAYER_ID = "current-player";
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(AcceptanceTest.class);
 
-	private HttpClient client;
-	private HttpRequest request;
 	private ArrayList<Player> players;
 	private WebDriver driver_1;
 	private WebDriver driver_2;
@@ -68,29 +35,29 @@ public class AcceptanceTest {
 	private HashMap<String, WebDriver> map = new HashMap<>();
 
 	@BeforeAll
-	static void setupAll() {
+	static void beforeAll() {
 		WebDriverManager.chromedriver().setup();
 	}
 
 	@BeforeEach
-	public void before() throws IOException, InterruptedException {
+	public void beforeEach() throws IOException, InterruptedException {
 		driver_1 = new ChromeDriver();
 		driver_2 = new ChromeDriver();
 		driver_3 = new ChromeDriver();
 		driver_4 = new ChromeDriver();
 
-		map.put(USER_1, driver_1);
-		map.put(USER_2, driver_2);
-		map.put(USER_3, driver_3);
-		map.put(USER_4, driver_4);
+		map.put(ATestUtil.USER_1, driver_1);
+		map.put(ATestUtil.USER_2, driver_2);
+		map.put(ATestUtil.USER_3, driver_3);
+		map.put(ATestUtil.USER_4, driver_4);
 
-		resetBackend();
+		ATestUtil.resetBackend();
 
 		players = new ArrayList<>();
 	}
 
 	@AfterEach
-	public void after() {
+	public void afterEach() {
 		for (String user : map.keySet()) {
 			map.get(user).close();
 		}
@@ -99,625 +66,619 @@ public class AcceptanceTest {
 
 	// @Test
 	public void row41() throws InterruptedException, IOException {
-		map.get(USER_1).get("http://localhost:8090/");
-		map.get(USER_2).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
 		initTwoPlayers("KC", new ArrayList<>(Arrays.asList("4C", "QH", "KC", "AH", "AC", "AD", "AS")),
 				new ArrayList<>(Arrays.asList("3C", "4H", "8C")), new ArrayList<>(Arrays.asList("9H", "JH", "QC")));
 
-		registerViaSeleniumTwoPlayers();
+		registerPlayerViaSelenium(ATestUtil.USER_1);
+		registerPlayerViaSelenium(ATestUtil.USER_2);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		rigGameWithPlayersData(players);
+		ATestUtil.rigGameWithPlayersData(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		assertCurrentPlayerViaSeleniumOfTwoPlayers(USER_1);
+		assertCurrentPlayerViaSeleniumOfTwoPlayers(ATestUtil.USER_1);
 
-		LOGGER.info("{} Playing 3C card.", USER_1);
+		map.get(ATestUtil.USER_1).findElement(By.className("3C")).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		map.get(USER_1).findElement(By.className("3C")).click();
-		Thread.sleep(THREAD_SLEEP_TIME);
-
-		assertCurrentPlayerViaSeleniumOfTwoPlayers(USER_2);
+		assertCurrentPlayerViaSeleniumOfTwoPlayers(ATestUtil.USER_2);
 	}
 
 	// @Test
 	public void row43() throws InterruptedException, IOException {
-		map.get(USER_1).get("http://localhost:8090/");
-		map.get(USER_2).get("http://localhost:8090/");
-		map.get(USER_3).get("http://localhost:8090/");
-		map.get(USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
 
 		String topCard = "KH";
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
 		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("4C", "QH", topCard, "AH", "AC", "AD", "AS")),
 				new ArrayList<>(Arrays.asList("AH", "4H", "8C")), new ArrayList<>(Arrays.asList("9H", "JH", "QC")),
 				new ArrayList<>(Arrays.asList("9H", "JH", "QC")), new ArrayList<>(Arrays.asList("7H", "JH", "QC")));
 
-		registerViaSeleniumFourPlayers();
+		registerPlayerViaSelenium(ATestUtil.USER_1);
+		registerPlayerViaSelenium(ATestUtil.USER_2);
+		registerPlayerViaSelenium(ATestUtil.USER_3);
+		registerPlayerViaSelenium(ATestUtil.USER_4);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		rigGameWithPlayersData(players);
+		ATestUtil.rigGameWithPlayersData(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_1);
+		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_1);
 
-		LOGGER.info("{} Playing AH card.", USER_1);
-		Thread.sleep(THREAD_SLEEP_TIME);
-		map.get(USER_1).findElement(By.className("AH")).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		map.get(ATestUtil.USER_1).findElement(By.className("AH")).click();
 
-		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_4);
+		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_4);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
-		map.get(USER_4).findElement(By.className("7H")).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		map.get(ATestUtil.USER_4).findElement(By.className("7H")).click();
 
-		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_3);
+		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_3);
 
 		assertCurrentDirection("Current Direction: Left -> Right");
 	}
 
 	// @Test
 	public void row44() throws InterruptedException, IOException {
-		map.get(USER_1).get("http://localhost:8090/");
-		map.get(USER_2).get("http://localhost:8090/");
-		map.get(USER_3).get("http://localhost:8090/");
-		map.get(USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
 
 		String topCard = "KC";
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
 		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("4C", "QH", "AS", "AH", "AC", "AD", "AS")),
 				new ArrayList<>(Arrays.asList("QC", "4H", "8C")), new ArrayList<>(Arrays.asList("9H", "JH", "QC")),
 				new ArrayList<>(Arrays.asList("9H", "JH", "QC")), new ArrayList<>(Arrays.asList("7H", "JH", "QC")));
 
-		registerViaSeleniumFourPlayers();
+		registerPlayerViaSelenium(ATestUtil.USER_1);
+		registerPlayerViaSelenium(ATestUtil.USER_2);
+		registerPlayerViaSelenium(ATestUtil.USER_3);
+		registerPlayerViaSelenium(ATestUtil.USER_4);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		rigGameWithPlayersData(players);
+		ATestUtil.rigGameWithPlayersData(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_1);
+		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_1);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
-		map.get(USER_1).findElement(By.className("QC")).click();
-		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_3);
-		assertTextIsOnScreenWithQueenCard(map.get(USER_2));
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		map.get(ATestUtil.USER_1).findElement(By.className("QC")).click();
+		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_3);
+		ATestUtil.assertTextIsOnScreen(map.get(ATestUtil.USER_2), ATestUtil.YOU_LOST_YOUR_TURN_DUE_TO_A_QUEEN);
 	}
 
 	// @Test
 	public void row45() throws InterruptedException, IOException {
-		map.get(USER_1).get("http://localhost:8090/");
-		map.get(USER_2).get("http://localhost:8090/");
-		map.get(USER_3).get("http://localhost:8090/");
-		map.get(USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
 
 		String topCard = "4C";
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
 		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("4C", "QH", "AS", "AH", "AC", "AD", "AS")),
 				new ArrayList<>(Arrays.asList("QC", "4H", "8C")), new ArrayList<>(Arrays.asList("9H", "JH", "QC")),
 				new ArrayList<>(Arrays.asList("9H", "JH", "QC")), new ArrayList<>(Arrays.asList("3C", "JH", "QC")));
 
-		registerViaSeleniumFourPlayers();
+		registerPlayerViaSelenium(ATestUtil.USER_1);
+		registerPlayerViaSelenium(ATestUtil.USER_2);
+		registerPlayerViaSelenium(ATestUtil.USER_3);
+		registerPlayerViaSelenium(ATestUtil.USER_4);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		rigGameWithPlayersData(players);
+		ATestUtil.rigGameWithPlayersData(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		resetCurrentPlayer(3);
+		ATestUtil.resetCurrentPlayer(3);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_4);
+		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_4);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
-		map.get(USER_4).findElement(By.className("3C")).click();
-		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_1);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		map.get(ATestUtil.USER_4).findElement(By.className("3C")).click();
+		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_1);
 	}
 
 	// @Test
 	public void row47() throws InterruptedException, IOException {
-		map.get(USER_1).get("http://localhost:8090/");
-		map.get(USER_2).get("http://localhost:8090/");
-		map.get(USER_3).get("http://localhost:8090/");
-		map.get(USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
 
 		String topCard = "KH";
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
 		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("4C", "QH", topCard, "AH", "AC", "AD", "AS")),
 				new ArrayList<>(Arrays.asList("AH", "4H", "8C")), new ArrayList<>(Arrays.asList("9H", "JH", "QC")),
 				new ArrayList<>(Arrays.asList("7H", "JH", "QC")), new ArrayList<>(Arrays.asList("AH", "JH", "QC")));
 
-		registerViaSeleniumFourPlayers();
+		registerPlayerViaSelenium(ATestUtil.USER_1);
+		registerPlayerViaSelenium(ATestUtil.USER_2);
+		registerPlayerViaSelenium(ATestUtil.USER_3);
+		registerPlayerViaSelenium(ATestUtil.USER_4);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		rigGameWithPlayersData(players);
+		ATestUtil.rigGameWithPlayersData(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		resetCurrentPlayer(3);
+		ATestUtil.resetCurrentPlayer(3);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_4);
+		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_4);
 
-		LOGGER.info("{} Playing AH card.", USER_4);
-		Thread.sleep(THREAD_SLEEP_TIME);
-		map.get(USER_4).findElement(By.className("AH")).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		map.get(ATestUtil.USER_4).findElement(By.className("AH")).click();
 
-		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_3);
+		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_3);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
-		map.get(USER_3).findElement(By.className("7H")).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		map.get(ATestUtil.USER_3).findElement(By.className("7H")).click();
 
-		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_2);
+		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_2);
 
 		assertCurrentDirection("Current Direction: Left -> Right");
 	}
 
 	// @Test
 	public void row48() throws InterruptedException, IOException {
-		map.get(USER_1).get("http://localhost:8090/");
-		map.get(USER_2).get("http://localhost:8090/");
-		map.get(USER_3).get("http://localhost:8090/");
-		map.get(USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
 
 		String topCard = "KC";
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
 		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("4C", "QH", "AS", "AH", "AC", "AD", "AS")),
 				new ArrayList<>(Arrays.asList("QC", "4H", "8C")), new ArrayList<>(Arrays.asList("9H", "JH", "QC")),
 				new ArrayList<>(Arrays.asList("9H", "JH", "QC")), new ArrayList<>(Arrays.asList("7H", "JH", "QC")));
 
-		registerViaSeleniumFourPlayers();
+		registerPlayerViaSelenium(ATestUtil.USER_1);
+		registerPlayerViaSelenium(ATestUtil.USER_2);
+		registerPlayerViaSelenium(ATestUtil.USER_3);
+		registerPlayerViaSelenium(ATestUtil.USER_4);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		rigGameWithPlayersData(players);
+		ATestUtil.rigGameWithPlayersData(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		resetCurrentPlayer(3);
+		ATestUtil.resetCurrentPlayer(3);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_4);
+		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_4);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
-		map.get(USER_4).findElement(By.className("QC")).click();
-		assertCurrentPlayerViaSeleniumOfFourPlayers(USER_2);
-		assertTextIsOnScreenWithQueenCard(map.get(USER_1));
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		map.get(ATestUtil.USER_4).findElement(By.className("QC")).click();
+		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_2);
+		ATestUtil.assertTextIsOnScreen(map.get(ATestUtil.USER_1), ATestUtil.YOU_LOST_YOUR_TURN_DUE_TO_A_QUEEN);
 	}
 
 	// @Test
 	public void row51() throws InterruptedException, IOException {
-		map.get(USER_1).get("http://localhost:8090/");
-		map.get(USER_2).get("http://localhost:8090/");
-		map.get(USER_3).get("http://localhost:8090/");
-		map.get(USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
 
 		String topCard = "KC";
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
 		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
 				new ArrayList<>(Arrays.asList("KH", "4H", "8C")), new ArrayList<>(Arrays.asList("9H", "JH", "QC")),
 				new ArrayList<>(Arrays.asList("9H", "JH", "QC")), new ArrayList<>(Arrays.asList("7H", "JH", "QC")));
 
-		registerViaSeleniumFourPlayers();
+		registerPlayerViaSelenium(ATestUtil.USER_1);
+		registerPlayerViaSelenium(ATestUtil.USER_2);
+		registerPlayerViaSelenium(ATestUtil.USER_3);
+		registerPlayerViaSelenium(ATestUtil.USER_4);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		rigGameWithPlayersData(players);
+		ATestUtil.rigGameWithPlayersData(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		map.get(USER_1).findElement(By.className("KH")).click();
+		map.get(ATestUtil.USER_1).findElement(By.className("KH")).click();
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		assertTextIsOnScreenAfterPlayCard(map.get(USER_1), "Please choose a card of similar suit.");
+		ATestUtil.assertTextIsOnScreen(map.get(ATestUtil.USER_1), ATestUtil.PLEASE_CHOOSE_A_CARD_OF_SIMILAR_SUIT);
 	}
 
 	// @Test
 	public void row52() throws InterruptedException, IOException {
-		map.get(USER_1).get("http://localhost:8090/");
-		map.get(USER_2).get("http://localhost:8090/");
-		map.get(USER_3).get("http://localhost:8090/");
-		map.get(USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
 
 		String topCard = "KC";
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
 		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
 				new ArrayList<>(Arrays.asList("7C", "4H", "8C")), new ArrayList<>(Arrays.asList("9H", "JH", "QC")),
 				new ArrayList<>(Arrays.asList("9H", "JH", "QC")), new ArrayList<>(Arrays.asList("7H", "JH", "QC")));
 
-		registerViaSeleniumFourPlayers();
+		registerPlayerViaSelenium(ATestUtil.USER_1);
+		registerPlayerViaSelenium(ATestUtil.USER_2);
+		registerPlayerViaSelenium(ATestUtil.USER_3);
+		registerPlayerViaSelenium(ATestUtil.USER_4);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		rigGameWithPlayersData(players);
+		ATestUtil.rigGameWithPlayersData(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		map.get(USER_1).findElement(By.className("7C")).click();
+		map.get(ATestUtil.USER_1).findElement(By.className("7C")).click();
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		assertTextIsOnScreenAfterPlayCard(map.get(USER_1), "Updated player data from Web Socket");
+		ATestUtil.assertTextIsOnScreen(map.get(ATestUtil.USER_1), ATestUtil.UPDATED_PLAYER_DATA_FROM_WEB_SOCKET);
 	}
 
 	// @Test
 	public void row53() throws InterruptedException, IOException {
-		map.get(USER_1).get("http://localhost:8090/");
-		map.get(USER_2).get("http://localhost:8090/");
-		map.get(USER_3).get("http://localhost:8090/");
-		map.get(USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
 
 		String topCard = "KC";
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
 		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
 				new ArrayList<>(Arrays.asList("8H", "4H", "8C")), new ArrayList<>(Arrays.asList("9H", "JH", "QC")),
 				new ArrayList<>(Arrays.asList("9H", "JH", "QC")), new ArrayList<>(Arrays.asList("7H", "JH", "QC")));
 
-		registerViaSeleniumFourPlayers();
+		registerPlayerViaSelenium(ATestUtil.USER_1);
+		registerPlayerViaSelenium(ATestUtil.USER_2);
+		registerPlayerViaSelenium(ATestUtil.USER_3);
+		registerPlayerViaSelenium(ATestUtil.USER_4);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		rigGameWithPlayersData(players);
+		ATestUtil.rigGameWithPlayersData(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		map.get(USER_1).findElement(By.className("8H")).click();
+		map.get(ATestUtil.USER_1).findElement(By.className("8H")).click();
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		assertTextIsOnScreenAfterPlayCard(map.get(USER_1), "Pick the next suit for the eight card.");
+		ATestUtil.assertTextIsOnScreen(map.get(ATestUtil.USER_1), ATestUtil.PICK_THE_NEXT_SUIT_FOR_THE_EIGHT_CARD);
 	}
 
 	// @Test
 	public void row54() throws InterruptedException, IOException {
-		map.get(USER_1).get("http://localhost:8090/");
-		map.get(USER_2).get("http://localhost:8090/");
-		map.get(USER_3).get("http://localhost:8090/");
-		map.get(USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
 
 		String topCard = "KC";
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
 		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
 				new ArrayList<>(Arrays.asList("5S", "4H", "8C")), new ArrayList<>(Arrays.asList("9H", "JH", "QC")),
 				new ArrayList<>(Arrays.asList("9H", "JH", "QC")), new ArrayList<>(Arrays.asList("7H", "JH", "QC")));
 
-		registerViaSeleniumFourPlayers();
+		registerPlayerViaSelenium(ATestUtil.USER_1);
+		registerPlayerViaSelenium(ATestUtil.USER_2);
+		registerPlayerViaSelenium(ATestUtil.USER_3);
+		registerPlayerViaSelenium(ATestUtil.USER_4);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		rigGameWithPlayersData(players);
+		ATestUtil.rigGameWithPlayersData(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		map.get(USER_1).findElement(By.className("5S")).click();
+		map.get(ATestUtil.USER_1).findElement(By.className("5S")).click();
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		assertTextIsOnScreenAfterPlayCard(map.get(USER_1), "Please choose a card of similar suit.");
+		ATestUtil.assertTextIsOnScreen(map.get(ATestUtil.USER_1), ATestUtil.PLEASE_CHOOSE_A_CARD_OF_SIMILAR_SUIT);
 	}
 
 //	@Test
 	public void row58() throws InterruptedException, IOException {
-		map.get(USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
 
 		String topCard = "7C";
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
 		initOnePlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
 				new ArrayList<>(Arrays.asList("3H")));
 
-		registerPlayerViaSelenium(USER_1);
+		registerPlayerViaSelenium(ATestUtil.USER_1);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		rigGameWithPlayersData(players);
+		ATestUtil.rigGameWithPlayersData(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
-		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
 
 		players.get(0).setHand(new ArrayList<>(Arrays.asList("3H", "6C")));
 
-		rigGameAfterDrawCard(players);
+		ATestUtil.rigGameAfterDrawCard(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		map.get(USER_1).findElement(By.className("6C")).click();
+		map.get(ATestUtil.USER_1).findElement(By.className("6C")).click();
 	}
 
 //	@Test
 	public void row59() throws InterruptedException, IOException {
-		map.get(USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
 
 		String topCard = "7C";
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
 		initOnePlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
 				new ArrayList<>(Arrays.asList("3H")));
 
-		registerPlayerViaSelenium(USER_1);
+		registerPlayerViaSelenium(ATestUtil.USER_1);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		rigGameWithPlayersData(players);
+		ATestUtil.rigGameWithPlayersData(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
-		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
-		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
 
 		players.get(0).setHand(new ArrayList<>(Arrays.asList("3H", "6D", "5C")));
 
-		rigGameAfterDrawCard(players);
+		ATestUtil.rigGameAfterDrawCard(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		map.get(USER_1).findElement(By.className("5C")).click();
+		map.get(ATestUtil.USER_1).findElement(By.className("5C")).click();
 	}
 
 //	@Test
 	public void row60() throws InterruptedException, IOException {
-		map.get(USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
 
 		String topCard = "7C";
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
 		initOnePlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
 				new ArrayList<>(Arrays.asList("3H")));
 
-		registerPlayerViaSelenium(USER_1);
+		registerPlayerViaSelenium(ATestUtil.USER_1);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		rigGameWithPlayersData(players);
+		ATestUtil.rigGameWithPlayersData(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
-		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
-		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
-		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
 
 		players.get(0).setHand(new ArrayList<>(Arrays.asList("3H", "6D", "5C", "7H")));
 
-		rigGameAfterDrawCard(players);
+		ATestUtil.rigGameAfterDrawCard(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 	}
 
 //	@Test
 	public void row61() throws InterruptedException, IOException {
-		map.get(USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
 
 		String topCard = "7C";
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
 		initOnePlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
 				new ArrayList<>(Arrays.asList("3H")));
 
-		registerPlayerViaSelenium(USER_1);
+		registerPlayerViaSelenium(ATestUtil.USER_1);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		rigGameWithPlayersData(players);
+		ATestUtil.rigGameWithPlayersData(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
-		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
-		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
-		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
-		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
-		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
 
-		assertTextIsOnScreenAfterPlayCard(map.get(USER_1), "No Card Given");
+		ATestUtil.assertTextIsOnScreen(map.get(ATestUtil.USER_1), ATestUtil.NO_CARD_GIVEN);
 		players.get(0).setHand(new ArrayList<>(Arrays.asList("3H", "6D", "5S", "4H")));
 
-		rigGameAfterDrawCard(players);
+		ATestUtil.rigGameAfterDrawCard(players);
 	}
 
 //	@Test
 	public void row62() throws InterruptedException, IOException {
-		map.get(USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
 
 		String topCard = "7C";
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
 		initOnePlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
 				new ArrayList<>(Arrays.asList("3H")));
 
-		registerPlayerViaSelenium(USER_1);
+		registerPlayerViaSelenium(ATestUtil.USER_1);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		rigGameWithPlayersData(players);
+		ATestUtil.rigGameWithPlayersData(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
-		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
 
 		players.get(0).setHand(new ArrayList<>(Arrays.asList("3H", "6D", "8H")));
 
-		rigGameAfterDrawCard(players);
+		ATestUtil.rigGameAfterDrawCard(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		map.get(USER_1).findElement(By.className("8H")).click();
+		map.get(ATestUtil.USER_1).findElement(By.className("8H")).click();
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		assertTextIsOnScreenAfterPlayCard(map.get(USER_1), "Pick the next suit for the eight card.");
+		ATestUtil.assertTextIsOnScreen(map.get(ATestUtil.USER_1), ATestUtil.PICK_THE_NEXT_SUIT_FOR_THE_EIGHT_CARD);
 
-		map.get(USER_1).findElement(By.className("H")).click();
+		map.get(ATestUtil.USER_1).findElement(By.className("H")).click();
 	}
 
 //	@Test
 	public void row63() throws InterruptedException, IOException {
-		map.get(USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
 
 		String topCard = "7C";
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
 		initOnePlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
 				new ArrayList<>(Arrays.asList("KS", "3C")));
 
-		registerPlayerViaSelenium(USER_1);
+		registerPlayerViaSelenium(ATestUtil.USER_1);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		rigGameWithPlayersData(players);
+		ATestUtil.rigGameWithPlayersData(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		map.get(USER_1).findElement(By.id(DRAW_CARD_BUTTON)).click();
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
 
 		players.get(0).setHand(new ArrayList<>(Arrays.asList("KS", "3C", "6C")));
 
-		rigGameAfterDrawCard(players);
+		ATestUtil.rigGameAfterDrawCard(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		map.get(USER_1).findElement(By.className("6C")).click();
+		map.get(ATestUtil.USER_1).findElement(By.className("6C")).click();
 	}
 
 	@Test
 	public void row78() throws InterruptedException, IOException, JSONException {
-		map.get(USER_1).get("http://localhost:8090/");
-		map.get(USER_2).get("http://localhost:8090/");
-		map.get(USER_3).get("http://localhost:8090/");
-		map.get(USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
 
 		String topCard = "7C";
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
 		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH")), new ArrayList<>(Arrays.asList("AS")),
 				new ArrayList<>(Arrays.asList()), new ArrayList<>(Arrays.asList("8H", "JH", "6H", "KH", "KS")),
 				new ArrayList<>(Arrays.asList("8C", "8D", "2D")));
 
-		registerPlayerViaSelenium(USER_1);
-		registerPlayerViaSelenium(USER_2);
-		registerPlayerViaSelenium(USER_3);
-		registerPlayerViaSelenium(USER_4);
+		registerPlayerViaSelenium(ATestUtil.USER_1);
+		registerPlayerViaSelenium(ATestUtil.USER_2);
+		registerPlayerViaSelenium(ATestUtil.USER_3);
+		registerPlayerViaSelenium(ATestUtil.USER_4);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		rigGameWithPlayersData(players);
+		ATestUtil.rigGameWithPlayersData(players);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		resetCurrentPlayer(2);
+		ATestUtil.resetCurrentPlayer(2);
 
-		Thread.sleep(THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		map.get(USER_3).findElement(By.id(DRAW_CARD_BUTTON)).click();
+		map.get(ATestUtil.USER_3).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
 		ArrayList<Integer> expectedScore = new ArrayList<>(Arrays.asList(1, 0, 86, 102));
-		ArrayList<Player> list = getPlayersBackend();
+		ArrayList<Player> list = ATestUtil.getPlayersBackend();
 
 		for (int i = 0; i < 4; i++) {
 			assertEquals(expectedScore.get(i), list.get(i).getScore());
 		}
 	}
 
-	private void assertTextIsOnScreenWithQueenCard(WebDriver driver) {
-		assertTrue(hasText(driver, "You lost your turn due to a queen."));
-	}
-
-	private void assertTextIsOnScreenAfterPlayCard(WebDriver driver, String textOnScreen) {
-		assertTrue(hasText(driver, textOnScreen));
-	}
-
 	private void assertCurrentPlayerViaSeleniumOfTwoPlayers(String player) {
 		assertEquals(String.format("Current Player: %s", player),
-				map.get(USER_1).findElement(By.id(CURRENT_PLAYER_ID)).getText());
+				map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.CURRENT_PLAYER_ID)).getText());
 		assertEquals(String.format("Current Player: %s", player),
-				map.get(USER_2).findElement(By.id(CURRENT_PLAYER_ID)).getText());
+				map.get(ATestUtil.USER_2).findElement(By.id(ATestUtil.CURRENT_PLAYER_ID)).getText());
 	}
 
 	private void registerPlayerViaSelenium(String playerName) {
-		map.get(playerName).findElement(By.id(USER_ID)).sendKeys(playerName);
-		map.get(playerName).findElement(By.id(REGISTER_PLAYER)).click();
-	}
-
-	private void registerViaSeleniumTwoPlayers() {
-		map.get(USER_1).findElement(By.id(USER_ID)).sendKeys(USER_1);
-		map.get(USER_1).findElement(By.id(REGISTER_PLAYER)).click();
-
-		map.get(USER_2).findElement(By.id(USER_ID)).sendKeys(USER_2);
-		map.get(USER_2).findElement(By.id(REGISTER_PLAYER)).click();
-	}
-
-	private void registerViaSeleniumFourPlayers() {
-		map.get(USER_1).findElement(By.id(USER_ID)).sendKeys(USER_1);
-		map.get(USER_1).findElement(By.id(REGISTER_PLAYER)).click();
-
-		map.get(USER_2).findElement(By.id(USER_ID)).sendKeys(USER_2);
-		map.get(USER_2).findElement(By.id(REGISTER_PLAYER)).click();
-
-		map.get(USER_3).findElement(By.id(USER_ID)).sendKeys(USER_3);
-		map.get(USER_3).findElement(By.id(REGISTER_PLAYER)).click();
-
-		map.get(USER_4).findElement(By.id(USER_ID)).sendKeys(USER_4);
-		map.get(USER_4).findElement(By.id(REGISTER_PLAYER)).click();
+		map.get(playerName).findElement(By.id(ATestUtil.USER_ID)).sendKeys(playerName);
+		map.get(playerName).findElement(By.id(ATestUtil.REGISTER_PLAYER)).click();
 	}
 
 	private void assertCurrentDirection(String direction) {
-		assertEquals(direction, map.get(USER_1).findElement(By.id(DIRECTION)).getText());
-		assertEquals(direction, map.get(USER_2).findElement(By.id(DIRECTION)).getText());
-		assertEquals(direction, map.get(USER_3).findElement(By.id(DIRECTION)).getText());
-		assertEquals(direction, map.get(USER_4).findElement(By.id(DIRECTION)).getText());
+		assertEquals(direction, map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DIRECTION)).getText());
+		assertEquals(direction, map.get(ATestUtil.USER_2).findElement(By.id(ATestUtil.DIRECTION)).getText());
+		assertEquals(direction, map.get(ATestUtil.USER_3).findElement(By.id(ATestUtil.DIRECTION)).getText());
+		assertEquals(direction, map.get(ATestUtil.USER_4).findElement(By.id(ATestUtil.DIRECTION)).getText());
 	}
 
 	private void assertCurrentPlayerViaSeleniumOfFourPlayers(String player) {
 		assertEquals(String.format("Current Player: %s", player),
-				map.get(USER_1).findElement(By.id(CURRENT_PLAYER_ID)).getText());
+				map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.CURRENT_PLAYER_ID)).getText());
 		assertEquals(String.format("Current Player: %s", player),
-				map.get(USER_2).findElement(By.id(CURRENT_PLAYER_ID)).getText());
+				map.get(ATestUtil.USER_2).findElement(By.id(ATestUtil.CURRENT_PLAYER_ID)).getText());
 		assertEquals(String.format("Current Player: %s", player),
-				map.get(USER_3).findElement(By.id(CURRENT_PLAYER_ID)).getText());
+				map.get(ATestUtil.USER_3).findElement(By.id(ATestUtil.CURRENT_PLAYER_ID)).getText());
 		assertEquals(String.format("Current Player: %s", player),
-				map.get(USER_4).findElement(By.id(CURRENT_PLAYER_ID)).getText());
+				map.get(ATestUtil.USER_4).findElement(By.id(ATestUtil.CURRENT_PLAYER_ID)).getText());
 	}
 
 	private void initOnePlayers(String topCard, ArrayList<String> deck, ArrayList<String> hand_1) {
 		PlayerScore playerScore = new PlayerScore();
-		playerScore.setName(USER_1);
+		playerScore.setName(ATestUtil.USER_1);
 		playerScore.setScore(0);
 
 		Player player_1 = new Player();
-		player_1.setName(USER_1);
+		player_1.setName(ATestUtil.USER_1);
 		player_1.setCard(topCard);
 		player_1.setScore(0);
 		player_1.setRound(0);
@@ -731,11 +692,11 @@ public class AcceptanceTest {
 	private void initTwoPlayers(String topCard, ArrayList<String> deck, ArrayList<String> hand_1,
 			ArrayList<String> hand_2) {
 		PlayerScore playerScore = new PlayerScore();
-		playerScore.setName(USER_1);
+		playerScore.setName(ATestUtil.USER_1);
 		playerScore.setScore(0);
 
 		Player player_1 = new Player();
-		player_1.setName(USER_1);
+		player_1.setName(ATestUtil.USER_1);
 		player_1.setCard(topCard);
 		player_1.setScore(0);
 		player_1.setRound(0);
@@ -744,7 +705,7 @@ public class AcceptanceTest {
 		player_1.setOtherPlayersScore(new ArrayList<>(Arrays.asList(playerScore)));
 
 		Player player_2 = new Player();
-		player_2.setName(USER_2);
+		player_2.setName(ATestUtil.USER_2);
 		player_2.setCard(topCard);
 		player_2.setScore(0);
 		player_2.setRound(0);
@@ -759,11 +720,11 @@ public class AcceptanceTest {
 	private void initFourPlayers(String topCard, ArrayList<String> deck, ArrayList<String> hand_1,
 			ArrayList<String> hand_2, ArrayList<String> hand_3, ArrayList<String> hand_4) {
 		PlayerScore playerScore = new PlayerScore();
-		playerScore.setName(USER_1);
+		playerScore.setName(ATestUtil.USER_1);
 		playerScore.setScore(0);
 
 		Player player_1 = new Player();
-		player_1.setName(USER_1);
+		player_1.setName(ATestUtil.USER_1);
 		player_1.setCard(topCard);
 		player_1.setScore(0);
 		player_1.setRound(0);
@@ -772,7 +733,7 @@ public class AcceptanceTest {
 		player_1.setOtherPlayersScore(new ArrayList<>(Arrays.asList(playerScore)));
 
 		Player player_2 = new Player();
-		player_2.setName(USER_2);
+		player_2.setName(ATestUtil.USER_2);
 		player_2.setCard(topCard);
 		player_2.setScore(0);
 		player_2.setRound(0);
@@ -781,7 +742,7 @@ public class AcceptanceTest {
 		player_2.setOtherPlayersScore(new ArrayList<>(Arrays.asList(playerScore)));
 
 		Player player_3 = new Player();
-		player_3.setName(USER_3);
+		player_3.setName(ATestUtil.USER_3);
 		player_3.setCard(topCard);
 		player_3.setScore(0);
 		player_3.setRound(0);
@@ -790,7 +751,7 @@ public class AcceptanceTest {
 		player_3.setOtherPlayersScore(new ArrayList<>(Arrays.asList(playerScore)));
 
 		Player player_4 = new Player();
-		player_4.setName(USER_4);
+		player_4.setName(ATestUtil.USER_4);
 		player_4.setCard(topCard);
 		player_4.setScore(0);
 		player_4.setRound(0);
@@ -805,66 +766,4 @@ public class AcceptanceTest {
 
 	}
 
-	private void rigGameWithPlayersData(ArrayList<Player> players)
-			throws JsonProcessingException, IOException, InterruptedException {
-		var objectMapper = new ObjectMapper();
-		String requestBody = objectMapper.writeValueAsString(players);
-
-		LOGGER.info("Attempting to rig game.");
-
-		client = HttpClient.newHttpClient();
-		request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8090/testSetPlayers"))
-				.POST(HttpRequest.BodyPublishers.ofString(requestBody)).header("Content-Type", "application/json")
-				.build();
-
-		client.send(request, HttpResponse.BodyHandlers.ofString());
-
-		LOGGER.info("Game Data rigged.");
-	}
-
-	private void rigGameAfterDrawCard(ArrayList<Player> players)
-			throws JsonProcessingException, IOException, InterruptedException {
-		var objectMapper = new ObjectMapper();
-		String requestBody = objectMapper.writeValueAsString(players);
-
-		client = HttpClient.newHttpClient();
-		request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8090/drawCardTest"))
-				.POST(HttpRequest.BodyPublishers.ofString(requestBody)).header("Content-Type", "application/json")
-				.build();
-
-		client.send(request, HttpResponse.BodyHandlers.ofString());
-	}
-
-	private void resetBackend() throws IOException, InterruptedException {
-		client = HttpClient.newHttpClient();
-		request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8090/reset")).GET().build();
-
-		client.send(request, HttpResponse.BodyHandlers.ofString());
-	}
-
-	private ArrayList<Player> getPlayersBackend() throws IOException, InterruptedException, JSONException {
-		client = HttpClient.newHttpClient();
-		request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8090/getPlayers")).GET().build();
-
-		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-		Gson g = new Gson();
-		return new ArrayList<>(Arrays.asList(g.fromJson(response.body(), Player[].class)));
-	}
-
-	private void resetCurrentPlayer(int currentPlayer) throws IOException, InterruptedException {
-		var objectMapper = new ObjectMapper();
-		String requestBody = objectMapper.writeValueAsString(currentPlayer);
-		client = HttpClient.newHttpClient();
-		request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8090/editCurrentPlayer"))
-				.POST(HttpRequest.BodyPublishers.ofString(requestBody)).header("Content-Type", "application/json")
-				.build();
-
-		client.send(request, HttpResponse.BodyHandlers.ofString());
-	}
-
-	private boolean hasText(WebDriver driver, final String searchKey) {
-		final List<WebElement> result = driver.findElements(By.xpath("//*[contains(text(),'" + searchKey + "')]"));
-		return result != null && result.size() > 0;
-	}
 }
