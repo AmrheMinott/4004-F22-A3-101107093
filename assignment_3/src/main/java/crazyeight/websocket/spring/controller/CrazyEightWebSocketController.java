@@ -134,14 +134,14 @@ public class CrazyEightWebSocketController {
 		int priorCurrentPlayer = currentPlayer;
 		amountDrawn = 0;
 
+		connectedPlayers.get(currentPlayer).setHand(player.getHand());
+
 		if (gameLogic.handleRoundCompletion(connectedPlayers, topCard)) {
 			LOGGER.info("Round Complete !!");
 			this.simpMessagingTemplate.convertAndSend("/topic/playerWS", connectedPlayers);
 			determineAndSendWinner();
 			return connectedPlayers.get(currentPlayer);
 		}
-
-		connectedPlayers.get(currentPlayer).setHand(player.getHand());
 
 		direction = gameLogic.determineDirection(topCard, direction);
 		int previousPlayer = currentPlayer;
@@ -236,6 +236,12 @@ public class CrazyEightWebSocketController {
 	}
 
 	@GetMapping
+	@RequestMapping("/getPlayers")
+	public ArrayList<Player> getPlayers() {
+		return connectedPlayers;
+	}
+
+	@GetMapping
 	@RequestMapping("/reset")
 	public void resetBackEnd() {
 		currentPlayer = 0;
@@ -253,7 +259,7 @@ public class CrazyEightWebSocketController {
 		this.simpMessagingTemplate.convertAndSend("/topic/currentPlayerName",
 				connectedPlayers.get(currentPlayer).getName());
 	}
-	
+
 	@PostMapping
 	@RequestMapping("/drawCardTest")
 	public void drawCardTest(@RequestBody ArrayList<Player> players) {
