@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import crazyeight.websocket.spring.model.Player;
 import crazyeight.websocket.spring.model.PlayerScore;
@@ -580,7 +582,7 @@ public class AcceptanceTest {
 		map.get(USER_1).findElement(By.className("H")).click();
 	}
 
-	@Test
+//	@Test
 	public void row63() throws InterruptedException, IOException {
 		map.get(USER_1).get("http://localhost:8090/");
 
@@ -608,6 +610,45 @@ public class AcceptanceTest {
 		Thread.sleep(THREAD_SLEEP_TIME);
 
 		map.get(USER_1).findElement(By.className("6C")).click();
+	}
+
+	@Test
+	public void row78() throws InterruptedException, IOException, JSONException {
+		map.get(USER_1).get("http://localhost:8090/");
+		map.get(USER_2).get("http://localhost:8090/");
+		map.get(USER_3).get("http://localhost:8090/");
+		map.get(USER_4).get("http://localhost:8090/");
+
+		String topCard = "7C";
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH")), new ArrayList<>(Arrays.asList("AS")),
+				new ArrayList<>(Arrays.asList()), new ArrayList<>(Arrays.asList("8H", "JH", "6H", "KH", "KS")),
+				new ArrayList<>(Arrays.asList("8C", "8D", "2D")));
+
+		registerPlayerViaSelenium(USER_1);
+		registerPlayerViaSelenium(USER_2);
+		registerPlayerViaSelenium(USER_3);
+		registerPlayerViaSelenium(USER_4);
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		rigGameWithPlayersData(players);
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		resetCurrentPlayer(2);
+
+		Thread.sleep(THREAD_SLEEP_TIME);
+
+		map.get(USER_3).findElement(By.id(DRAW_CARD_BUTTON)).click();
+		ArrayList<Integer> expectedScore = new ArrayList<>(Arrays.asList(1, 0, 86, 102));
+		ArrayList<Player> list = getPlayersBackend();
+
+		for (int i = 0; i < 4; i++) {
+			assertEquals(expectedScore.get(i), list.get(i).getScore());
+		}
 	}
 
 	private void assertTextIsOnScreenWithQueenCard(WebDriver driver) {
@@ -799,6 +840,16 @@ public class AcceptanceTest {
 		request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8090/reset")).GET().build();
 
 		client.send(request, HttpResponse.BodyHandlers.ofString());
+	}
+
+	private ArrayList<Player> getPlayersBackend() throws IOException, InterruptedException, JSONException {
+		client = HttpClient.newHttpClient();
+		request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8090/getPlayers")).GET().build();
+
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+		Gson g = new Gson();
+		return new ArrayList<>(Arrays.asList(g.fromJson(response.body(), Player[].class)));
 	}
 
 	private void resetCurrentPlayer(int currentPlayer) throws IOException, InterruptedException {
