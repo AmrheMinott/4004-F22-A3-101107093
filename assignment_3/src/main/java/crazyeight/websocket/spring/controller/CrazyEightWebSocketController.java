@@ -239,6 +239,7 @@ public class CrazyEightWebSocketController {
 	@RequestMapping("/reset")
 	public void resetBackEnd() {
 		currentPlayer = 0;
+		amountDrawn = 0;
 		direction = true;
 		connectedPlayers.clear();
 		gameLogic.resetDeck();

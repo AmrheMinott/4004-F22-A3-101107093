@@ -71,7 +71,7 @@ public class AcceptanceTest {
 	}
 
 	@BeforeEach
-	public void before() {
+	public void before() throws IOException, InterruptedException {
 		driver_1 = new ChromeDriver();
 		driver_2 = new ChromeDriver();
 		driver_3 = new ChromeDriver();
@@ -81,6 +81,8 @@ public class AcceptanceTest {
 		map.put(USER_2, driver_2);
 		map.put(USER_3, driver_3);
 		map.put(USER_4, driver_4);
+
+		resetBackend();
 
 		players = new ArrayList<>();
 	}
@@ -97,7 +99,7 @@ public class AcceptanceTest {
 	public void row41() throws InterruptedException, IOException {
 		map.get(USER_1).get("http://localhost:8090/");
 		map.get(USER_2).get("http://localhost:8090/");
-		resetBackend();
+
 		Thread.sleep(THREAD_SLEEP_TIME);
 
 		initTwoPlayers("KC", new ArrayList<>(Arrays.asList("4C", "QH", "KC", "AH", "AC", "AD", "AS")),
@@ -130,7 +132,6 @@ public class AcceptanceTest {
 
 		String topCard = "KH";
 
-		resetBackend();
 		Thread.sleep(THREAD_SLEEP_TIME);
 
 		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("4C", "QH", topCard, "AH", "AC", "AD", "AS")),
@@ -170,7 +171,6 @@ public class AcceptanceTest {
 
 		String topCard = "KC";
 
-		resetBackend();
 		Thread.sleep(THREAD_SLEEP_TIME);
 
 		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("4C", "QH", "AS", "AH", "AC", "AD", "AS")),
@@ -202,7 +202,6 @@ public class AcceptanceTest {
 
 		String topCard = "4C";
 
-		resetBackend();
 		Thread.sleep(THREAD_SLEEP_TIME);
 
 		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("4C", "QH", "AS", "AH", "AC", "AD", "AS")),
@@ -237,7 +236,6 @@ public class AcceptanceTest {
 
 		String topCard = "KH";
 
-		resetBackend();
 		Thread.sleep(THREAD_SLEEP_TIME);
 
 		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("4C", "QH", topCard, "AH", "AC", "AD", "AS")),
@@ -281,7 +279,6 @@ public class AcceptanceTest {
 
 		String topCard = "KC";
 
-		resetBackend();
 		Thread.sleep(THREAD_SLEEP_TIME);
 
 		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("4C", "QH", "AS", "AH", "AC", "AD", "AS")),
@@ -317,7 +314,6 @@ public class AcceptanceTest {
 
 		String topCard = "KC";
 
-		resetBackend();
 		Thread.sleep(THREAD_SLEEP_TIME);
 
 		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
@@ -348,7 +344,6 @@ public class AcceptanceTest {
 
 		String topCard = "KC";
 
-		resetBackend();
 		Thread.sleep(THREAD_SLEEP_TIME);
 
 		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
@@ -379,7 +374,6 @@ public class AcceptanceTest {
 
 		String topCard = "KC";
 
-		resetBackend();
 		Thread.sleep(THREAD_SLEEP_TIME);
 
 		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
@@ -410,7 +404,6 @@ public class AcceptanceTest {
 
 		String topCard = "KC";
 
-		resetBackend();
 		Thread.sleep(THREAD_SLEEP_TIME);
 
 		initFourPlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
@@ -438,7 +431,6 @@ public class AcceptanceTest {
 
 		String topCard = "7C";
 
-		resetBackend();
 		Thread.sleep(THREAD_SLEEP_TIME);
 
 		initOnePlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
@@ -468,7 +460,6 @@ public class AcceptanceTest {
 
 		String topCard = "7C";
 
-		resetBackend();
 		Thread.sleep(THREAD_SLEEP_TIME);
 
 		initOnePlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
@@ -499,7 +490,6 @@ public class AcceptanceTest {
 
 		String topCard = "7C";
 
-		resetBackend();
 		Thread.sleep(THREAD_SLEEP_TIME);
 
 		initOnePlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
@@ -529,7 +519,6 @@ public class AcceptanceTest {
 
 		String topCard = "7C";
 
-		resetBackend();
 		Thread.sleep(THREAD_SLEEP_TIME);
 
 		initOnePlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
@@ -560,7 +549,6 @@ public class AcceptanceTest {
 
 		String topCard = "7C";
 
-		resetBackend();
 		Thread.sleep(THREAD_SLEEP_TIME);
 
 		initOnePlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
@@ -592,14 +580,12 @@ public class AcceptanceTest {
 		map.get(USER_1).findElement(By.className("H")).click();
 	}
 
-	
 	@Test
 	public void row63() throws InterruptedException, IOException {
 		map.get(USER_1).get("http://localhost:8090/");
 
 		String topCard = "7C";
 
-		resetBackend();
 		Thread.sleep(THREAD_SLEEP_TIME);
 
 		initOnePlayers(topCard, new ArrayList<>(Arrays.asList("JH", "QH", "AS", "AH", "AC", "AD", "AS")),
@@ -623,6 +609,7 @@ public class AcceptanceTest {
 
 		map.get(USER_1).findElement(By.className("6C")).click();
 	}
+
 	private void assertTextIsOnScreenWithQueenCard(WebDriver driver) {
 		assertTrue(hasText(driver, "You lost your turn due to a queen."));
 	}
