@@ -603,7 +603,50 @@ public class AcceptanceTest {
 		map.get(ATestUtil.USER_1).findElement(By.className("6C")).click();
 	}
 
-	@Test
+//	@Test
+	public void row67() throws InterruptedException, IOException, JSONException {
+		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
+
+		String topCard = "7C";
+
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		initTwoPlayers(topCard, new ArrayList<>(Arrays.asList("KH", "10C")), new ArrayList<>(Arrays.asList("JH", "2C")),
+				new ArrayList<>(Arrays.asList("4H")));
+
+		registerPlayerViaSelenium(ATestUtil.USER_1);
+		registerPlayerViaSelenium(ATestUtil.USER_2);
+
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		ATestUtil.rigGameWithPlayersData(players);
+
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_1).findElement(By.className("2C")).click();
+
+		map.get(ATestUtil.USER_2).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+
+		players.get(1).setHand(new ArrayList<>(Arrays.asList("4H", "9D")));
+
+		ATestUtil.rigGameAfterDrawCard(players);
+
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_2).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+
+		players.get(1).setHand(new ArrayList<>(Arrays.asList("4H", "9D", "6C")));
+
+		ATestUtil.rigGameAfterDrawCard(players);
+
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		map.get(ATestUtil.USER_2).findElement(By.className("6C")).click();
+	}
+
+//	@Test
 	public void row78() throws InterruptedException, IOException, JSONException {
 		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
 		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
