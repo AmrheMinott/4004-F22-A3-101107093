@@ -612,7 +612,7 @@ public class AcceptanceTest {
 
 		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		initTwoPlayers(topCard, new ArrayList<>(Arrays.asList("KH", "10C")), new ArrayList<>(Arrays.asList("JH", "2C")),
+		initTwoPlayers(topCard, new ArrayList<>(Arrays.asList("KH", "10C", "KC", "KS")), new ArrayList<>(Arrays.asList("JH", "2C")),
 				new ArrayList<>(Arrays.asList("4H")));
 
 		registerPlayerViaSelenium(ATestUtil.USER_1);
@@ -624,19 +624,11 @@ public class AcceptanceTest {
 
 		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
-
 		map.get(ATestUtil.USER_1).findElement(By.className("2C")).click();
 
-		map.get(ATestUtil.USER_2).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		ArrayList<Player> list = ATestUtil.getPlayersBackend();
 
-		players.get(1).setHand(new ArrayList<>(Arrays.asList("4H", "9D")));
-
-		ATestUtil.rigGameAfterDrawCard(players);
-
-		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
-
-		map.get(ATestUtil.USER_2).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		assertEquals(3, list.get(1).getHand().size());
 
 		players.get(1).setHand(new ArrayList<>(Arrays.asList("4H", "9D", "6C")));
 

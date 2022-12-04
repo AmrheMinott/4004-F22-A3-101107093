@@ -154,6 +154,15 @@ public class CrazyEightWebSocketController {
 			gameLogic.addTwoCardToPlayer(connectedPlayers.get(currentPlayer), topCard);
 		}
 
+		if (topCard.contains(CardFaces.EIGHT)) {
+			gameLogic.getDeck().add(gameLogic.getDeck().size() - 1, player.getCard());
+			this.topCard = gameLogic.takeCard();
+			while (topCard.contains(CardFaces.EIGHT)) {
+				gameLogic.getDeck().add(gameLogic.getDeck().size() - 1, this.topCard);
+				this.topCard = gameLogic.takeCard();
+			}
+		}
+
 		updateBasicPlayerInformation();
 
 		this.simpMessagingTemplate.convertAndSend("/topic/direction", direction);
