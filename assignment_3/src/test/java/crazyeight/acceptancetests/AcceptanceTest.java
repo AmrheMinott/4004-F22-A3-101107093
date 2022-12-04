@@ -715,6 +715,42 @@ public class AcceptanceTest {
 
 		assertEquals(6, list.get(1).getHand().size());
 	}
+	
+	
+//	@Test
+//	public void row72() throws InterruptedException, IOException, JSONException {
+//		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
+//		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
+//
+//		String topCard = "7C";
+//
+//		initTwoPlayers(topCard, new ArrayList<>(Arrays.asList("KH", "10C")), new ArrayList<>(Arrays.asList("JH", "2C")),
+//				new ArrayList<>(Arrays.asList("4H")));
+//
+//		registerPlayerViaSelenium(ATestUtil.USER_1);
+//		registerPlayerViaSelenium(ATestUtil.USER_2);
+//
+//		ATestUtil.rigGameWithPlayersData(players);
+//
+//		map.get(ATestUtil.USER_1).findElement(By.className("2C")).click();
+//
+//		ArrayList<Player> list = ATestUtil.getPlayersBackend();
+//
+//		assertEquals(3, list.get(1).getHand().size());
+//
+//		players.get(1).setHand(new ArrayList<>(Arrays.asList("4H", "9D", "6S")));
+//
+//		ATestUtil.rigGameAfterDrawCard(players);
+//
+//		map.get(ATestUtil.USER_2).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+//		map.get(ATestUtil.USER_2).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+//		map.get(ATestUtil.USER_2).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+//		map.get(ATestUtil.USER_2).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+//
+//		list = ATestUtil.getPlayersBackend();
+//
+//		assertEquals(6, list.get(1).getHand().size());
+//	}
 
 //	@Test
 	public void row78() throws InterruptedException, IOException, JSONException {
