@@ -26,6 +26,8 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class AcceptanceTest {
 
+	private static final String LOCALHOST_URL = "http://localhost:8090/";
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(AcceptanceTest.class);
 
 	private ArrayList<Player> players;
@@ -68,8 +70,8 @@ public class AcceptanceTest {
 
 	// @Test
 	public void row41() throws InterruptedException, IOException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
 
 		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
@@ -95,10 +97,10 @@ public class AcceptanceTest {
 
 	// @Test
 	public void row43() throws InterruptedException, IOException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_3).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_4).get(LOCALHOST_URL);
 
 		String topCard = "KH";
 
@@ -136,10 +138,10 @@ public class AcceptanceTest {
 
 	// @Test
 	public void row44() throws InterruptedException, IOException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_3).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_4).get(LOCALHOST_URL);
 
 		String topCard = "KC";
 
@@ -170,10 +172,10 @@ public class AcceptanceTest {
 
 	// @Test
 	public void row45() throws InterruptedException, IOException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_3).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_4).get(LOCALHOST_URL);
 
 		String topCard = "4C";
 
@@ -207,10 +209,10 @@ public class AcceptanceTest {
 
 	// @Test
 	public void row47() throws InterruptedException, IOException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_3).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_4).get(LOCALHOST_URL);
 
 		String topCard = "KH";
 
@@ -252,10 +254,10 @@ public class AcceptanceTest {
 
 	// @Test
 	public void row48() throws InterruptedException, IOException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_3).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_4).get(LOCALHOST_URL);
 
 		String topCard = "KC";
 
@@ -290,10 +292,10 @@ public class AcceptanceTest {
 
 	// @Test
 	public void row51() throws InterruptedException, IOException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_3).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_4).get(LOCALHOST_URL);
 
 		String topCard = "KC";
 
@@ -323,10 +325,10 @@ public class AcceptanceTest {
 
 	// @Test
 	public void row52() throws InterruptedException, IOException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_3).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_4).get(LOCALHOST_URL);
 
 		String topCard = "KC";
 
@@ -356,10 +358,10 @@ public class AcceptanceTest {
 
 	// @Test
 	public void row53() throws InterruptedException, IOException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_3).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_4).get(LOCALHOST_URL);
 
 		String topCard = "KC";
 
@@ -389,10 +391,10 @@ public class AcceptanceTest {
 
 	// @Test
 	public void row54() throws InterruptedException, IOException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_3).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_4).get(LOCALHOST_URL);
 
 		String topCard = "KC";
 
@@ -422,7 +424,7 @@ public class AcceptanceTest {
 
 //	@Test
 	public void row58() throws InterruptedException, IOException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 
 		String topCard = "7C";
 
@@ -451,7 +453,7 @@ public class AcceptanceTest {
 
 //	@Test
 	public void row59() throws InterruptedException, IOException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 
 		String topCard = "7C";
 
@@ -481,7 +483,7 @@ public class AcceptanceTest {
 
 //	@Test
 	public void row60() throws InterruptedException, IOException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 
 		String topCard = "7C";
 
@@ -510,7 +512,7 @@ public class AcceptanceTest {
 
 //	@Test
 	public void row61() throws InterruptedException, IOException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 
 		String topCard = "7C";
 
@@ -540,7 +542,7 @@ public class AcceptanceTest {
 
 //	@Test
 	public void row62() throws InterruptedException, IOException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 
 		String topCard = "7C";
 
@@ -577,7 +579,7 @@ public class AcceptanceTest {
 
 //	@Test
 	public void row63() throws InterruptedException, IOException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 
 		String topCard = "7C";
 
@@ -607,8 +609,8 @@ public class AcceptanceTest {
 
 //	@Test
 	public void row67() throws InterruptedException, IOException, JSONException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
 
 		String topCard = "7C";
 
@@ -642,8 +644,8 @@ public class AcceptanceTest {
 
 //	@Test
 	public void row68() throws InterruptedException, IOException, JSONException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
 
 		String topCard = "7C";
 
@@ -685,8 +687,8 @@ public class AcceptanceTest {
 
 //	@Test
 	public void row69() throws InterruptedException, IOException, JSONException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
 
 		String topCard = "7C";
 
@@ -720,8 +722,8 @@ public class AcceptanceTest {
 
 //	@Test
 //	public void row72() throws InterruptedException, IOException, JSONException {
-//		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
-//		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
+//		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
+//		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
 //
 //		String topCard = "7C";
 //
@@ -755,10 +757,10 @@ public class AcceptanceTest {
 
 //	@Test
 	public void row78() throws InterruptedException, IOException, JSONException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_3).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_4).get(LOCALHOST_URL);
 
 		String topCard = "7C";
 
@@ -794,10 +796,10 @@ public class AcceptanceTest {
 
 //	@Test
 	public void fullGame() throws InterruptedException, JsonProcessingException, IOException, JSONException {
-		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
-		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_3).get(LOCALHOST_URL);
+		map.get(ATestUtil.USER_4).get(LOCALHOST_URL);
 
 		String topCard = "4D";
 
@@ -822,14 +824,9 @@ public class AcceptanceTest {
 
 		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		map.get(ATestUtil.USER_1).findElement(By.className("4H")).click();
-
-		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
-		map.get(ATestUtil.USER_2).findElement(By.className("4S")).click();
-		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
-
-		map.get(ATestUtil.USER_3).findElement(By.className("9S")).click();
-		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		clickButtonForPlayer(map.get(ATestUtil.USER_1), "4H");
+		clickButtonForPlayer(map.get(ATestUtil.USER_2), "4S");
+		clickButtonForPlayer(map.get(ATestUtil.USER_3), "9S");
 
 		map.get(ATestUtil.USER_4).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
 		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
@@ -867,21 +864,14 @@ public class AcceptanceTest {
 		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
 		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_1);
-		//
-		// map.get(ATestUtil.USER_4).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
-		// map.get(ATestUtil.USER_4).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
-		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
 		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		map.get(ATestUtil.USER_1).findElement(By.className("7S")).click();
-		map.get(ATestUtil.USER_2).findElement(By.className("6S")).click();
-		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		clickButtonForPlayer(map.get(ATestUtil.USER_1), "7S");
+		clickButtonForPlayer(map.get(ATestUtil.USER_2), "6S");
+		clickButtonForPlayer(map.get(ATestUtil.USER_3), "6C");
+		clickButtonForPlayer(map.get(ATestUtil.USER_4), "2C");
 
-		map.get(ATestUtil.USER_3).findElement(By.className("6C")).click();
-		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
-
-		map.get(ATestUtil.USER_4).findElement(By.className("2C")).click();
-		//
 		players.get(0).setHand(new ArrayList<>(Arrays.asList("5D", "6D", "9D", "10C", "JC")));
 		players.get(1).setHand(new ArrayList<>(Arrays.asList("KC", "8H", "10D")));
 		players.get(2).setHand(new ArrayList<>(Arrays.asList("9C", "JD", "3H")));
@@ -893,8 +883,7 @@ public class AcceptanceTest {
 		players.get(1).setCard(topCard);
 		players.get(2).setCard(topCard);
 		players.get(3).setCard(topCard);
-		//
-		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
 		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
 		ATestUtil.rigGameAfterDrawCard(players);
@@ -903,18 +892,13 @@ public class AcceptanceTest {
 		map.get(ATestUtil.USER_4).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
 		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		//
 		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_1);
 
-		map.get(ATestUtil.USER_1).findElement(By.className("JC")).click();
-		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		clickButtonForPlayer(map.get(ATestUtil.USER_1), "JC");
+		clickButtonForPlayer(map.get(ATestUtil.USER_2), "KC");
+		clickButtonForPlayer(map.get(ATestUtil.USER_3), "9C");
+		clickButtonForPlayer(map.get(ATestUtil.USER_4), "3C");
 
-		map.get(ATestUtil.USER_2).findElement(By.className("KC")).click();
-		map.get(ATestUtil.USER_3).findElement(By.className("9C")).click();
-		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
-
-		map.get(ATestUtil.USER_4).findElement(By.className("3C")).click();
-		//
 		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
 		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_1);
 
@@ -922,7 +906,7 @@ public class AcceptanceTest {
 		players.get(1).setHand(new ArrayList<>(Arrays.asList("8H", "10D")));
 		players.get(2).setHand(new ArrayList<>(Arrays.asList("JD", "3H")));
 		players.get(3).setHand(new ArrayList<>(Arrays.asList("7D", "JH", "QH", "KH", "5C", "4C")));
-		//
+
 		players.get(0).setCard("3C");
 		players.get(1).setCard("3C");
 		players.get(2).setCard("3C");
@@ -932,28 +916,20 @@ public class AcceptanceTest {
 		ATestUtil.rigGameAfterDrawCard(players);
 		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		//
+
 		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_1);
 
-		map.get(ATestUtil.USER_1).findElement(By.className("7C")).click();
-		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
-		map.get(ATestUtil.USER_2).findElement(By.className("8H")).click();
-		//
-		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		clickButtonForPlayer(map.get(ATestUtil.USER_1), "7C");
+		clickButtonForPlayer(map.get(ATestUtil.USER_2), "8H");
 
 		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_2);
 		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		map.get(ATestUtil.USER_2).findElement(By.className("D")).click();
-		//
-		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		clickButtonForPlayer(map.get(ATestUtil.USER_2), "D");
 
 		clickButtonForPlayer(map.get(ATestUtil.USER_3), "JD");
-
 		clickButtonForPlayer(map.get(ATestUtil.USER_4), "7D");
-
 		clickButtonForPlayer(map.get(ATestUtil.USER_1), "9D");
-
 		clickButtonForPlayer(map.get(ATestUtil.USER_2), "10D");
 
 		ArrayList<Integer> expectedScore = new ArrayList<>(Arrays.asList(21, 0, 3, 39));
@@ -971,7 +947,6 @@ public class AcceptanceTest {
 		players.get(1).setHand(new ArrayList<>(Arrays.asList("9D", "3S", "9C", "3H", "JC")));
 		players.get(2).setHand(new ArrayList<>(Arrays.asList("3D", "9S", "3C", "9H", "5H")));
 		players.get(3).setHand(new ArrayList<>(Arrays.asList("4D", "7S", "4C", "5S", "8D")));
-		//
 
 		topCard = "10D";
 		players.get(0).setCard(topCard);
@@ -988,15 +963,11 @@ public class AcceptanceTest {
 		ATestUtil.rigGameAfterDrawCard(players);
 		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		//
 		clickButtonForPlayer(map.get(ATestUtil.USER_2), "9D");
 
 		clickButtonForPlayer(map.get(ATestUtil.USER_3), "3D");
-
 		clickButtonForPlayer(map.get(ATestUtil.USER_4), "4D");
-
 		clickButtonForPlayer(map.get(ATestUtil.USER_1), "4S");
-
 		clickButtonForPlayer(map.get(ATestUtil.USER_2), "3S");
 
 		clickButtonForPlayer(map.get(ATestUtil.USER_3), "9S");
@@ -1027,7 +998,7 @@ public class AcceptanceTest {
 		players.get(1).setHand(new ArrayList<>(Arrays.asList("JC")));
 		players.get(2).setHand(new ArrayList<>(Arrays.asList("5H")));
 		players.get(3).setHand(new ArrayList<>(Arrays.asList("5S", "8D", "KS", "QS", "KH")));
-		//
+
 		topCard = "9H";
 		players.get(0).setCard(topCard);
 		players.get(1).setCard(topCard);
@@ -1057,7 +1028,7 @@ public class AcceptanceTest {
 		players.get(1).setHand(new ArrayList<>(Arrays.asList("JC")));
 		players.get(2).setHand(new ArrayList<>(Arrays.asList("5H")));
 		players.get(3).setHand(new ArrayList<>(Arrays.asList("5S", "8D", "KS", "QS", "KH")));
-		//
+
 		topCard = "KH";
 		players.get(0).setCard(topCard);
 		players.get(1).setCard(topCard);
@@ -1088,7 +1059,7 @@ public class AcceptanceTest {
 		players.get(1).setHand(new ArrayList<>(Arrays.asList("JC", "6S", "JS", "10S")));
 		players.get(2).setHand(new ArrayList<>(Arrays.asList("5H")));
 		players.get(3).setHand(new ArrayList<>(Arrays.asList("5S", "8D", "KS", "QS", "KH")));
-		//
+
 		topCard = "KH";
 		players.get(0).setCard(topCard);
 		players.get(1).setCard(topCard);
@@ -1106,7 +1077,6 @@ public class AcceptanceTest {
 		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_3);
 
 		clickButtonForPlayer(map.get(ATestUtil.USER_3), "5H");
-
 	}
 
 	private void clickButtonForPlayer(WebDriver driver, String button) throws InterruptedException {
