@@ -58,7 +58,7 @@ public class CrazyEightWebSocketController {
 		amountDrawn++;
 
 		String card = gameLogic.drawCard(connectedPlayers.get(currentPlayer).getName(), userName, amountDrawn);
-		LOGGER.info("Drawn Card {}.", card);
+		LOGGER.info("Card drawn {}.", card);
 
 		if (!Objects.isNull(card)) {
 			connectedPlayers.get(currentPlayer).getHand().add(card);
@@ -122,7 +122,7 @@ public class CrazyEightWebSocketController {
 				return canPlay;
 			} else {
 				if (amountDrawn > GameLogicConstants.MAX_DRAWS) {
-					LOGGER.info("Max number of round reached!");
+					LOGGER.info("Max number of draws reached!");
 					currentPlayer = gameLogic.changeSimpleDirection(currentPlayer, connectedPlayers, direction);
 					amountDrawn = 0;
 					return canPlay;

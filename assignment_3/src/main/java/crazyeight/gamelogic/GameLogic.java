@@ -192,7 +192,7 @@ public class GameLogic {
 	}
 
 	public boolean canPlay(String userName, String currentPlayer) {
-		LOGGER.info("Can {} {} Play {}!", userName, currentPlayer, currentPlayer.equals(userName));
+		LOGGER.info("Can {} {} Play -> {}!", userName, currentPlayer, currentPlayer.equals(userName));
 		return currentPlayer.equals(userName);
 	}
 
@@ -260,7 +260,7 @@ public class GameLogic {
 				updateAllPlayerScores(players);
 				round += 1;
 				resetDeckAndPlayers(players);
-				LOGGER.info("Round {} is complete, now moving onto Round {}", round - 1, round);
+				LOGGER.info("Round {} is complete, now moving onto Round {}.", round - 1, round);
 				return true;
 			}
 
