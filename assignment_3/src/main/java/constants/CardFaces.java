@@ -13,4 +13,7 @@ public class CardFaces {
 	public static final CharSequence TWO = "2";
 
 	public static final String EIGHT = "8";
+	
+	public static final String TEN = "10";
+
 }

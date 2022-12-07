@@ -16,7 +16,6 @@ import crazyeight.websocket.spring.model.PlayerScore;
 
 public class GameLogic {
 	private static final int SCORE_ENDING_POINTS = 100;
-	
 
 	private final ArrayList<String> DECK_CARD = new ArrayList<>(Arrays.asList("2H", "3H", "4H", "5H", "6H", "7H", "8H",
 			"9H", "10H", "JH", "QH", "KH", "AH", "2S", "3S", "4S", "5S", "6S", "7S", "8S", "9S", "10S", "JS", "QS",
@@ -65,12 +64,27 @@ public class GameLogic {
 
 	public void addTwoCardToPlayer(Player player, String topCard) {
 		if (topCard.contains(CardFaces.TWO)) {
-			LOGGER.info("Attempting to add two cards to {}.", player.getName());
-			String card = "";
-			for (int i = 0; i < 2; i++) {
-				card = takeCard();
-				if (Objects.nonNull(card)) {
-					player.getHand().add(card);
+			boolean shouldDrawTwo = false;
+			if (player.getHand().size() == 1) {
+				shouldDrawTwo = true;
+			}
+			String topCardSuit = Character.toString(topCard.charAt(topCard.length() - 1));
+
+			for (String card : player.getHand()) {
+				String playerHandCardSuit = Character.toString(card.charAt(card.length() - 1));
+				if (topCardSuit.equals(playerHandCardSuit)) {
+					shouldDrawTwo = false;
+				}
+			}
+
+			if (shouldDrawTwo) {
+				LOGGER.info("Attempting to add two cards to {}.", player.getName());
+				String card = "";
+				for (int i = 0; i < 2; i++) {
+					card = takeCard();
+					if (Objects.nonNull(card)) {
+						player.getHand().add(card);
+					}
 				}
 			}
 		}
@@ -142,7 +156,8 @@ public class GameLogic {
 		}
 
 		for (String card : playerHand) {
-			if (card.contains(CardFaces.KING) || card.contains(CardFaces.QUEEN) || card.contains(CardFaces.JACK)) {
+			if (card.contains(CardFaces.KING) || card.contains(CardFaces.QUEEN) || card.contains(CardFaces.JACK)
+					|| card.contains(CardFaces.TEN)) {
 				finalScore += GameLogicConstants.SCORE_TEN;
 			} else if (card.contains(CardFaces.EIGHT)) {
 				finalScore += GameLogicConstants.SCORE_FIFTY;
@@ -202,7 +217,7 @@ public class GameLogic {
 				}
 			}
 		}
-	
+
 		return null;
 	}
 
@@ -235,6 +250,9 @@ public class GameLogic {
 	public boolean handleRoundCompletion(ArrayList<Player> players, String topCard) {
 
 		String topCardSuit = Character.toString(topCard.charAt(topCard.length() - 1));
+		String topCardNumber = Character.toString(topCard.charAt(0));
+		boolean isTopCardTen = topCard.contains(CardFaces.TEN);
+
 		boolean shouldEnd = true;
 
 		for (Player p : players) {
@@ -249,7 +267,9 @@ public class GameLogic {
 			for (String s : p.getHand()) {
 				String playerHandCardNumber = Character.toString(s.charAt(0));
 				String playerHandCardSuit = Character.toString(s.charAt(s.length() - 1));
-				if (topCardSuit.equals(playerHandCardSuit) || (playerHandCardNumber.equals(CardFaces.EIGHT))) {
+				boolean isPlayerHandCardTen = s.contains(CardFaces.TEN);
+				if (topCardSuit.equals(playerHandCardSuit) || (playerHandCardNumber.equals(CardFaces.EIGHT))
+						|| (isPlayerHandCardTen && isTopCardTen) || (topCardNumber.equals(playerHandCardNumber))) {
 					shouldEnd = false;
 				}
 			}
