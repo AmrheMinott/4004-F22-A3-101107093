@@ -18,6 +18,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import crazyeight.websocket.spring.model.Player;
 import crazyeight.websocket.spring.model.PlayerScore;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -316,7 +318,7 @@ public class AcceptanceTest {
 
 		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-		ATestUtil.assertTextIsOnScreen(map.get(ATestUtil.USER_1), ATestUtil.PLEASE_CHOOSE_A_CARD_OF_SIMILAR_SUIT);
+		ATestUtil.assertTextIsOnScreen(map.get(ATestUtil.USER_1), ATestUtil.UPDATED_PLAYER_DATA_FROM_WEB_SOCKET);
 	}
 
 	// @Test
@@ -715,8 +717,7 @@ public class AcceptanceTest {
 
 		assertEquals(6, list.get(1).getHand().size());
 	}
-	
-	
+
 //	@Test
 //	public void row72() throws InterruptedException, IOException, JSONException {
 //		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
@@ -789,6 +790,328 @@ public class AcceptanceTest {
 		for (int i = 0; i < 4; i++) {
 			assertEquals(expectedScore.get(i), list.get(i).getScore());
 		}
+	}
+
+//	@Test
+	public void fullGame() throws InterruptedException, JsonProcessingException, IOException, JSONException {
+		map.get(ATestUtil.USER_1).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_2).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_3).get("http://localhost:8090/");
+		map.get(ATestUtil.USER_4).get("http://localhost:8090/");
+
+		String topCard = "4D";
+
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		initFourPlayers(topCard,
+				new ArrayList<>(Arrays.asList("JH", "QH", "JH", "QH", "JH", "QH", "JH", "QH", "JH", "QH", "JH", "QH",
+						"JH", "QH")),
+				new ArrayList<>(Arrays.asList("4H", "7S", "5D", "6D", "9D")),
+				new ArrayList<>(Arrays.asList("4S", "6S", "KC", "8H", "10D")),
+				new ArrayList<>(Arrays.asList("9S", "6C", "9C", "JD", "3H")),
+				new ArrayList<>(Arrays.asList("7D", "JH", "QH", "KH", "5C")));
+
+		registerPlayerViaSelenium(ATestUtil.USER_1);
+		registerPlayerViaSelenium(ATestUtil.USER_2);
+		registerPlayerViaSelenium(ATestUtil.USER_3);
+		registerPlayerViaSelenium(ATestUtil.USER_4);
+
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		ATestUtil.rigGameWithPlayersData(players);
+
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_1).findElement(By.className("4H")).click();
+
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		map.get(ATestUtil.USER_2).findElement(By.className("4S")).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_3).findElement(By.className("9S")).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_4).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_4).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_4).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_4).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_4).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+
+		players.get(0).setHand(new ArrayList<>(Arrays.asList("7S", "5D", "6D", "9D")));
+		players.get(1).setHand(new ArrayList<>(Arrays.asList("6S", "KC", "8H", "10D")));
+		players.get(2).setHand(new ArrayList<>(Arrays.asList("6C", "9C", "JD", "3H")));
+		players.get(3).setHand(new ArrayList<>(Arrays.asList("7D", "JH", "QH", "KH", "5C", "2C", "3C", "4C")));
+
+		topCard = "9S";
+
+		players.get(0).setCard(topCard);
+		players.get(1).setCard(topCard);
+		players.get(2).setCard(topCard);
+		players.get(3).setCard(topCard);
+
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		ATestUtil.rigGameAfterDrawCard(players);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		map.get(ATestUtil.USER_4).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		map.get(ATestUtil.USER_4).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_1);
+		//
+		// map.get(ATestUtil.USER_4).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		// map.get(ATestUtil.USER_4).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_1).findElement(By.className("7S")).click();
+		map.get(ATestUtil.USER_2).findElement(By.className("6S")).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_3).findElement(By.className("6C")).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_4).findElement(By.className("2C")).click();
+		//
+		players.get(0).setHand(new ArrayList<>(Arrays.asList("5D", "6D", "9D", "10C", "JC")));
+		players.get(1).setHand(new ArrayList<>(Arrays.asList("KC", "8H", "10D")));
+		players.get(2).setHand(new ArrayList<>(Arrays.asList("9C", "JD", "3H")));
+		players.get(3).setHand(new ArrayList<>(Arrays.asList("7D", "JH", "QH", "KH", "5C", "3C", "4C")));
+
+		topCard = "2C";
+
+		players.get(0).setCard(topCard);
+		players.get(1).setCard(topCard);
+		players.get(2).setCard(topCard);
+		players.get(3).setCard(topCard);
+		//
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		ATestUtil.rigGameAfterDrawCard(players);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_4).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		//
+		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_1);
+
+		map.get(ATestUtil.USER_1).findElement(By.className("JC")).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_2).findElement(By.className("KC")).click();
+		map.get(ATestUtil.USER_3).findElement(By.className("9C")).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_4).findElement(By.className("3C")).click();
+		//
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_1);
+
+		players.get(0).setHand(new ArrayList<>(Arrays.asList("7C", "5D", "6D", "9D", "10C")));
+		players.get(1).setHand(new ArrayList<>(Arrays.asList("8H", "10D")));
+		players.get(2).setHand(new ArrayList<>(Arrays.asList("JD", "3H")));
+		players.get(3).setHand(new ArrayList<>(Arrays.asList("7D", "JH", "QH", "KH", "5C", "4C")));
+		//
+		players.get(0).setCard("3C");
+		players.get(1).setCard("3C");
+		players.get(2).setCard("3C");
+		players.get(3).setCard("3C");
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		ATestUtil.rigGameAfterDrawCard(players);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		//
+		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_1);
+
+		map.get(ATestUtil.USER_1).findElement(By.className("7C")).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		map.get(ATestUtil.USER_2).findElement(By.className("8H")).click();
+		//
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_2);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_2).findElement(By.className("D")).click();
+		//
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		clickButtonForPlayer(map.get(ATestUtil.USER_3), "JD");
+
+		clickButtonForPlayer(map.get(ATestUtil.USER_4), "7D");
+
+		clickButtonForPlayer(map.get(ATestUtil.USER_1), "9D");
+
+		clickButtonForPlayer(map.get(ATestUtil.USER_2), "10D");
+
+		ArrayList<Integer> expectedScore = new ArrayList<>(Arrays.asList(21, 0, 3, 39));
+		ArrayList<Player> list = ATestUtil.getPlayersBackend();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		for (int i = 0; i < 4; i++) {
+			assertEquals(expectedScore.get(i), list.get(i).getScore());
+		}
+
+		ATestUtil.resetCurrentPlayer(1);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		players.get(0).setHand(new ArrayList<>(Arrays.asList("7D", "4S", "7C", "4H", "5D")));
+		players.get(1).setHand(new ArrayList<>(Arrays.asList("9D", "3S", "9C", "3H", "JC")));
+		players.get(2).setHand(new ArrayList<>(Arrays.asList("3D", "9S", "3C", "9H", "5H")));
+		players.get(3).setHand(new ArrayList<>(Arrays.asList("4D", "7S", "4C", "5S", "8D")));
+		//
+
+		topCard = "10D";
+		players.get(0).setCard(topCard);
+		players.get(1).setCard(topCard);
+		players.get(2).setCard(topCard);
+		players.get(3).setCard(topCard);
+
+		players.get(0).setScore(21);
+		players.get(1).setScore(0);
+		players.get(2).setScore(3);
+		players.get(3).setScore(39);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		ATestUtil.rigGameAfterDrawCard(players);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		//
+		clickButtonForPlayer(map.get(ATestUtil.USER_2), "9D");
+
+		clickButtonForPlayer(map.get(ATestUtil.USER_3), "3D");
+
+		clickButtonForPlayer(map.get(ATestUtil.USER_4), "4D");
+
+		clickButtonForPlayer(map.get(ATestUtil.USER_1), "4S");
+
+		clickButtonForPlayer(map.get(ATestUtil.USER_2), "3S");
+
+		clickButtonForPlayer(map.get(ATestUtil.USER_3), "9S");
+		clickButtonForPlayer(map.get(ATestUtil.USER_4), "7S");
+		clickButtonForPlayer(map.get(ATestUtil.USER_1), "7C");
+		clickButtonForPlayer(map.get(ATestUtil.USER_2), "9C");
+
+		clickButtonForPlayer(map.get(ATestUtil.USER_3), "3C");
+		clickButtonForPlayer(map.get(ATestUtil.USER_4), "4C");
+		clickButtonForPlayer(map.get(ATestUtil.USER_1), "4H");
+		clickButtonForPlayer(map.get(ATestUtil.USER_2), "3H");
+
+		clickButtonForPlayer(map.get(ATestUtil.USER_3), "9H");
+
+		map.get(ATestUtil.USER_4).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_4).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_4).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_4).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		players.get(0).setHand(new ArrayList<>(Arrays.asList("7D", "5D")));
+		players.get(1).setHand(new ArrayList<>(Arrays.asList("JC")));
+		players.get(2).setHand(new ArrayList<>(Arrays.asList("5H")));
+		players.get(3).setHand(new ArrayList<>(Arrays.asList("5S", "8D", "KS", "QS", "KH")));
+		//
+		topCard = "9H";
+		players.get(0).setCard(topCard);
+		players.get(1).setCard(topCard);
+		players.get(2).setCard(topCard);
+		players.get(3).setCard(topCard);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		ATestUtil.rigGameAfterDrawCard(players);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		clickButtonForPlayer(map.get(ATestUtil.USER_4), "KH");
+		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_1);
+
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		players.get(0).setHand(new ArrayList<>(Arrays.asList("7D", "5D", "6D", "JD", "QD")));
+		players.get(1).setHand(new ArrayList<>(Arrays.asList("JC")));
+		players.get(2).setHand(new ArrayList<>(Arrays.asList("5H")));
+		players.get(3).setHand(new ArrayList<>(Arrays.asList("5S", "8D", "KS", "QS", "KH")));
+		//
+		topCard = "KH";
+		players.get(0).setCard(topCard);
+		players.get(1).setCard(topCard);
+		players.get(2).setCard(topCard);
+		players.get(3).setCard(topCard);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		ATestUtil.rigGameAfterDrawCard(players);
+
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_2).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_2).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_2).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		map.get(ATestUtil.USER_2).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		players.get(0).setHand(new ArrayList<>(Arrays.asList("7D", "5D", "6D", "JD", "QD")));
+		players.get(1).setHand(new ArrayList<>(Arrays.asList("JC", "6S", "JS", "10S")));
+		players.get(2).setHand(new ArrayList<>(Arrays.asList("5H")));
+		players.get(3).setHand(new ArrayList<>(Arrays.asList("5S", "8D", "KS", "QS", "KH")));
+		//
+		topCard = "KH";
+		players.get(0).setCard(topCard);
+		players.get(1).setCard(topCard);
+		players.get(2).setCard(topCard);
+		players.get(3).setCard(topCard);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		ATestUtil.rigGameAfterDrawCard(players);
+
+		map.get(ATestUtil.USER_2).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		map.get(ATestUtil.USER_2).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_3);
+
+		clickButtonForPlayer(map.get(ATestUtil.USER_3), "5H");
+
+	}
+
+	private void clickButtonForPlayer(WebDriver driver, String button) throws InterruptedException {
+		driver.findElement(By.className(button)).click();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 	}
 
 	private void assertCurrentPlayerViaSeleniumOfTwoPlayers(String player) {
