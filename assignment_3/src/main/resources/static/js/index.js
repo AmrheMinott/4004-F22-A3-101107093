@@ -106,8 +106,17 @@ async function playCard(card) {
     }
 
     if (!card.includes("8")) {
-      if (!playerObject.card.includes(card.charAt(card.length - 1))) {
-        renderMessage("Please choose a card of similar suit.");
+      let playable = false;
+      if (
+        (playerObject.card.includes("10") && card.includes("10")) ||
+        playerObject.card.includes(card.charAt(card.length - 1)) ||
+        playerObject.card.includes(card.charAt(0))
+      ) {
+        playable = true;
+      }
+
+      if (!playable) {
+        renderMessage("Please choose a card playable card.");
         return;
       }
     }

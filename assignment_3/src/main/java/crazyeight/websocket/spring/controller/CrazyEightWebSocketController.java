@@ -75,7 +75,7 @@ public class CrazyEightWebSocketController {
 		int previousPlayerIndex = currentPlayer;
 		userName = userName.replace("\"", "");
 
-		LOGGER.info("Can {} {} play?", connectedPlayers.get(currentPlayer).getName(), userName);
+		LOGGER.info("Checking if {} play on -> {} turn?", connectedPlayers.get(currentPlayer).getName(), userName);
 
 		this.simpMessagingTemplate.convertAndSend("/topic/currentPlayerName",
 				connectedPlayers.get(currentPlayer).getName());
@@ -103,11 +103,17 @@ public class CrazyEightWebSocketController {
 
 		if (userName.equals(connectedPlayers.get(currentPlayer).getName())) {
 			String topCardSuit = Character.toString(topCard.charAt(topCard.length() - 1));
+			String topCardNumber = Character.toString(topCard.charAt(0));
+			boolean isTopCardTen = topCard.contains(CardFaces.TEN);
+
 			boolean canPlay = false;
 			for (String card : connectedPlayers.get(currentPlayer).getHand()) {
 				String playerHandCardNumber = Character.toString(card.charAt(0));
 				String playerHandCardSuit = Character.toString(card.charAt(card.length() - 1));
-				if (topCardSuit.equals(playerHandCardSuit) || (playerHandCardNumber.equals(CardFaces.EIGHT))) {
+				boolean isPlayerHandCardTen = card.contains(CardFaces.TEN);
+
+				if (topCardSuit.equals(playerHandCardSuit) || (playerHandCardNumber.equals(CardFaces.EIGHT))
+						|| (isPlayerHandCardTen && isTopCardTen) || (topCardNumber.equals(playerHandCardNumber))) {
 					canPlay = true;
 				}
 			}
@@ -116,6 +122,7 @@ public class CrazyEightWebSocketController {
 				return canPlay;
 			} else {
 				if (amountDrawn > GameLogicConstants.MAX_DRAWS) {
+					LOGGER.info("Max number of round reached!");
 					currentPlayer = gameLogic.changeSimpleDirection(currentPlayer, connectedPlayers, direction);
 					amountDrawn = 0;
 					return canPlay;
@@ -150,18 +157,7 @@ public class CrazyEightWebSocketController {
 
 		LOGGER.info("Current player {} is now {}", currentPlayer, connectedPlayers.get(currentPlayer).getName());
 		// Add two cards to player hands.
-		if (connectedPlayers.get(currentPlayer).getHand().size() == 1) {
-			gameLogic.addTwoCardToPlayer(connectedPlayers.get(currentPlayer), topCard);
-		}
-
-		if (topCard.contains(CardFaces.EIGHT)) {
-			gameLogic.getDeck().add(gameLogic.getDeck().size() - 1, player.getCard());
-			this.topCard = gameLogic.takeCard();
-			while (topCard.contains(CardFaces.EIGHT)) {
-				gameLogic.getDeck().add(gameLogic.getDeck().size() - 1, this.topCard);
-				this.topCard = gameLogic.takeCard();
-			}
-		}
+		gameLogic.addTwoCardToPlayer(connectedPlayers.get(currentPlayer), topCard);
 
 		updateBasicPlayerInformation();
 

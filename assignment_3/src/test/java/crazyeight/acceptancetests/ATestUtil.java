@@ -40,7 +40,7 @@ public class ATestUtil {
 	static final String NO_CARD_GIVEN = "No Card Given";
 	static final String PICK_THE_NEXT_SUIT_FOR_THE_EIGHT_CARD = "Pick the next suit for the eight card.";
 	static final String UPDATED_PLAYER_DATA_FROM_WEB_SOCKET = "Updated player data from Web Socket";
-	static final String PLEASE_CHOOSE_A_CARD_OF_SIMILAR_SUIT = "Please choose a card of similar suit.";
+	static final String PLEASE_CHOOSE_A_CARD_OF_SIMILAR_SUIT = "Please choose a card playable card.";
 	static final String YOU_LOST_YOUR_TURN_DUE_TO_A_QUEEN = "You lost your turn due to a queen.";
 
 	private static HttpClient client;
