@@ -15,8 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -27,8 +25,6 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 public class AcceptanceTest {
 
 	private static final String LOCALHOST_URL = "http://localhost:8090/";
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(AcceptanceTest.class);
 
 	private ArrayList<Player> players;
 	private WebDriver driver_1;
@@ -68,7 +64,7 @@ public class AcceptanceTest {
 		players.clear();
 	}
 
-	// @Test
+	@Test
 	public void row41() throws InterruptedException, IOException {
 		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
@@ -95,7 +91,7 @@ public class AcceptanceTest {
 		assertCurrentPlayerViaSeleniumOfTwoPlayers(ATestUtil.USER_2);
 	}
 
-	// @Test
+	@Test
 	public void row43() throws InterruptedException, IOException {
 		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
@@ -136,7 +132,7 @@ public class AcceptanceTest {
 		assertCurrentDirection("Current Direction: Left -> Right");
 	}
 
-	// @Test
+	@Test
 	public void row44() throws InterruptedException, IOException {
 		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
@@ -170,7 +166,7 @@ public class AcceptanceTest {
 		ATestUtil.assertTextIsOnScreen(map.get(ATestUtil.USER_2), ATestUtil.YOU_LOST_YOUR_TURN_DUE_TO_A_QUEEN);
 	}
 
-	// @Test
+	@Test
 	public void row45() throws InterruptedException, IOException {
 		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
@@ -207,7 +203,7 @@ public class AcceptanceTest {
 		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_1);
 	}
 
-	// @Test
+	@Test
 	public void row47() throws InterruptedException, IOException {
 		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
@@ -252,7 +248,7 @@ public class AcceptanceTest {
 		assertCurrentDirection("Current Direction: Left -> Right");
 	}
 
-	// @Test
+	@Test
 	public void row48() throws InterruptedException, IOException {
 		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
@@ -290,7 +286,7 @@ public class AcceptanceTest {
 		ATestUtil.assertTextIsOnScreen(map.get(ATestUtil.USER_1), ATestUtil.YOU_LOST_YOUR_TURN_DUE_TO_A_QUEEN);
 	}
 
-	// @Test
+	@Test
 	public void row51() throws InterruptedException, IOException {
 		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
@@ -323,7 +319,7 @@ public class AcceptanceTest {
 		ATestUtil.assertTextIsOnScreen(map.get(ATestUtil.USER_1), ATestUtil.UPDATED_PLAYER_DATA_FROM_WEB_SOCKET);
 	}
 
-	// @Test
+	@Test
 	public void row52() throws InterruptedException, IOException {
 		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
@@ -356,7 +352,7 @@ public class AcceptanceTest {
 		ATestUtil.assertTextIsOnScreen(map.get(ATestUtil.USER_1), ATestUtil.UPDATED_PLAYER_DATA_FROM_WEB_SOCKET);
 	}
 
-	// @Test
+	@Test
 	public void row53() throws InterruptedException, IOException {
 		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
@@ -389,7 +385,7 @@ public class AcceptanceTest {
 		ATestUtil.assertTextIsOnScreen(map.get(ATestUtil.USER_1), ATestUtil.PICK_THE_NEXT_SUIT_FOR_THE_EIGHT_CARD);
 	}
 
-	// @Test
+	@Test
 	public void row54() throws InterruptedException, IOException {
 		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
@@ -451,7 +447,7 @@ public class AcceptanceTest {
 		map.get(ATestUtil.USER_1).findElement(By.className("6C")).click();
 	}
 
-//	@Test
+	@Test
 	public void row59() throws InterruptedException, IOException {
 		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 
@@ -481,7 +477,7 @@ public class AcceptanceTest {
 		map.get(ATestUtil.USER_1).findElement(By.className("5C")).click();
 	}
 
-//	@Test
+	@Test
 	public void row60() throws InterruptedException, IOException {
 		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 
@@ -510,7 +506,7 @@ public class AcceptanceTest {
 		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 	}
 
-//	@Test
+	@Test
 	public void row61() throws InterruptedException, IOException {
 		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 
@@ -535,12 +531,15 @@ public class AcceptanceTest {
 		map.get(ATestUtil.USER_1).findElement(By.id(ATestUtil.DRAW_CARD_BUTTON)).click();
 
 		ATestUtil.assertTextIsOnScreen(map.get(ATestUtil.USER_1), ATestUtil.NO_CARD_GIVEN);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
 		players.get(0).setHand(new ArrayList<>(Arrays.asList("3H", "6D", "5S", "4H")));
 
 		ATestUtil.rigGameAfterDrawCard(players);
 	}
 
-//	@Test
+	@Test
 	public void row62() throws InterruptedException, IOException {
 		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 
@@ -577,7 +576,7 @@ public class AcceptanceTest {
 		map.get(ATestUtil.USER_1).findElement(By.className("H")).click();
 	}
 
-//	@Test
+	@Test
 	public void row63() throws InterruptedException, IOException {
 		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 
@@ -607,7 +606,7 @@ public class AcceptanceTest {
 		map.get(ATestUtil.USER_1).findElement(By.className("6C")).click();
 	}
 
-//	@Test
+	@Test
 	public void row67() throws InterruptedException, IOException, JSONException {
 		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
@@ -642,7 +641,7 @@ public class AcceptanceTest {
 		map.get(ATestUtil.USER_2).findElement(By.className("6C")).click();
 	}
 
-//	@Test
+	@Test
 	public void row68() throws InterruptedException, IOException, JSONException {
 		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
@@ -685,7 +684,7 @@ public class AcceptanceTest {
 		map.get(ATestUtil.USER_2).findElement(By.className("6C")).click();
 	}
 
-//	@Test
+	@Test
 	public void row69() throws InterruptedException, IOException, JSONException {
 		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
@@ -755,7 +754,7 @@ public class AcceptanceTest {
 //		assertEquals(6, list.get(1).getHand().size());
 //	}
 
-//	@Test
+	@Test
 	public void row78() throws InterruptedException, IOException, JSONException {
 		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
@@ -794,7 +793,7 @@ public class AcceptanceTest {
 		}
 	}
 
-//	@Test
+	@Test
 	public void fullGame() throws InterruptedException, JsonProcessingException, IOException, JSONException {
 		map.get(ATestUtil.USER_1).get(LOCALHOST_URL);
 		map.get(ATestUtil.USER_2).get(LOCALHOST_URL);
@@ -916,7 +915,6 @@ public class AcceptanceTest {
 		ATestUtil.rigGameAfterDrawCard(players);
 		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 
-
 		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_1);
 
 		clickButtonForPlayer(map.get(ATestUtil.USER_1), "7C");
@@ -1027,7 +1025,7 @@ public class AcceptanceTest {
 		players.get(0).setHand(new ArrayList<>(Arrays.asList("7D", "5D", "6D", "JD", "QD")));
 		players.get(1).setHand(new ArrayList<>(Arrays.asList("JC")));
 		players.get(2).setHand(new ArrayList<>(Arrays.asList("5H")));
-		players.get(3).setHand(new ArrayList<>(Arrays.asList("5S", "8D", "KS", "QS", "KH")));
+		players.get(3).setHand(new ArrayList<>(Arrays.asList("5S", "8D", "KS", "QS")));
 
 		topCard = "KH";
 		players.get(0).setCard(topCard);
@@ -1058,7 +1056,7 @@ public class AcceptanceTest {
 		players.get(0).setHand(new ArrayList<>(Arrays.asList("7D", "5D", "6D", "JD", "QD")));
 		players.get(1).setHand(new ArrayList<>(Arrays.asList("JC", "6S", "JS", "10S")));
 		players.get(2).setHand(new ArrayList<>(Arrays.asList("5H")));
-		players.get(3).setHand(new ArrayList<>(Arrays.asList("5S", "8D", "KS", "QS", "KH")));
+		players.get(3).setHand(new ArrayList<>(Arrays.asList("5S", "8D", "KS", "QS")));
 
 		topCard = "KH";
 		players.get(0).setCard(topCard);
@@ -1077,6 +1075,18 @@ public class AcceptanceTest {
 		assertCurrentPlayerViaSeleniumOfFourPlayers(ATestUtil.USER_3);
 
 		clickButtonForPlayer(map.get(ATestUtil.USER_3), "5H");
+
+		expectedScore = new ArrayList<>(Arrays.asList(59, 36, 3, 114));
+		list = ATestUtil.getPlayersBackend();
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		for (int i = 0; i < 4; i++) {
+			assertEquals(expectedScore.get(i), list.get(i).getScore());
+		}
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
+
+		ATestUtil.assertTextIsOnScreen(map.get(ATestUtil.USER_3), "Winner: user_3");
+		Thread.sleep(ATestUtil.THREAD_SLEEP_TIME);
 	}
 
 	private void clickButtonForPlayer(WebDriver driver, String button) throws InterruptedException {

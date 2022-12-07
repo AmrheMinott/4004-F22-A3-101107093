@@ -24,7 +24,7 @@ import crazyeight.websocket.spring.model.Player;
 
 public class ATestUtil {
 
-	static final int THREAD_SLEEP_TIME = 500;
+	static final int THREAD_SLEEP_TIME = 50;
 
 	static final String REGISTER_PLAYER = "register-player";
 	static final String USER_ID = "user-id";

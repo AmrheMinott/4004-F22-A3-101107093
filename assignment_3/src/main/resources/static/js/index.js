@@ -349,7 +349,7 @@ function wsConnect() {
     });
 
     stompClient.subscribe("/topic/winner", function (winnerName) {
-      renderWinner(JSON.parse(winnerName.body));
+      renderWinner((winnerName.body));
       renderMessage("GAME OVER Disconnecting!");
       stompClient.disconnect();
     });

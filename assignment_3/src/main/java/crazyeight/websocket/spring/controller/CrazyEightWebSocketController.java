@@ -195,7 +195,7 @@ public class CrazyEightWebSocketController {
 	@RequestMapping("/createPlayer")
 	public Player createPlayer(@RequestBody String userName) throws URISyntaxException {
 		userName = userName.replace("\"", "");
-		LOGGER.info("Post made an addition " + userName);
+		LOGGER.info("Player created {}.", userName);
 
 		for (Player p : connectedPlayers) {
 			if (p.getName().equals(userName)) {
@@ -290,8 +290,8 @@ public class CrazyEightWebSocketController {
 	private void determineAndSendWinner() {
 		String winner = gameLogic.determineWinner(connectedPlayers);
 		if (Objects.nonNull(winner)) {
+			LOGGER.info("Winner is -> {}", winner);
 			this.simpMessagingTemplate.convertAndSend("/topic/winner", winner);
-			System.exit(1);
 		}
 	}
 }
