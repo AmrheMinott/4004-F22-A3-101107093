@@ -43,6 +43,10 @@ public class CrazyEightWebSocketController {
 		this.connectedPlayers = new ArrayList<>();
 		this.gameLogic = new GameLogic();
 		this.topCard = gameLogic.takeCard();
+		if (topCard.contains("8")) {
+			gameLogic.getDeck().add(topCard);
+			this.topCard = gameLogic.takeCard();
+		}
 	}
 
 	@GetMapping
