@@ -27,7 +27,7 @@ public class CrazyEightWebSocketController {
 	private final SimpMessagingTemplate simpMessagingTemplate;
 	private final ArrayList<Player> connectedPlayers;
 
-	private final int TOTAL_NUMBER_OF_PLAYERS = 1;
+	private final int TOTAL_NUMBER_OF_PLAYERS = 3;
 
 	private GameLogic gameLogic;
 	private String topCard = "";
